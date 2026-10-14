@@ -1,0 +1,1776 @@
+{
+  "schemaVersion": 1,
+  "scenario": "js-exceptions",
+  "status": "verified-local-headless-previous-host-control-five-sabotages",
+  "at": "2026-10-14T06:47:04.336Z",
+  "executionBaseCommit": "c0b52a543301568629b265ce910832dc85f88bd3",
+  "sourceDirtyDuringExecution": true,
+  "dirtyPathsDuringExecution": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "dashboard/migration.json",
+    "docs/compatibility/bootstrap-audit-0.87.1.json",
+    "docs/evidence/runtime/README.md",
+    "native/application_runtime.cpp",
+    "native/js_error_path.cpp",
+    "native/js_error_path.h",
+    "package.json",
+    "scripts/js-exceptions-bundle.mjs",
+    "scripts/js-exceptions-evidence.mjs",
+    "scripts/js-exceptions-sabotage.mjs",
+    "tests/js-errors-oracle.mjs",
+    "tests/js-exceptions-cases.mjs",
+    "tests/js-exceptions-fixture.jsx",
+    "tests/js-exceptions-host.js",
+    "tests/js-exceptions-native.test.mjs",
+    "tests/js-exceptions-oracle.mjs",
+    "tests/js-exceptions-probe.gd",
+    "tests/js-exceptions-sabotages.mjs",
+    "tests/react-microtasks-oracle.mjs"
+  ],
+  "implementationCommit": "10e0150de574f7c164a7e663b0d896b5212afdb2",
+  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>. The lanes ran on top of executionBaseCommit with the uncommitted paths of dirtyPathsDuringExecution, so the pins, not the commit the lanes ran on, tie what they executed to the implementation commit.",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless",
+    "nativeHostSha256": "caf2005e75ecfb16fb0593b6289a186fe14920e1ddd63a8418221506b0a69725",
+    "previousHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+    "previousHost": {
+      "sourceCommit": "c0b52a543301568629b265ce910832dc85f88bd3",
+      "sourceCommitSubject": "docs(dashboard): Register GF-05's web globals slice",
+      "nativeTreeAtSourceCommit": "b4a7aed08d27d2223366dac421dcba74abf1ac5d",
+      "sha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+      "copy": "build/gf05-exceptions-previous-host/fabric_godot.dylib (local, not in Git)",
+      "provenance": "The commit is given by whoever built the host (--previous-host-commit); no build receipt was recorded for the copy. It is the host of the web globals slice's tip, taken from addons/ before this slice changed any native file, after a build from those sources reported nothing to do; the native/ tree of that commit is nativeTreeAtSourceCommit."
+    }
+  },
+  "commands": [
+    "npm run test:js-exceptions",
+    "node tests/js-exceptions-native.test.mjs --allow-original-negative (previous host in addons/)",
+    "node scripts/js-exceptions-sabotage.mjs",
+    "node scripts/js-exceptions-evidence.mjs --previous-host-commit <sha> [--commit <sha>]"
+  ],
+  "currentLane": {
+    "checks": 41,
+    "failedChecks": [],
+    "oracleVerdict": null,
+    "bundleSha256": "44ae266975fa9c7cd0a18e6a88a9cb3729ff8c95a7ba78afbdb1c61a2d617c1a",
+    "nativeHostSha256": "caf2005e75ecfb16fb0593b6289a186fe14920e1ddd63a8418221506b0a69725",
+    "logSha256": "5078bd45291ffa107d8cda54ec8fa420c146aa1411914b9c29b4e71e20d09876",
+    "result": "JS_EXCEPTIONS_PASSED: 41",
+    "checkVerdicts": [
+      {
+        "name": "mount/The root mounts through the original AppRegistry without a diagnostic",
+        "passed": true
+      },
+      {
+        "name": "release/The bundle is a release build on Hermes' own Promise, and the six callback globals under test are installed",
+        "passed": true
+      },
+      {
+        "name": "timeout/An exception in a setTimeout callback is a fatal error for JsErrorHandler, with RN's message and stack, and records one host failure",
+        "passed": true
+      },
+      {
+        "name": "timeout/The other timers due in the same tick still run, and the runtime keeps running",
+        "passed": true
+      },
+      {
+        "name": "interval/An exception in a setInterval callback is a fatal error, once per tick that threw",
+        "passed": true
+      },
+      {
+        "name": "interval/The interval keeps ticking after an exception, and clears itself when it is told to",
+        "passed": true
+      },
+      {
+        "name": "raf/An exception in a requestAnimationFrame callback is a fatal error, as RN's timer-based frame callback is",
+        "passed": true
+      },
+      {
+        "name": "raf/The other callbacks of the frame, and the ones they request, still run",
+        "passed": true
+      },
+      {
+        "name": "idle/An exception in a requestIdleCallback callback leaves its RuntimeScheduler task and is a fatal error through the scheduler's handler",
+        "passed": true
+      },
+      {
+        "name": "idle/The idle callback queued behind it still runs: the scheduler's queue is not cleared on an error",
+        "passed": true
+      },
+      {
+        "name": "event/An exception in an event handler (a Pressable's onPress) reaches the RuntimeScheduler's handler as a fatal error, once",
+        "passed": true
+      },
+      {
+        "name": "event/The timer the handler queued still runs, and the runtime keeps running: the next press is handled and makes no error",
+        "passed": true
+      },
+      {
+        "name": "soft/A soft exception reported from a timer callback (ErrorUtils.reportError) is counted as soft, logged, and records no failure",
+        "passed": true
+      },
+      {
+        "name": "microtask-evaluate/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors at the head of the host's pump",
+        "passed": true
+      },
+      {
+        "name": "microtask-evaluate/The microtasks behind the one that threw still run in order: the other callback, the Promise reaction, the immediate, the nested callback, and the timer after them",
+        "passed": true
+      },
+      {
+        "name": "microtask-timer/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors after a timer's work item",
+        "passed": true
+      },
+      {
+        "name": "microtask-timer/The microtasks behind the one that threw still run in order: the other callback, the Promise reaction, the immediate, the nested callback, and the timer after them",
+        "passed": true
+      },
+      {
+        "name": "microtask-raf/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors after a frame callback",
+        "passed": true
+      },
+      {
+        "name": "microtask-raf/The microtasks behind the one that threw still run in order: the other callback, the Promise reaction, the immediate, the nested callback, and the timer after them",
+        "passed": true
+      },
+      {
+        "name": "microtask-press/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors in RN's own checkpoint after a RuntimeScheduler task",
+        "passed": true
+      },
+      {
+        "name": "microtask-press/The microtasks behind the one that threw still run in order: the other callback, the Promise reaction, the immediate, the nested callback, and the timer after them",
+        "passed": true
+      },
+      {
+        "name": "promise/A Promise reaction that throws, a rejection nobody handles and an async function that throws reach no host: nothing is reported, logged or recorded",
+        "passed": true
+      },
+      {
+        "name": "promise/The reactions ran in order and the catch ran; Hermes tracks a rejection only when told to, and then reports the unhandled one, and the late handler of it",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-evaluate/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-evaluate/A timer and a frame callback queued beside the chain run only between checkpoints, after the first one was cut, and the chain completes",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-timer/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-timer/A timer and a frame callback queued beside the chain run only between checkpoints, after the first one was cut, and the chain completes",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-raf/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-raf/A timer and a frame callback queued beside the chain run only between checkpoints, after the first one was cut, and the chain completes",
+        "passed": true
+      },
+      {
+        "name": "storm-evaluate/A Promise storm of a million reactions is bounded by nothing and reported by nothing: no failure, no log, no bound",
+        "passed": true
+      },
+      {
+        "name": "storm-evaluate/A timer and a frame callback queued beside the storm run only after the whole chain: RN's event loop is starved for its duration, as the host's is",
+        "passed": true
+      },
+      {
+        "name": "storm-timer/A Promise storm of a million reactions is bounded by nothing and reported by nothing: no failure, no log, no bound",
+        "passed": true
+      },
+      {
+        "name": "storm-timer/A timer and a frame callback queued beside the storm run only after the whole chain: RN's event loop is starved for its duration, as the host's is",
+        "passed": true
+      },
+      {
+        "name": "stop/The microtasks pending when the application stops complete in one checkpoint even when one throws: its exception is a fatal error and the ones behind it still run",
+        "passed": true
+      },
+      {
+        "name": "lifecycle/Stop releases the root, and all native Controls of the root are balanced",
+        "passed": true
+      },
+      {
+        "name": "errors/The host recorded a failure for every fatal error of the cases and for nothing else: the application's own list is the cases' failures, in order",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-press/RN's own checkpoint, after the press task, reports the same bound the host's does: BOUND failures, \"Hits microtasks retries bound.\", then the rest of the chain",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-press/The host's timers and frame callbacks keep running after the scheduler's checkpoint gave up, and the chain completes in the host's checkpoint",
+        "passed": true
+      },
+      {
+        "name": "retry-bound-press/The bound that escapes RN's runEventLoop leaves its RuntimeScheduler with a queued task and no scheduled loop, so the next press is never delivered",
+        "passed": true
+      },
+      {
+        "name": "lifecycle/The application that lost its scheduler still stops, and releases its root",
+        "passed": true
+      },
+      {
+        "name": "report/The callback exceptions report is saved with any normative failure visible",
+        "passed": true
+      }
+    ],
+    "bundleInputs": {
+      "count": 429,
+      "injectedFirst": [
+        "tests/js-exceptions-host.js",
+        "node_modules/@react-native/js-polyfills/console.js",
+        "node_modules/@react-native/js-polyfills/error-guard.js"
+      ]
+    },
+    "originalReactNativeSources": {
+      "Libraries/Core/setUpTimers.js": "4c748c5fcb8f789488fec1c6717b68c993bc434b7f2bc798e00f6e441d0572ca",
+      "Libraries/Core/Timers/immediateShim.js": "9167921c77c4286f2b9e378ba067eead40d741ce8e12a46598a25d62943b9d87",
+      "Libraries/Core/setUpErrorHandling.js": "5153398b8a8db5e8575e77fc0ed8fe8f7d9ee58fb6772065818ca690eb13050d",
+      "Libraries/Core/ExceptionsManager.js": "83dc6599335fbe34b8cd26ae38603a0fb65fe84d035392a06d666f0231a31e41",
+      "Libraries/vendor/core/ErrorUtils.js": "925d143e1936ac29703b5dfba137fc6b8c0977205659f4f0929c4ade771e7c87",
+      "src/private/webapis/microtasks/specs/NativeMicrotasks.js": "1871e92a5e288064066c2a7ed6080561e3e70cda9e9ae8449970b9b6576fa4dc",
+      "src/private/webapis/idlecallbacks/specs/NativeIdleCallbacks.js": "e181df1a83968547b3e9c7c0673194306f89c909fc3c956a5ab58dd64c0102c0",
+      "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp": "d758cdc07c674bb49df067c9bb0e29a364f4173e30cd291ef06c047cd6e72fce",
+      "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.h": "baed63268849beaa97e0f309762649c40edffb295c852137156a8e9051f00723",
+      "ReactCommon/react/renderer/runtimescheduler/Task.cpp": "f36941f6beb6dca5ef01a3d6629c6d3fdb65648f4bf81c0b183b573780a9bc84",
+      "ReactCommon/react/runtime/TimerManager.cpp": "4da567def5bf1c65895cb8dc70682c03371008f30f30f7022a56c9412ce57275",
+      "ReactCommon/react/runtime/ReactInstance.cpp": "30e5eaa1d8a8d2b1b78b35aed32ef6eb9b49d2718d8ca3059cdeada0c1b6aad4",
+      "ReactCommon/react/runtime/BufferedRuntimeExecutor.cpp": "9ce05d1192261cc310b1c782469b9c72a790a6cfc67670677cdc7f1383cc601c",
+      "ReactCommon/react/runtime/platform/ios/ReactCommon/RCTInstance.mm": "a9325cbf2e2575cab5f4cbca4e6d26f696993c0f437d7d89592f1ed7332461c0",
+      "ReactAndroid/src/main/jni/react/runtime/jni/JReactInstance.cpp": "40bd882eb67d6d4e769733b05a70cfdc0e76e2e81751e14b2b6a1b0e429f63ad",
+      "ReactCommon/react/nativemodule/microtasks/NativeMicrotasks.cpp": "aacb0866d2e5409eabc3bf83fe1827d82af6ada26eed020f996273ae0bc794e8",
+      "ReactCommon/react/nativemodule/idlecallbacks/NativeIdleCallbacks.cpp": "ab549069359d4603cabf8f0da6c6ec8281ace3da8af8a6d89727d6c11550a369",
+      "ReactCommon/react/renderer/core/EventBeat.cpp": "c5d244d50c9567181ccf1525c6921aab9e191808d48afe16b0c26a4dbf7effcf",
+      "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+      "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+      "ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h": "eb0b7191eb0c15dc66959b45649bdba25d68523f51aa27918045a75547f1df29",
+      "ReactCommon/jserrorhandler/JsErrorHandler.cpp": "d8f734cfe13a87a093bea944a4f3705e7d3bbebb73b2b3e5c1f7bec02c5b0ab6",
+      "ReactCommon/jsi/jsi/jsi.h": "db2f1ee9291340f3d05b11abdcdc3d12ac84c239e58599d4ef2ac06dbaa14d92",
+      "Libraries/Core/polyfillPromise.js": "7e037864bb1e04811dbc58010ef628518f4fd8bedbad4a5cbc065db7f2446e4b",
+      "Libraries/Core/InitializeCore.js": "8f2dd190065a412e8a30ee49c3db050b8797cfb780ecbc1a8f5e2c75a2fc9701",
+      "Libraries/promiseRejectionTrackingOptions.js": "86535468f54dc48d1c52f6ece0b3976d5529264ce5035fee5a0092176940f812",
+      "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+      "React/Fabric/RCTScheduler.mm": "0d1ede5f7e414798c83eef3b0a0f235a26eb60c023787e68397e067d9795814f",
+      "ReactCommon/react/renderer/animated/NativeAnimatedNodesManager.cpp": "ce76593398c9780a30273b533caec5043010921a8ed485812886732ce82628e0",
+      "ReactCommon/react/renderer/animations/LayoutAnimationKeyFrameManager.cpp": "1cee7ffbd07728fd9d87ba19fe6c4f6ec91cab71297997232f361367d3e0e413"
+    },
+    "environment": {
+      "dev": false,
+      "logged": [
+        {
+          "level": 1,
+          "message": "Running \"JsExceptionsApp\""
+        }
+      ],
+      "scenario": "react",
+      "timers": {
+        "queueMicrotask": "undefined",
+        "requestAnimationFrame": "function",
+        "requestIdleCallback": "undefined",
+        "setImmediate": "undefined",
+        "setInterval": "function",
+        "setTimeout": "function"
+      },
+      "tracker": {
+        "calls": [],
+        "hasPromise": true,
+        "type": "function",
+        "wrapped": false
+      }
+    },
+    "cases": {
+      "event": {
+        "journal": [
+          "onPress",
+          "timer"
+        ],
+        "failureCount": 1,
+        "failures": [
+          "Error: Non-js exception: js-exceptions event/onPress"
+        ],
+        "moduleFatal": 1,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 1
+      },
+      "event-after": {
+        "journal": [
+          "onPress",
+          "timer"
+        ],
+        "failureCount": 0,
+        "failures": [],
+        "moduleFatal": 0,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 0
+      },
+      "idle": {
+        "journal": [
+          "start",
+          "i1",
+          "i2",
+          "timer"
+        ],
+        "failureCount": 1,
+        "failures": [
+          "Error: Non-js exception: js-exceptions idle/i1"
+        ],
+        "moduleFatal": 1,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 1
+      },
+      "interval": {
+        "journal": [
+          "start",
+          "tick#1",
+          "tick#2",
+          "tick#3"
+        ],
+        "failureCount": 2,
+        "failures": [
+          "Error: js-exceptions interval/tick#1, stack:",
+          "Error: js-exceptions interval/tick#2, stack:"
+        ],
+        "moduleFatal": 2,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 2
+      },
+      "microtask-evaluate": {
+        "journal": [
+          "start",
+          "m1",
+          "m2",
+          "p",
+          "i1",
+          "i2",
+          "m3",
+          "m4",
+          "timer"
+        ],
+        "failureCount": 2,
+        "failures": [
+          "Error: js-exceptions microtask-evaluate/m1, stack:",
+          "Error: js-exceptions microtask-evaluate/i1, stack:"
+        ],
+        "moduleFatal": 2,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 2
+      },
+      "microtask-press": {
+        "journal": [
+          "start",
+          "m1",
+          "m2",
+          "p",
+          "i1",
+          "i2",
+          "m3",
+          "m4",
+          "timer"
+        ],
+        "failureCount": 2,
+        "failures": [
+          "Error: Non-js exception: js-exceptions microtask-press/m1",
+          "Error: Non-js exception: js-exceptions microtask-press/i1"
+        ],
+        "moduleFatal": 2,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 2
+      },
+      "microtask-raf": {
+        "journal": [
+          "start",
+          "m1",
+          "m2",
+          "p",
+          "i1",
+          "i2",
+          "m3",
+          "m4",
+          "timer"
+        ],
+        "failureCount": 2,
+        "failures": [
+          "Error: js-exceptions microtask-raf/m1, stack:",
+          "Error: js-exceptions microtask-raf/i1, stack:"
+        ],
+        "moduleFatal": 2,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 2
+      },
+      "microtask-timer": {
+        "journal": [
+          "start",
+          "m1",
+          "m2",
+          "p",
+          "i1",
+          "i2",
+          "m3",
+          "m4",
+          "timer"
+        ],
+        "failureCount": 2,
+        "failures": [
+          "Error: js-exceptions microtask-timer/m1, stack:",
+          "Error: js-exceptions microtask-timer/i1, stack:"
+        ],
+        "moduleFatal": 2,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 2
+      },
+      "promise": {
+        "journal": [
+          "start",
+          "then-throws",
+          "then-catch-throws",
+          "async-throws",
+          "after",
+          "then-catch-caught",
+          "timer"
+        ],
+        "failureCount": 0,
+        "failures": [],
+        "moduleFatal": 0,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 0
+      },
+      "raf": {
+        "journal": [
+          "start",
+          "r1",
+          "r2",
+          "r3"
+        ],
+        "failureCount": 1,
+        "failures": [
+          "Error: js-exceptions raf/r1, stack:"
+        ],
+        "moduleFatal": 1,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 1
+      },
+      "retry-bound-evaluate": {
+        "journal": [
+          "start",
+          "alongside-raf {\"retry\":255}",
+          "retry-last {\"retry\":300}",
+          "alongside-timer {\"retry\":300}",
+          "end {\"retry\":300}"
+        ],
+        "failureCount": 301,
+        "failures": {
+          "first": [
+            "Error: js-exceptions retry-bound-evaluate/retry, stack:",
+            "Error: js-exceptions retry-bound-evaluate/retry, stack:"
+          ],
+          "around": [
+            "Error: js-exceptions retry-bound-evaluate/retry, stack:",
+            "Error: js-exceptions retry-bound-evaluate/retry, stack:",
+            "Error: Non-JS exception: Hits microtasks retries bound., stack:",
+            "Error: js-exceptions retry-bound-evaluate/retry, stack:",
+            "Error: js-exceptions retry-bound-evaluate/retry, stack:"
+          ],
+          "last": [
+            "Error: js-exceptions retry-bound-evaluate/retry, stack:"
+          ]
+        },
+        "moduleFatal": 301,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 301
+      },
+      "retry-bound-press": {
+        "journal": [
+          "start",
+          "retry-last {\"retry\":300}",
+          "alongside-raf {\"retry\":300}",
+          "alongside-timer {\"retry\":300}",
+          "end {\"retry\":300}"
+        ],
+        "failureCount": 301,
+        "failures": {
+          "first": [
+            "Error: Non-js exception: js-exceptions retry-bound-press/retry",
+            "Error: Non-js exception: js-exceptions retry-bound-press/retry"
+          ],
+          "around": [
+            "Error: Non-js exception: js-exceptions retry-bound-press/retry",
+            "Error: Non-js exception: js-exceptions retry-bound-press/retry",
+            "Error: Non-JS exception: Hits microtasks retries bound., stack:",
+            "Error: js-exceptions retry-bound-press/retry, stack:",
+            "Error: js-exceptions retry-bound-press/retry, stack:"
+          ],
+          "last": [
+            "Error: js-exceptions retry-bound-press/retry, stack:"
+          ]
+        },
+        "moduleFatal": 301,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 301
+      },
+      "retry-bound-raf": {
+        "journal": [
+          "start",
+          "alongside-timer {\"retry\":255}",
+          "retry-last {\"retry\":300}",
+          "alongside-raf {\"retry\":300}",
+          "end {\"retry\":300}"
+        ],
+        "failureCount": 301,
+        "failures": {
+          "first": [
+            "Error: js-exceptions retry-bound-raf/retry, stack:",
+            "Error: js-exceptions retry-bound-raf/retry, stack:"
+          ],
+          "around": [
+            "Error: js-exceptions retry-bound-raf/retry, stack:",
+            "Error: js-exceptions retry-bound-raf/retry, stack:",
+            "Error: Non-JS exception: Hits microtasks retries bound., stack:",
+            "Error: js-exceptions retry-bound-raf/retry, stack:",
+            "Error: js-exceptions retry-bound-raf/retry, stack:"
+          ],
+          "last": [
+            "Error: js-exceptions retry-bound-raf/retry, stack:"
+          ]
+        },
+        "moduleFatal": 301,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 301
+      },
+      "retry-bound-timer": {
+        "journal": [
+          "start",
+          "retry-last {\"retry\":300}",
+          "alongside-raf {\"retry\":300}",
+          "alongside-timer {\"retry\":300}",
+          "end {\"retry\":300}"
+        ],
+        "failureCount": 301,
+        "failures": {
+          "first": [
+            "Error: js-exceptions retry-bound-timer/retry, stack:",
+            "Error: js-exceptions retry-bound-timer/retry, stack:"
+          ],
+          "around": [
+            "Error: js-exceptions retry-bound-timer/retry, stack:",
+            "Error: js-exceptions retry-bound-timer/retry, stack:",
+            "Error: Non-JS exception: Hits microtasks retries bound., stack:",
+            "Error: js-exceptions retry-bound-timer/retry, stack:",
+            "Error: js-exceptions retry-bound-timer/retry, stack:"
+          ],
+          "last": [
+            "Error: js-exceptions retry-bound-timer/retry, stack:"
+          ]
+        },
+        "moduleFatal": 301,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 301
+      },
+      "soft": {
+        "journal": [
+          "start",
+          "soft",
+          "timer"
+        ],
+        "failureCount": 0,
+        "failures": [],
+        "moduleFatal": 0,
+        "moduleSoft": 1,
+        "handlerReports": 0,
+        "consoleLines": 1
+      },
+      "stop": {
+        "journal": [
+          "queued",
+          "s1",
+          "s2",
+          "sp",
+          "si",
+          "s3"
+        ],
+        "failureCount": 1,
+        "failures": [
+          "Error: js-exceptions stop/s1, stack:"
+        ],
+        "moduleFatal": 1,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 0
+      },
+      "storm-evaluate": {
+        "journal": [
+          "start",
+          "storm-last {\"storm\":1000000}",
+          "alongside-raf {\"storm\":1000000}",
+          "alongside-timer {\"storm\":1000000}",
+          "end {\"storm\":1000000}"
+        ],
+        "failureCount": 0,
+        "failures": [],
+        "moduleFatal": 0,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 0
+      },
+      "storm-timer": {
+        "journal": [
+          "start",
+          "storm-last {\"storm\":1000000}",
+          "alongside-raf {\"storm\":1000000}",
+          "alongside-timer {\"storm\":1000000}",
+          "end {\"storm\":1000000}"
+        ],
+        "failureCount": 0,
+        "failures": [],
+        "moduleFatal": 0,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 0
+      },
+      "timeout": {
+        "journal": [
+          "start",
+          "a",
+          "b",
+          "c"
+        ],
+        "failureCount": 1,
+        "failures": [
+          "Error: js-exceptions timeout/a, stack:"
+        ],
+        "moduleFatal": 1,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 1
+      }
+    },
+    "wedgeLane": {
+      "retryBoundPress": {
+        "journal": [
+          "start",
+          "retry-last {\"retry\":300}",
+          "alongside-raf {\"retry\":300}",
+          "alongside-timer {\"retry\":300}",
+          "end {\"retry\":300}"
+        ],
+        "failureCount": 301,
+        "failures": {
+          "first": [
+            "Error: Non-js exception: js-exceptions retry-bound-press/retry",
+            "Error: Non-js exception: js-exceptions retry-bound-press/retry"
+          ],
+          "around": [
+            "Error: Non-js exception: js-exceptions retry-bound-press/retry",
+            "Error: Non-js exception: js-exceptions retry-bound-press/retry",
+            "Error: Non-JS exception: Hits microtasks retries bound., stack:",
+            "Error: js-exceptions retry-bound-press/retry, stack:",
+            "Error: js-exceptions retry-bound-press/retry, stack:"
+          ],
+          "last": [
+            "Error: js-exceptions retry-bound-press/retry, stack:"
+          ]
+        },
+        "moduleFatal": 301,
+        "moduleSoft": 0,
+        "handlerReports": 0,
+        "consoleLines": 301
+      },
+      "secondPress": {
+        "presses": 1,
+        "entered": false,
+        "done": false,
+        "waitedFrames": 122
+      },
+      "stopped": true
+    },
+    "rejectionTrackerControl": {
+      "enabled": true,
+      "handled": [
+        {
+          "id": 0
+        }
+      ],
+      "unhandled": [
+        {
+          "id": 0,
+          "message": "js-exceptions tracked/unhandled"
+        }
+      ]
+    },
+    "hostFailureLines": 1220,
+    "hostCounters": {
+      "main": {
+        "handledFatalError": false,
+        "handler": {
+          "fatal": 0,
+          "soft": 0
+        },
+        "inHandler": false,
+        "listeners": 0,
+        "module": {
+          "fatal": 918,
+          "soft": 1
+        },
+        "reports": [
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 888,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 889,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 890,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 891,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 892,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 893,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 894,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 895,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 896,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 897,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 898,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 899,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 900,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 901,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 902,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 903,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 904,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 905,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 906,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 907,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 908,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 909,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 910,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 911,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 912,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 913,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 914,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 915,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 916,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 917,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 918,
+            "message": "Error: js-exceptions retry-bound-raf/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 919,
+            "message": "Error: js-exceptions stop/s1",
+            "origin": "module"
+          }
+        ],
+        "runtimeReady": true
+      },
+      "wedge": {
+        "handledFatalError": false,
+        "handler": {
+          "fatal": 0,
+          "soft": 0
+        },
+        "inHandler": false,
+        "listeners": 0,
+        "module": {
+          "fatal": 302,
+          "soft": 0
+        },
+        "reports": [
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 271,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 272,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 273,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 274,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 275,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 276,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 277,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 278,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 279,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 280,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 281,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 282,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 283,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 284,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 285,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 286,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 287,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 288,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 289,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 290,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 291,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 292,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 293,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 294,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 295,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 296,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 297,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 298,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 299,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 300,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 301,
+            "message": "Error: js-exceptions retry-bound-press/retry",
+            "origin": "module"
+          },
+          {
+            "fatal": true,
+            "frames": 3,
+            "id": 302,
+            "message": "Error: js-exceptions stop/s1",
+            "origin": "module"
+          }
+        ],
+        "runtimeReady": true
+      }
+    }
+  },
+  "previousHostControl": {
+    "checks": 41,
+    "failedChecks": [
+      "timeout/An exception in a setTimeout callback is a fatal error for JsErrorHandler, with RN's message and stack, and records one host failure",
+      "interval/An exception in a setInterval callback is a fatal error, once per tick that threw",
+      "raf/An exception in a requestAnimationFrame callback is a fatal error, as RN's timer-based frame callback is",
+      "microtask-evaluate/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors at the head of the host's pump",
+      "microtask-timer/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors after a timer's work item",
+      "microtask-raf/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors after a frame callback",
+      "retry-bound-evaluate/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+      "retry-bound-timer/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+      "retry-bound-raf/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+      "retry-bound-press/RN's own checkpoint, after the press task, reports the same bound the host's does: BOUND failures, \"Hits microtasks retries bound.\", then the rest of the chain"
+    ],
+    "oracleVerdict": "The oracle fails 10 check(s), the first of them timeout/An exception in a setTimeout callback is a fatal error for JsErrorHandler, with RN's message and stack, and records one host failure",
+    "bundleSha256": "44ae266975fa9c7cd0a18e6a88a9cb3729ff8c95a7ba78afbdb1c61a2d617c1a",
+    "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+    "logSha256": "779a3b9e2f4cb20e4688f97842a7f9c50c71eab1098e626c2e14527d2807ef67",
+    "sameBundleAsCurrent": true,
+    "result": "JS_EXCEPTIONS_ORIGINAL_NEGATIVE: 10",
+    "expectedOriginalFailures": [
+      "timeout/An exception in a setTimeout callback is a fatal error for JsErrorHandler, with RN's message and stack, and records one host failure",
+      "interval/An exception in a setInterval callback is a fatal error, once per tick that threw",
+      "raf/An exception in a requestAnimationFrame callback is a fatal error, as RN's timer-based frame callback is",
+      "microtask-evaluate/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors at the head of the host's pump",
+      "microtask-timer/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors after a timer's work item",
+      "microtask-raf/A throwing queueMicrotask callback and a throwing setImmediate callback are fatal errors after a frame callback",
+      "retry-bound-evaluate/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+      "retry-bound-timer/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+      "retry-bound-raf/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+      "retry-bound-press/RN's own checkpoint, after the press task, reports the same bound the host's does: BOUND failures, \"Hits microtasks retries bound.\", then the rest of the chain"
+    ],
+    "note": "The same bundle runs on the host that recorded a callback's exception where it caught it (error.what(), without RN's message and stack) and drained the microtasks with a single call: it fails exactly the checks that need the new routing, and holds the rest (the scheduler's own routes, the Promise reactions, the storm, the bound reached by RN's own checkpoint up to the format of the rest of the chain). Its native producers are pinned for the tree; the old binary was built from environment.previousHost.sourceCommit, not from executionBaseCommit."
+  },
+  "retainedSabotage": {
+    "script": "scripts/js-exceptions-sabotage.mjs",
+    "table": "tests/js-exceptions-sabotages.mjs",
+    "mechanism": "every sabotage breaks one line of native/application_runtime.cpp, rebuilds the host, keeps it in the variant's hostDirectory and restores the source byte for byte (scripts/sabotage-sources.mjs)",
+    "variants": [
+      {
+        "name": "timer-site",
+        "file": "native/application_runtime.cpp",
+        "find": "catch (const std::exception &error) { js_errors->handle_fatal(rt, error); }",
+        "replace": "catch (const std::exception &error) { fail(error.what()); }",
+        "checks": 41,
+        "failedChecks": [
+          "timeout/An exception in a setTimeout callback is a fatal error for JsErrorHandler, with RN's message and stack, and records one host failure",
+          "interval/An exception in a setInterval callback is a fatal error, once per tick that threw"
+        ],
+        "oracleVerdict": "The oracle fails 2 check(s), the first of them timeout/An exception in a setTimeout callback is a fatal error for JsErrorHandler, with RN's message and stack, and records one host failure",
+        "bundleSha256": "44ae266975fa9c7cd0a18e6a88a9cb3729ff8c95a7ba78afbdb1c61a2d617c1a",
+        "nativeHostSha256": "0b1898b19e5f2e8f5b769651fece0ef0bf98eca41e644369e96a0ab03e43f2c4",
+        "logSha256": "8f53e820d83e97ac33b5699b33e589d2413c53839f5275f797ab78738cfb38f1"
+      },
+      {
+        "name": "no-retry-bound",
+        "file": "native/application_runtime.cpp",
+        "find": "    while (retries < kRetriesBound) {",
+        "replace": "    while (true) {",
+        "checks": 41,
+        "failedChecks": [
+          "retry-bound-evaluate/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+          "retry-bound-timer/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+          "retry-bound-raf/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint"
+        ],
+        "oracleVerdict": "The oracle fails 3 check(s), the first of them retry-bound-evaluate/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+        "bundleSha256": "44ae266975fa9c7cd0a18e6a88a9cb3729ff8c95a7ba78afbdb1c61a2d617c1a",
+        "nativeHostSha256": "614f8e809f8cf722170b02bd75d6c455dc37b24b18e2d704826e05abd6c807c5",
+        "logSha256": "a58aafedd8fc10df6c75eef6cc6cf0c9fd2fbe4c26961289001f5823e651b32d"
+      },
+      {
+        "name": "soft-as-fatal",
+        "file": "native/application_runtime.cpp",
+        "find": "    if (report.fatal) {",
+        "replace": "    if (true) {",
+        "checks": 41,
+        "failedChecks": [
+          "soft/A soft exception reported from a timer callback (ErrorUtils.reportError) is counted as soft, logged, and records no failure"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them soft/A soft exception reported from a timer callback (ErrorUtils.reportError) is counted as soft, logged, and records no failure",
+        "bundleSha256": "44ae266975fa9c7cd0a18e6a88a9cb3729ff8c95a7ba78afbdb1c61a2d617c1a",
+        "nativeHostSha256": "10b49d87f7b759449294acf1ec88952e1cba67bd36f926ccea0ce126c844f843",
+        "logSha256": "7643ba117ff221ebb5aa3523754fec1b5b88dd790cd81ac0337ce275f4aa7f5c"
+      },
+      {
+        "name": "drop-remaining",
+        "file": "native/application_runtime.cpp",
+        "find": "catch (const std::exception &error) { js_errors->handle_fatal(rt, error); }",
+        "replace": "catch (const std::exception &error) { js_errors->handle_fatal(rt, error); work.clear(); }",
+        "checks": 41,
+        "failedChecks": [
+          "timeout/The other timers due in the same tick still run, and the runtime keeps running"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them timeout/The other timers due in the same tick still run, and the runtime keeps running",
+        "bundleSha256": "44ae266975fa9c7cd0a18e6a88a9cb3729ff8c95a7ba78afbdb1c61a2d617c1a",
+        "nativeHostSha256": "6ddcd4a34ab0489dd4ef8ed7e19112951c5b8b0b9c2db32505477ee8438c0963",
+        "logSha256": "fb48d1ec867f81ca1575be37bff5292964cb54a90e90da5ff6310850d961d471"
+      },
+      {
+        "name": "no-resume",
+        "file": "native/application_runtime.cpp",
+        "find": "        js_errors->handle_task_error(*runtime, error);\n",
+        "replace": "        js_errors->handle_task_error(*runtime, error);\n        break;\n",
+        "checks": 41,
+        "failedChecks": [
+          "retry-bound-evaluate/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+          "retry-bound-evaluate/A timer and a frame callback queued beside the chain run only between checkpoints, after the first one was cut, and the chain completes",
+          "retry-bound-timer/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+          "retry-bound-timer/A timer and a frame callback queued beside the chain run only between checkpoints, after the first one was cut, and the chain completes",
+          "retry-bound-raf/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+          "retry-bound-raf/A timer and a frame callback queued beside the chain run only between checkpoints, after the first one was cut, and the chain completes",
+          "storm-evaluate/A Promise storm of a million reactions is bounded by nothing and reported by nothing: no failure, no log, no bound",
+          "storm-evaluate/A timer and a frame callback queued beside the storm run only after the whole chain: RN's event loop is starved for its duration, as the host's is",
+          "storm-timer/A Promise storm of a million reactions is bounded by nothing and reported by nothing: no failure, no log, no bound",
+          "storm-timer/A timer and a frame callback queued beside the storm run only after the whole chain: RN's event loop is starved for its duration, as the host's is",
+          "errors/The host recorded a failure for every fatal error of the cases and for nothing else: the application's own list is the cases' failures, in order",
+          "retry-bound-press/RN's own checkpoint, after the press task, reports the same bound the host's does: BOUND failures, \"Hits microtasks retries bound.\", then the rest of the chain",
+          "retry-bound-press/The host's timers and frame callbacks keep running after the scheduler's checkpoint gave up, and the chain completes in the host's checkpoint"
+        ],
+        "oracleVerdict": "The oracle fails 13 check(s), the first of them retry-bound-evaluate/A microtask that queues itself and throws every time is cut after RN's 255 retries and reported as \"Hits microtasks retries bound.\"; the rest of the chain runs in the next checkpoint",
+        "bundleSha256": "44ae266975fa9c7cd0a18e6a88a9cb3729ff8c95a7ba78afbdb1c61a2d617c1a",
+        "nativeHostSha256": "4e973120ab32fa9275d092783729167f8abd97bdd29cf474a8cedf66a6ad0c8e",
+        "logSha256": "b078b94bbaf7e9565dddff1faf034eabcf522efbb7b7e36ded4e2d52f6b63653"
+      }
+    ]
+  },
+  "oracle": {
+    "file": "tests/js-exceptions-oracle.mjs",
+    "independence": "Written from RN's pinned sources, not from the probe: the constants and the loop of performMicrotaskCheckpoint, the task error handler and the runtime executor's catch, TimerManager's missing catch and the executor it runs on, immediateShim, NativeMicrotasks, NativeIdleCallbacks, the renderer's rethrow after the listeners, the files that can enable Hermes' rejection tracker and the iOS frame paths are read from the files; the host's checkpoint is compared with RN's loop token by token; each case is run through a model of the host's event loop (RN's RuntimeScheduler rules, V8's microtask queue) and the chains are counted from the bound RN's source states; every verdict of the probe is derived again from the report's raw observations.",
+    "fromRn": {
+      "retryBound": 255,
+      "retryCounterType": "uint8_t",
+      "boundMessage": "Hits microtasks retries bound.",
+      "schedulerWrap": "Non-js exception: ",
+      "runtimeExecutorWrap": "Non-JS exception: ",
+      "queueClearingOnErrorDefault": false,
+      "loopShape": "while (retries < kRetriesBound) try drainMicrotasks() break; catch handle retries++; if (retries == kRetriesBound) throw",
+      "trackerMentions": [
+        "Libraries/Core/polyfillPromise.js",
+        "Libraries/Promise.js",
+        "Libraries/promiseRejectionTrackingOptions.js"
+      ]
+    },
+    "modelJournals": {
+      "soft": [
+        "start",
+        "soft",
+        "timer"
+      ],
+      "timeout": [
+        "start",
+        "a",
+        "b",
+        "c"
+      ],
+      "interval": [
+        "start",
+        "tick#1",
+        "tick#2",
+        "tick#3"
+      ],
+      "raf": [
+        "start",
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "idle": [
+        "start",
+        "i1",
+        "i2",
+        "timer"
+      ],
+      "event": [
+        "onPress",
+        "timer"
+      ],
+      "event-after": [
+        "onPress",
+        "timer"
+      ],
+      "microtask-evaluate": [
+        "start",
+        "m1",
+        "m2",
+        "p",
+        "i1",
+        "i2",
+        "m3",
+        "m4",
+        "timer"
+      ],
+      "microtask-timer": [
+        "start",
+        "m1",
+        "m2",
+        "p",
+        "i1",
+        "i2",
+        "m3",
+        "m4",
+        "timer"
+      ],
+      "microtask-raf": [
+        "start",
+        "m1",
+        "m2",
+        "p",
+        "i1",
+        "i2",
+        "m3",
+        "m4",
+        "timer"
+      ],
+      "microtask-press": [
+        "start",
+        "m1",
+        "m2",
+        "p",
+        "i1",
+        "i2",
+        "m3",
+        "m4",
+        "timer"
+      ],
+      "promise": [
+        "start",
+        "then-throws",
+        "then-catch-throws",
+        "async-throws",
+        "after",
+        "then-catch-caught",
+        "timer"
+      ],
+      "stop": [
+        "queued",
+        "s1",
+        "s2",
+        "sp",
+        "si",
+        "s3"
+      ]
+    },
+    "modelFatalErrors": {
+      "soft": [],
+      "timeout": [
+        [
+          "a",
+          "host"
+        ]
+      ],
+      "interval": [
+        [
+          "tick#1",
+          "host"
+        ],
+        [
+          "tick#2",
+          "host"
+        ]
+      ],
+      "raf": [
+        [
+          "r1",
+          "host"
+        ]
+      ],
+      "idle": [
+        [
+          "i1",
+          "scheduler"
+        ]
+      ],
+      "event": [
+        [
+          "onPress",
+          "scheduler"
+        ]
+      ],
+      "event-after": [],
+      "microtask-evaluate": [
+        [
+          "m1",
+          "host"
+        ],
+        [
+          "i1",
+          "host"
+        ]
+      ],
+      "microtask-timer": [
+        [
+          "m1",
+          "host"
+        ],
+        [
+          "i1",
+          "host"
+        ]
+      ],
+      "microtask-raf": [
+        [
+          "m1",
+          "host"
+        ],
+        [
+          "i1",
+          "host"
+        ]
+      ],
+      "microtask-press": [
+        [
+          "m1",
+          "scheduler"
+        ],
+        [
+          "i1",
+          "scheduler"
+        ]
+      ],
+      "promise": [],
+      "stop": [
+        [
+          "s1",
+          "host"
+        ]
+      ]
+    },
+    "modelRetryBlocks": {
+      "retry-bound-evaluate": {
+        "blocks": [
+          {
+            "failures": 255,
+            "cut": true
+          },
+          {
+            "failures": 45,
+            "cut": false
+          }
+        ],
+        "boundaries": [
+          255,
+          300
+        ],
+        "wedges": false
+      },
+      "retry-bound-timer": {
+        "blocks": [
+          {
+            "failures": 255,
+            "cut": true
+          },
+          {
+            "failures": 45,
+            "cut": false
+          }
+        ],
+        "boundaries": [
+          255,
+          300
+        ],
+        "wedges": false
+      },
+      "retry-bound-raf": {
+        "blocks": [
+          {
+            "failures": 255,
+            "cut": true
+          },
+          {
+            "failures": 45,
+            "cut": false
+          }
+        ],
+        "boundaries": [
+          255,
+          300
+        ],
+        "wedges": false
+      },
+      "retry-bound-press": {
+        "blocks": [
+          {
+            "failures": 255,
+            "cut": true
+          },
+          {
+            "failures": 45,
+            "cut": false
+          }
+        ],
+        "boundaries": [
+          255,
+          300
+        ],
+        "wedges": true
+      }
+    }
+  },
+  "rnBehaviour": [
+    {
+      "kind": "setTimeout",
+      "caller": [
+        "ReactCommon/react/runtime/TimerManager.cpp:171",
+        "ReactCommon/react/runtime/TimerManager.cpp:185",
+        "ReactCommon/react/runtime/ReactInstance.cpp:173 (the buffered executor)",
+        "ReactCommon/react/runtime/platform/ios/ReactCommon/RCTInstance.mm:334",
+        "ReactAndroid/src/main/jni/react/runtime/jni/JReactInstance.cpp:72",
+        "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:47"
+      ],
+      "exception": "not caught by TimerManager; leaves an Immediate task of the RuntimeScheduler: executeTask (ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:399) -> handleTaskError (ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:469) -> the task error handler, JsErrorHandler::handleError(..., true) (ReactCommon/react/runtime/ReactInstance.cpp:130): FATAL",
+      "restOfQueue": "yes: every other timer is a task of its own, and the queue is not cleared (ReactCommon/react/featureflags/ReactNativeFeatureFlagsDefaults.h:198 is false); a one-shot timer keeps its TimerManager entry (ReactCommon/react/runtime/TimerManager.cpp:191 is skipped)",
+      "hostBefore": "catch in the timer's work item: fail(error.what())",
+      "hostNow": "JsErrorPath::handle_fatal (a fatal error; the other timers still run)"
+    },
+    {
+      "kind": "setInterval",
+      "caller": [
+        "ReactCommon/react/runtime/TimerManager.cpp:293"
+      ],
+      "exception": "as setTimeout",
+      "restOfQueue": "yes; the recurring timer is not erased, so the next tick runs",
+      "hostBefore": "as setTimeout",
+      "hostNow": "as setTimeout; the interval keeps ticking"
+    },
+    {
+      "kind": "requestAnimationFrame",
+      "caller": [
+        "ReactCommon/react/runtime/TimerManager.cpp:321 (a timer with a zero delay: ReactCommon/react/runtime/TimerManager.cpp:367)"
+      ],
+      "exception": "as setTimeout: FATAL through the task error handler (ReactInstance has no frame loop)",
+      "restOfQueue": "yes: another callback is another timer",
+      "hostBefore": "catch around the frame callback: fail(error.what())",
+      "hostNow": "JsErrorPath::handle_fatal; the other callbacks of the tick still run"
+    },
+    {
+      "kind": "setImmediate (immediateShim)",
+      "caller": [
+        "Libraries/Core/Timers/immediateShim.js:45 (one queueMicrotask per call; there is no batch loop)"
+      ],
+      "exception": "as queueMicrotask",
+      "restOfQueue": "yes: every immediate is a microtask of its own, and the checkpoint carries on after a throw",
+      "hostBefore": "the throw left drainMicrotasks() into pump()'s outer catch: fail(error.what()), the rest of that pump skipped",
+      "hostNow": "the checkpoint below"
+    },
+    {
+      "kind": "queueMicrotask",
+      "caller": [
+        "ReactCommon/react/nativemodule/microtasks/NativeMicrotasks.cpp:28",
+        "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:414 (after each task: ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:332)"
+      ],
+      "exception": "drainMicrotasks throws and discards the job (ReactCommon/jsi/jsi/jsi.h:397); the checkpoint hands the error to handleTaskError (FATAL) and drains again (ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:435); after 255 failures (ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:429) it throws std::runtime_error(\"Hits microtasks retries bound.\") (ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:449), which leaves runEventLoopTick for the runtime executor's catch (ReactCommon/react/runtime/ReactInstance.cpp:103): FATAL, wrapped \"Non-JS exception: \"",
+      "restOfQueue": "yes: the next drain runs the jobs behind the one that threw, up to the bound; the rest of the chain runs in the next checkpoint",
+      "hostBefore": "a throw left drainMicrotasks() into pump()'s outer catch (fail(error.what()), rest of the pump skipped); stop() drained once",
+      "hostNow": "perform_microtask_checkpoint: the same loop, constants and report, at the head of the pump, after each frame callback, after each work item, at its end and at the head of stop()"
+    },
+    {
+      "kind": "Promise reaction (then, catch) and unhandled rejection",
+      "caller": [
+        "Hermes' own microtask queue (the same queue as queueMicrotask's)"
+      ],
+      "exception": "a reaction that throws rejects the promise it returned; Promise jobs never propagate to the host (ReactCommon/jsi/jsi/jsi.h:410). An unhandled rejection is not tracked in a release build: Libraries/Core/polyfillPromise.js:32 runs under __DEV__ only (Libraries/Core/polyfillPromise.js:28), setUpErrorHandling does not enable it (Libraries/Core/setUpErrorHandling.js:20 is all it installs for errors), and in a development bundle the options report it as a SOFT error (Libraries/promiseRejectionTrackingOptions.js:46): swallowed",
+      "restOfQueue": "yes",
+      "hostBefore": "same (the engine's)",
+      "hostNow": "same; certified: nothing reported, logged or recorded"
+    },
+    {
+      "kind": "requestIdleCallback",
+      "caller": [
+        "ReactCommon/react/nativemodule/idlecallbacks/NativeIdleCallbacks.cpp:118",
+        "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:378 (an Idle-priority task)"
+      ],
+      "exception": "propagates out of the task: executeTask -> handleTaskError -> the task error handler: FATAL (wrapped 'Non-js exception: ' by the host's linkage, slice C's finding)",
+      "restOfQueue": "yes: the queue is not cleared on an error",
+      "hostBefore": "unchanged (slice C routed the scheduler's handler)",
+      "hostNow": "unchanged; certified"
+    },
+    {
+      "kind": "event handler (dispatchEvent)",
+      "caller": [
+        "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp:158",
+        "ReactCommon/react/renderer/core/EventBeat.cpp:78",
+        "Libraries/Renderer/implementations/ReactFabric-prod.js:302 (keeps the first exception and rethrows it after every listener: Libraries/Renderer/implementations/ReactFabric-prod.js:1313)"
+      ],
+      "exception": "escapes UIManagerBinding and EventQueueProcessor (neither catches) out of the event beat's Immediate task: executeTask -> handleTaskError: FATAL",
+      "restOfQueue": "yes for the scheduler's tasks; the events behind it in that flush are not dispatched (ReactCommon/react/renderer/core/EventQueueProcessor.cpp:56 has no catch; read, not exercised)",
+      "hostBefore": "unchanged (slice C)",
+      "hostNow": "unchanged; certified"
+    }
+  ],
+  "catchSites": [
+    {
+      "site": "TimerManager's runtime executor (timers, immediates)",
+      "rn": "a task of the RuntimeScheduler: executeTask's catch",
+      "before": "fail(error.what())",
+      "now": "JsErrorPath::handle_fatal (native/application_runtime.cpp:1057)",
+      "certifiedBy": "timeout/ and interval/ checks, previous-host control and the timer-site and drop-remaining sabotages"
+    },
+    {
+      "site": "requestAnimationFrame callbacks",
+      "rn": "a TimerManager timer, so the same",
+      "before": "fail(error.what())",
+      "now": "JsErrorPath::handle_fatal",
+      "certifiedBy": "raf/ checks"
+    },
+    {
+      "site": "the host's microtask drains (head of the pump, after each frame callback, after each work item, end of the pump, head of stop())",
+      "rn": "performMicrotaskCheckpoint (ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp:414)",
+      "before": "runtime->drainMicrotasks(), once, uncaught in the pump (the pump's outer catch recorded error.what() and skipped the rest of it) and caught once at stop()",
+      "now": "native/application_runtime.cpp:1241: RN's loop, with its constants and its report; native/application_runtime.cpp:1263 reports the bound as the runtime executor's catch does",
+      "certifiedBy": "microtask-*, retry-bound-*, storm-* and stop/ checks and the no-retry-bound and no-resume sabotages"
+    },
+    {
+      "site": "Native Animated frame, LayoutAnimation tick",
+      "rn": "none: iOS drives them from a CADisplayLink and a run loop observer (RCTScheduler.mm), Android through JNI calls from its frame callbacks (FabricUIManagerBinding.cpp), and no C++ on either path catches: the exception is not handed to JsErrorHandler, it is uncaught",
+      "before": "fail(error.what())",
+      "now": "unchanged: a recorded failure with the exception's text, this host's continuation of RN's fatal (V2-D26). No JS runs inside them; their JS callbacks go through the runtime executor, which the work queue's catch handles",
+      "certifiedBy": "not exercised (no JS reaches them); the oracle reads RN's frame paths"
+    },
+    {
+      "site": "FabricApplication.evaluate (the validation seam)",
+      "rn": "none: a host API",
+      "before": "fail(error.what())",
+      "now": "unchanged",
+      "certifiedBy": "not RN's"
+    }
+  ],
+  "sourcePins": {
+    "tests/js-exceptions-fixture.jsx": "8da9e701fd4dac6c676e12b1cc656463d8ed368e780bfb4b0a3d58eded710cc6",
+    "tests/js-exceptions-host.js": "2c05474d1f5a23791efcbdda1ce738e42197ab297c79152820003984c4acce58",
+    "tests/js-exceptions-cases.mjs": "9a2bc61c05b5bebf9f296e1456da32a42a17971405881bb3ea2c189b3a0f4a5d",
+    "tests/js-exceptions-probe.gd": "5d08b94628d751d97408d20c7ede4e324daa735c11813bbcf22bc4226ca9608c",
+    "tests/js-exceptions-native.test.mjs": "b58662a193afeaccd4b1a393b099308024e912251ef1ce2f730904d3fd8907d3",
+    "tests/js-exceptions-oracle.mjs": "097493557edaada82449df82add2d2575988f3d83f517534adc20263da446225",
+    "tests/js-exceptions-sabotages.mjs": "06b85366804f097c16a374f09cf5183885eb0fcf087d0f7f15a3ae7bea467563",
+    "scripts/js-exceptions-bundle.mjs": "691cc7a70512b191b0cc034fd76773c1f36a6a46a993d0c50a71242bdf4bdab7",
+    "scripts/js-exceptions-sabotage.mjs": "2b70855bd33a7fc8141e27fee514fa05960fc26f5c853704ab4564feac3f1628",
+    "scripts/native-probe-bundle.mjs": "a90c034ccc09dd70b0b2b625bb0ea3b2a4876ad2cc3500d7d48183935453d863",
+    "src/initialize.js": "b4b6ca7e238e40317535f8ede0920b5cefa6dff074c80a3546bc4a0576335620",
+    "src/runtime.js": "b8fc9d76bba60022a4e281f24e2f770b663055441d96fa160de663ae9ce50840",
+    "sdk/toolchain/platform-plugin.mjs": "37bb179a2aa2e757979cce8ec6ce3938022b427017f5555f3503d763d3c60a40",
+    "sdk/toolchain/metro-polyfills.mjs": "e1b371456bf1b6f33c817e552e21e5ca550016f3be2292455fd019454f643d29",
+    "native/application_runtime.cpp": "63efe70567dca81ce6d305dec44a2572288493baf197bb4bcb6516a51dc389ab",
+    "native/application_runtime.h": "ed3ace3e5d23cf3ba17755b744e601efaa48b9a46fd9eaf9fa35ab0696fd6d63",
+    "native/fabric_application.cpp": "174b616f74471afbe9dfa9993a3116ee5b54abf691a5b21733bab92da2732323",
+    "native/js_error_path.cpp": "341e49af4715e580dae79dcf4302a859c672d3c3d46accfa7eb18b73fa8eb89c",
+    "native/js_error_path.h": "7663de1088960125cb6b727856fae27b82c2a6b2c12b0ea6a23763799db4e90f"
+  },
+  "scope": {
+    "actualHermesRuntime": true,
+    "actualFabricApplication": true,
+    "headless": true,
+    "realEventPath": true,
+    "applications": [
+      "main",
+      "wedge"
+    ]
+  },
+  "limits": [
+    "The catches of the Native Animated frame and of the LayoutAnimation tick keep a recorded failure: RN does not catch there either, and no JS callback runs inside them, so no case reaches them.",
+    "The bound that RN's own checkpoint (after a task of its RuntimeScheduler) throws leaves the scheduler with a task queued and no loop scheduled, so the application that reaches it takes no further scheduler task (events, idle callbacks, React's own tasks); RN ends the process on that fatal error. The host's timers, frame callbacks and checkpoints keep running. GF-07's error cleanup owns any change.",
+    "RN's own scheduler wraps what Hermes throws as 'Non-js exception: <what>' (the two jsi::JSError classes differ), so an idle callback, an event handler and a microtask at RN's own checkpoint are reported with that text, where a timer, a frame callback and a microtask at the host's checkpoints are reported as the JS error they are.",
+    "The model of the event loop derives the order of the cases; the retry-bound and storm cases are judged by the boundaries between checkpoints, not by the position of a timer or a frame callback inside them, which depends on how many drains the host performs in a pump.",
+    "The headless desktop host only; no mobile export has run this bundle.",
+    "Hosted CI is pending: the record is of the local run."
+  ]
+}
