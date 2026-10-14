@@ -60,6 +60,12 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   isolated Godot GUI findings and the sibling-Window decision. Product RN
   integration, background focus semantics and mobile presentation remain open.
 
+- [Overlays and portals](overlays-portals.md): what RN 0.87.1 offers publicly for
+  content that draws above other content (`Modal`, `zIndex`, the Fabric renderer's
+  unexported `createPortal`), what the Godot host does with several surfaces, a table of
+  a game UI's overlay needs with the owning GF of each gap, and three options for
+  portals whose choice is left to the user. Ten Node tests pin the facts it relies on.
+
 - [Pointer transport and capture lifetime](pointer-capture-boundary.md): pinned
   EventTarget flags, pending/active capture, removal and commit-order constraints.
   This is source investigation, distinct from executed focus/runtime proof.

@@ -478,6 +478,12 @@ Input não consumido segue a política do Godot. A especificação deve definir
 essas políticas para fundo transparente, teclado/gamepad e overlays, sem dupla
 ativação do gameplay quando um botão ou modal consome a interação.
 
+Overlays e portals: a [nota de pesquisa](research/overlays-portals.md) mede o que o
+RN 0.87.1 oferece publicamente (`Modal`, `zIndex` e o `createPortal` do renderer, que
+o pacote não exporta), o que o host faz hoje com várias surfaces e apresenta três
+opções para portals. A escolha entre elas, e a política de input entre surfaces
+sobrepostas, seguem em aberto.
+
 ### V2-D11
 
 **Tempo da UI e lifecycle:** timers públicos usam tempo real monotônico para
