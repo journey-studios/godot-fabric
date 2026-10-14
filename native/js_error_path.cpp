@@ -17,6 +17,12 @@ namespace {
 // How many reports the snapshot keeps: the last ones, for a probe that wants to see what reached the host.
 constexpr std::size_t retained_reports = 32;
 
+// What ReactInstance's runtime executor makes of an exception that is not a JS error (ReactInstance.cpp:104-108): a JS error whose
+// message starts with this, spelled as RN spells it there. RN spells the wrap of its RuntimeScheduler differently ("Non-js exception: ",
+// RuntimeScheduler_Modern.cpp:402 and 442); that one is made by RN's compiled scheduler, not by the host, and the oracle reads both
+// spellings from the pinned sources and checks this one against ReactInstance.cpp.
+constexpr const char *non_js_exception_prefix = "Non-JS exception: ";
+
 // ReactInstance.cpp:423, copied: the truthiness JS gives a value.
 bool is_truthy(jsi::Runtime &runtime, const jsi::Value &value) {
   auto Boolean = runtime.global().getPropertyAsFunction(runtime, "Boolean");
@@ -233,10 +239,10 @@ void JsErrorPath::handle_fatal(jsi::Runtime &runtime, const std::exception &erro
     return;
   }
   try {
-    jsi::JSError wrapped(runtime, std::string("Non-JS exception: ") + error.what());
+    jsi::JSError wrapped(runtime, std::string(non_js_exception_prefix) + error.what());
     handle_fatal(runtime, wrapped);
   } catch (const std::exception &failure) {
-    state_->deliver(State::Origin::Handler, {true, std::string("Non-JS exception: ") + error.what() + " (" + failure.what() + ")", {}, 0});
+    state_->deliver(State::Origin::Handler, {true, std::string(non_js_exception_prefix) + error.what() + " (" + failure.what() + ")", {}, 0});
   }
 }
 

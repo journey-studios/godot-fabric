@@ -36,6 +36,19 @@ async function optionalJson(file) {
   }
 }
 
+// Where the tree stood when the lane ran: the commit it was on and every path that differed from it (a modified, added or untracked file; ignored
+// paths such as build/ are not listed). The committed record of the lanes (scripts/js-errors-evidence.mjs) reads this and not the state of the tree
+// at the time it is written, which can be another commit. docs/evidence/runtime/js-errors.json is left out: it is what that script writes.
+function gitState() {
+  const run = (...args) => spawnSync("git", args, {cwd: root, encoding: "utf8"});
+  const head = run("rev-parse", "HEAD");
+  const status = run("status", "--porcelain", "--untracked-files=all", "--", ".", ":(exclude)docs/evidence/runtime/js-errors.json");
+  if (head.status !== 0 || status.status !== 0) {
+    return null;
+  }
+  return {head: head.stdout.trim(), dirtyPaths: status.stdout.split("\n").filter(line => line !== "").map(line => line.slice(3)).sort()};
+}
+
 async function hashes() {
   return Object.fromEntries(await Promise.all(guarded.map(async file => [file, digest(await readFile(path.join(root, file)))])));
 }
@@ -91,7 +104,7 @@ test("RN's error path runs in the host: ErrorUtils, setUpErrorHandling and Excep
   const report = await optionalJson("build/js-errors-report.json");
   if (report != null) {
     report.provenance = {node: process.version, lane, bundle, nativeHostSha256: digest(await readFile(path.join(root, "addons/fabric_godot.dylib"))),
-      sourceReceiptDoesNotCertifyNativeBuild: true};
+      git: gitState(), sourceReceiptDoesNotCertifyNativeBuild: true};
     await writeFile(path.join(root, `build/js-errors-${lane}-report.json`), JSON.stringify(report, null, 2) + "\n");
   }
   // Artifacts are saved before assertions. A control never accepts unrelated failures or removes the declared failures from the report.

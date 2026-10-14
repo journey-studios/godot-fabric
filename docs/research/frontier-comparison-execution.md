@@ -554,7 +554,7 @@ The exports, the manifests, the probe's `.app`, the choice of leaving the extens
   run on this one (4.3 to 6.8 in the short rehearsal, 4.87 to 6.83 in the windowed one, 5.2 to 6.7 in the Release one). The campaign waits for the load but cannot make the machine quiet.
 - **The instrument's windowed self-check, run for real**, on the campaign's machine: a campaign through a windowed launcher runs it first (the probe with `--windowed`, a window in front, the user away) and stops if
   it does not pass or no display presented the window; the code is there and tested with the probe replaced, and was never run. The headless one runs through the exported probe in the Release rehearsal and says so in its deviations; on a busy machine it failed once in four runs
-  (its check that the process term changes from frame to frame).
+  (its check that the process term changes from frame to frame; that check was replaced on 2026-10-13, because a count of repeats depends on how quiet the runner is, and failed genuine hosted runs: see `docs/evidence/cpu-time-instrument/README.md`).
 - **The raw data under `docs/evidence/`**: a campaign's `raw/` holds about 0.3 MB per attempt (about 22 MB for 75 attempts); where it is kept and how it is published is for the slice that runs it.
 
 ## Limits
