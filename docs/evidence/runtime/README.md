@@ -146,6 +146,11 @@ does not bound an infinite chain of Promise jobs or arbitrary blocking JS.
 > and `setUpErrorHandling` run and the host answers them with RN's `JsErrorHandler` and an
 > `ExceptionsManager` module, so the error-handler path is no longer open; callback exceptions
 > of the timers, immediates and microtasks are slice F's.
+>
+> Later note: since the [React microtask path slice](#react-microtask-path-slice-d1-2026-10-13), `queueMicrotask`
+> is the function of RN's `NativeMicrotasks` module (a C++ module the host registers, compiled unchanged) behind the
+> host's lifecycle gate, and the host sets `RN$enableMicrotasksInReact` as RN's bridgeless `setUpTimers` does, so
+> React commits the work of its sync lanes in a microtask; the idle callbacks (slice D2) stay open.
 
 RAF uses real Godot process frames rather than upstream TimerManager's
 zero-delay fallback. The oracle certifies cancellation and monotonicity; it
@@ -154,7 +159,8 @@ relative to UI events. Timer callbacks run on the Godot main thread and overdue
 intervals resume from callback completion without replaying missed ticks.
 
 Surface stop suppresses the portable microtask/immediate callbacks owned by
-this bootstrap. Ordinary Promises have no general cancellation mechanism.
+this bootstrap. (Later note: since the [React microtask path slice](#react-microtask-path-slice-d1-2026-10-13), the microtask and immediate callbacks queued before a stop complete first, in one
+checkpoint at its head, and none is accepted once it has begun; timers and frame callbacks are still cleared.) Ordinary Promises have no general cancellation mechanism.
 Hardware input, DPI/font scale, OS app lifecycle and mobile Godot builds are
 separate milestones. GF-09 real system metrics remain Planned.
 
@@ -231,8 +237,8 @@ symbol, a missing reason, and the rest), so the gate is shown to reject what it 
 | --- | --- | --- |
 | B | JS-installed globals; the host's `performance` and `console` stubs go (done, below) | `setUpGlobals`, `setUpDOM`, `setUpPerformance`, `setUpNavigator`, the `console` polyfill |
 | C | the error path: `ErrorUtils`, `setUpErrorHandling`, `RN$handleException` (done, below) | `setUpErrorHandling`, the `error-guard` polyfill |
-| D1 | `RN$enableMicrotasksInReact` (high regression risk, full sweep) | `setUpTimers` part `react-microtasks` |
-| D2 | idle callbacks over `NativeIdleCallbacks` | `setUpTimers` part `idle-callbacks` |
+| D1 | `RN$enableMicrotasksInReact` and `queueMicrotask` over `NativeMicrotasks` (high regression risk, full sweep; done, below) | `setUpTimers` parts `react-microtasks` and `queue-microtask` |
+| D2 | idle callbacks over `NativeIdleCallbacks`, then `setUpTimers` imported unchanged | `setUpTimers` part `idle-callbacks` |
 | E | web-globals probe: URL, URLSearchParams, Abort*, encoding per the decision | `setUpXHR` (`verifyIn`), decision `encoding` |
 | F | callback exceptions and starvation against RN | `verifyIn` on the timers, animation frame, `queueMicrotask`, `setImmediate` and `polyfillPromise` entries |
 
@@ -595,3 +601,216 @@ excludes and GF-07's error-cleanup slice owns (installing them changes what a ru
 exception). A test that parses what a failure says should expect `message, stack:` and the frame lines, and the
 `[runtime not ready]: ` prefix before the bundle has evaluated; GF-07's error cleanup reads `errors` and the `jsErrors` section of the
 application's status (`runtimeReady`, `handledFatalError`, the counters by route), and an uncaught error is no longer only a message.
+
+## React microtask path (slice D1, 2026-10-13)
+
+Slice A marked two parts of `setUpTimers` for slice D1: `RN$enableMicrotasksInReact` (`pending`) and the `queueMicrotask` part,
+which wrapped RN's portable `Libraries/Core/Timers/queueMicrotask` (a job on a resolved Promise) because the host had no
+`NativeMicrotasks` module. The host never set the flag, so the pinned renderer kept scheduling the work of its sync lanes as a
+RuntimeScheduler Immediate task, where RN bridgeless commits it in a microtask. Slice D1 sets the flag and makes `queueMicrotask`
+RN's own `NativeMicrotasks` function, which changes when every React commit of a discrete event flushes.
+
+**How RN 0.87.1 bridgeless does it** (verified in the pinned sources). `Libraries/Core/setUpTimers.js`, in its `RN$Bridgeless`
+branch, sets `global.RN$enableMicrotasksInReact = true` and installs `queueMicrotask` lazily from
+`src/private/webapis/microtasks/specs/NativeMicrotasks` (`.default.queueMicrotask`), a TurboModule named `NativeMicrotasksCxx`
+that `ReactCommon/react/nativemodule/microtasks/NativeMicrotasks.cpp` backs with `runtime.queueMicrotask(callback)`: the callback
+joins the runtime's microtask queue, the same queue Promise reactions use. The pinned renderer (`ReactFabric-prod.js`) reads
+the flag once, when it evaluates (`supportsMicrotasks`), and captures the `queueMicrotask` global in the same statement
+(`scheduleMicrotask`). `ensureRootIsScheduled` queues one job per turn through `scheduleImmediateRootScheduleTask`: with the flag on the
+job is a `scheduleMicrotask` callback that runs `processRootScheduleInMicrotask` (which flushes the sync work of every root in the
+same call, so the commit is inside the job); with it off it is a `scheduleCallback(ImmediatePriority, ...)` task of the
+RuntimeScheduler.
+
+### What runs now
+
+| Step | Where |
+| --- | --- |
+| The flag is set to `true` before the renderer evaluates, as `setUpTimers` sets it | `src/runtime.js` (loaded by `src/initialize.js`, which the renderer requires first) |
+| `queueMicrotask` is the function of RN's `NativeMicrotasks` spec module behind the host's lifecycle gate; the module is looked up on first use, as `setUpTimers`' `polyfillGlobal` does | `src/runtime.js` |
+| The spec module resolves for `src/runtime.js` alone, by the spelling `src/initialize.js` uses for `setUpDOM` | `sdk/toolchain/platform-plugin.mjs` |
+| `NativeMicrotasksCxx` is RN's `NativeMicrotasks`, compiled unchanged, registered like the other C++ modules; the registry counts the calls that reach it | `native/CMakeLists.txt` (`react/nativemodule/microtasks`), `TurboModuleRegistry::add_microtasks` in `native/turbo_module_registry.cpp`, registered in the `Impl` constructor |
+| `setImmediate` is still RN's `immediateShim`, which defers through the global, so it reaches the module too | `src/runtime.js` |
+
+### Decisions
+
+- **RN's C++ module, compiled unchanged.** The registry's `CountedMicrotasks` derives from `rn::NativeMicrotasks` and puts a counter in
+  front of RN's own invoker (the module's `methodMap_` entry); the call itself is RN's, `jsi::Runtime::queueMicrotask`. The counter is
+  the observable of the suite, in `snapshot().nativeModules.microtasks.calls`.
+- **Not `setUpTimers` yet.** Its bridgeless branch also installs `requestIdleCallback` and `cancelIdleCallback` from
+  `NativeIdleCallbacks`, which the host lacks. Slice D2 adds that module, imports `setUpTimers` unchanged and removes from `src/runtime.js`
+  what it then installs (the flag, `queueMicrotask`, `setImmediate`, `clearImmediate`); the audit's `slices.D2` says so.
+- **The lifecycle gate stays, as the host's extension** (V2-D27, which RN does not have): once `stop()` has begun no timer, frame or
+  microtask callback runs and none is scheduled, except in the window in which it unmounts the roots, and what was queued before it completes in a checkpoint
+  at its head ([the stop path](#the-stop-path-the-gate-the-checkpoint-and-the-unmount-window-a-finding)). It is the same thin check as before, now around the module's function.
+
+### The drain point
+
+`NativeMicrotasks` uses the queue Hermes drains: the host builds its runtime with `withMicrotaskQueue(true)`, and `runtime.queueMicrotask` and
+Promise reactions are jobs of that one queue. RN's `RuntimeScheduler_Modern::runEventLoopTick` performs a microtask checkpoint after
+every task it runs (`performMicrotaskCheckpoint`, between `executeTask` and `updateRendering`), before `runEventLoop` chooses the next
+task. The host already mirrors that: `Impl::pump` calls `runtime->drainMicrotasks()` after each item of its work queue (the items are
+`runEventLoop` runs, timers and the runtime executor's tasks), after each frame callback, and once at the head of the pump. No drain
+was added for the module. The press handler of the probe runs inside such a task: `EventBeat::induce` schedules the beat with
+`scheduleWork`, an Immediate-priority task, so the checkpoint that follows it is the one that runs React's microtask.
+
+### The stop path: the gate, the checkpoint and the unmount window (a finding)
+
+With the flag on, React's own work goes through `queueMicrotask`, and so through the gate. A queueMicrotask call that the gate refuses leaves React
+believing the job is pending (`didScheduleMicrotask` stays set), so it never queues another, and a root whose update depends on that job is never
+unmounted. Two paths of `stop()` hit it, and both are fixed in the host (`native/application_runtime.cpp`, `Impl::stop`); the JS gate in `src/runtime.js` did
+not change.
+
+- *The unmount.* `stop()` set `stopping`, which closed the gate, and then unmounted each root with `RN$stopSurface` and pumped so that React's cleanup ran. React's
+  call for that unmount was refused, and the suites that count React effects after `stop()` failed ("Application shutdown releases remaining React effects"; first sweep:
+  `test:application`, `test:app-state`, `test:appearance`, `test:focus:commands`, `test:modules`, `test:networking`, `test:accessibility-info`, `test:device-services`).
+  The gate is open again for exactly the unmount (`unmounting_roots`), and closed when the last root is gone.
+- *The request.* Hosted CI then failed the adapter acceptance's `--reentrant-stop` (the `resize` mode, `tests/adapters/consumer/validation.gd`: "Views, module providers and React
+  effects dispose once on reentrant stop"). A native signal (the `resized` of an external Control) requests the stop in the middle of a React commit; the request returns at once
+  (`stop_requested`, the native stack still owns the commit) and React finishes the commit afterwards, calling `queueMicrotask` for its next job. `godotRuntimeActive` was
+  `!inactive()`, and `inactive()` includes `stop_requested`, so the call was refused (measured with a temporary `console.log` in the wrapper: "refused queueMicrotask at queue
+  time") and the unmount that followed never ran its cleanups. The gate now ignores the request: it is open until `stop()` begins to tear the application down.
+
+What `stop()` does with microtasks now, in order:
+
+1. The microtasks pending when it begins complete first, in one microtask checkpoint (one `drainMicrotasks()`, `RuntimeScheduler_Modern::performMicrotaskCheckpoint`'s step), with the gate
+   open and before any root, service or timer is torn down. They were queued before the stop, so they are not new entries (V2-D27: drain the work the host controls, then refuse new
+   entries). User callbacks and React's own jobs alike; nothing is special-cased. A stop that a callback of the checkpoint asks for is the one under way (`draining_for_stop`).
+2. The gate closes (`stopping`): `queueMicrotask`, `setTimeout`, `setInterval` and `requestAnimationFrame` schedule nothing, and a microtask that is still queued when it runs is dropped.
+3. The services stop, the timers and the frame callbacks are cleared, and the roots unmount with the gate open again (`unmounting_roots`), so that React's unmount can queue its job. The
+   pump does not run timers or frames while `stopping`; what a cleanup queues in this window completes in it.
+4. The gate closes for good, and `stopped` follows.
+
+"Queued after the stop request" therefore has two parts. Between the request and `stop()` (the native stack unwinding, which is where React finishes an in-flight commit) the gate is open: what JS
+queues there is a timer or a frame, which `stop()` clears, or a microtask, which completes in the checkpoint. Once `stop()` has begun, and outside the unmount window, nothing is accepted.
+Timers and frame callbacks queued before the stop do not run (the adapter acceptance's `reentrant-raf` and `reentrant-timer` modes check it).
+
+**The bound of the checkpoint.** Hermes ignores the `maxMicrotasksHint` of `drainMicrotasks(int)` (measured: 200,000 microtasks, each queueing the next, all ran in one call, 69 ms), so
+the hint is not used. What the microtasks queue while they run completes in the same checkpoint, and a microtask that queues itself without end starves `stop()` as it starves a frame in
+`pump()`; that starvation, and RN's behaviour under it, is slice F's.
+
+
+### The probe
+
+`npm run test:react-microtasks` runs `tests/react-microtasks-native.test.mjs`: one bundle (`tests/react-microtasks-fixture.jsx`, with
+`react-microtasks-host.js` injected before everything) in an actual Hermes application, headless, with one mounted root. The handler of each
+case is a `Pressable`'s `onPress`; `tests/react-microtasks-probe.gd` presses and releases the root with Godot mouse events, so the update reaches React
+through the host's real input and event path: the input adapter, Fabric's event beat (`EventBeat::induce`, a RuntimeScheduler task) and the touch
+end, which `EventQueueProcessor` gives the Discrete priority (the pinned default of `fixMappingOfEventPrioritiesBetweenFabricAndReact` is
+false, and the end of a continuous gesture resets its state before the priority is chosen), which the renderer maps to the sync lane.
+`tests/react-microtasks-probe.gd` makes 19 checks:
+
+- *flag*: `RN$enableMicrotasksInReact` is written `true` by the host runtime before the renderer reads it and the renderer reads `true`; the
+  runtime installs `queueMicrotask` before the renderer evaluates and the renderer captures that function (an accessor over each global, injected first,
+  logs every write and read in order); the host defines neither before the bundle;
+- *module*: RN's spec module loads over `NativeMicrotasksCxx`; the registry serves it and counts the calls; a batch of five calls through the global moves
+  the counter by exactly five between two snapshots (no frame passes between them); the host drains them; `setImmediate`, RN's shim, reaches the module too and runs;
+- *four cases*, each one press: the order of the marks the case leaves, judged against what the pinned renderer dictates with the flag on:
+
+| Case | Steps in the handler | Order with the flag on | Order with the flag off (the sabotage) |
+| --- | --- | --- | --- |
+| `fifo` | Promise reactions, `queueMicrotask`, `setImmediate` and callbacks that queue more, a Normal task, a timer | `promise-1, microtask-1, promise-2, microtask-2, immediate, microtask-1-nested, microtask-1-promise, promise-2-microtask, task-normal, timeout` | the same |
+| `react-microtask` | microtask, **update**, microtask, Promise reaction | `microtask-before, commit, microtask-after, promise-after` | `microtask-before, microtask-after, promise-after, commit` |
+| `react-tasks` | Normal, UserBlocking and Immediate tasks, a timer, **update**, microtask | `commit, microtask-after, task-immediate, task-user-blocking, task-normal, timeout` | `microtask-after, task-immediate, commit, task-user-blocking, task-normal, timeout` |
+| `react-batched` | **update**, microtask, **update**, microtask | `commit:2, microtask-1, microtask-2` | `microtask-1, microtask-2, commit:2` |
+
+  Why the flag-on column is RN's: `ensureRootIsScheduled` queues one job per turn at the first update; with the flag on `scheduleImmediateRootScheduleTask`
+  queues it with `scheduleMicrotask`, so it takes its place in the microtask queue where the update asks for it (ahead of the microtasks queued after the
+  update, behind those queued before), and `processRootScheduleInMicrotask` commits in the same call; the checkpoint after the beat's task runs the whole queue
+  before `runEventLoop` chooses another task, so the commit precedes every scheduler task queued earlier, an Immediate one included, and precedes a timer, which the
+  host takes in a later pump. With the flag off the same job is an Immediate-priority task whose expiration comes after an Immediate task queued earlier and before
+  UserBlocking and Normal ones (`SchedulerPriorityUtils.h`: 0, 250 ms, 5 s), so it runs behind the microtasks of the handler and behind `task-immediate`. `commit:2` is the number of updates the one commit carries. Nothing fixes a count of frames: each case ends by its own
+  last timer (`end`, queued after the handler's), and the probe waits for it;
+- *gate*: a microtask, an immediate and a Promise reaction are queued in one turn, with an update of the component (so that React's own job is pending too), and the application
+  stops before the host drains them; each completes first, while the application is still alive (it asks the host's `godotNode`, which answers null once a stop is requested or under
+  way), and the root's effect cleanup runs exactly once, which takes React's own queued microtask through the gate; once the application has stopped `queueMicrotask` schedules
+  nothing, does not reach the module, and the callback queued then never runs;
+- *lifecycle*: stop releases the root with balanced native Controls;
+- *reentrant*: a second application, in which the probe connects the `resized` signal of the root's Control to `stop()` and resizes the Control from React: the signal requests the stop in the
+  middle of the commit, as the adapter acceptance does with an external Control, and the root is still unmounted (its effect cleanup runs once).
+
+`tests/react-microtasks-oracle.mjs` is written from RN, not from the probe. It reads the facts out of the pinned files (the flag and the spec in `setUpTimers.js`, the spec's
+name and its one method, the C++ `runtime.queueMicrotask(callback)`, the renderer's flag branch by the structure of its code, the event priority mapping, the RuntimeScheduler's
+priority timeouts, its checkpoint after each task and its smallest-expiration-first order, and the host's order of timers before the work drain), and derives the order of
+each case from a model of the host's event loop whose microtask queue is V8's own (Promise reactions, `queueMicrotask` and RN's `immediateShim` run in a `vm` context) and in which
+React's job goes where the flag branch puts it. At least two cases must come out in another order with the flag off (three do), and the queue alone must not depend on it.
+The model is judged against the host in both directions: the lane that leaves the flag unset has to come out, case by case, in the order the model gives for the flag off.
+Every verdict of the probe is derived again from the report's raw observations and must agree.
+
+### Controls
+
+**The previous host** (the host of slice C, built before this slice from `26a3a9087dbb`, this branch's point on slice C, recorded as `environment.previousHost.sourceCommit` of the evidence; kept in `build/gf05-microtasks-previous-host/`; `node tests/react-microtasks-native.test.mjs
+--allow-original-negative` while it is `addons/fabric_godot.dylib`, then the current host is put back) runs the same bundle and fails exactly 14 of the 19
+checks, the ones that need the new module, and the oracle rejects it. It registers no `NativeMicrotasksCxx`, so the first `queueMicrotask` throws, React's first update throws with it, and the root
+does not mount. The 5 that hold on both hosts are the three about the flag and the global installed before the renderer reads it (pure JS), the lifecycle and the report.
+**Seven sabotages** (`scripts/react-microtasks-sabotage.mjs`, the table in `tests/react-microtasks-sabotages.mjs`) are each rejected by the probe and the oracle:
+`flag-unset` (`src/runtime.js` does not set the flag) fails 4 checks, and its cases come out in the order the model gives for the flag off; `promise-shim` (`queueMicrotask` is a Promise
+job again; the module is looked up and never called) fails 2, the two that count the calls; `gate-removed` (`queueMicrotask` no longer asks the gate whether to queue) fails 1, the one
+about what is queued once the application has stopped; `no-module` (the host does not register the module) fails 14; `gate-closed` (the host closes the gate for the unmount, as it did
+before the window) fails 1, the reentrant stop (the direct stop does not need React's job to unmount, because `RN$stopSurface` renders its update synchronously); `request-closes-gate`
+(the host closes the gate at the stop request, as `inactive()` did) fails the same check, the failure hosted CI found; `checkpoint-gate-closed` (the pending microtasks drain with the gate
+already closed) fails 2: what was queued before the stop is dropped, and so is React's job. The first three are in-memory bundle overrides, with no file edited; each of the last four breaks
+one line of `native/application_runtime.cpp`, rebuilds the host, keeps it in `build/react-microtasks-sabotage-<name>-host/` and restores the source byte for byte. The suite is in the
+`native-suites-runtime` job of `contracts.yml`.
+
+### Regressions
+
+This changes when every React commit of a discrete event flushes, so the host was rebuilt and every suite that observes commit timing, ordering or the
+shutdown of a root ran on it, with these results: `test:runtime`, `test:application`, `test:events:original|ancestry|dispatch|integrated`,
+`test:pointers:processor|geometry|interest|query-faults|documents|resolver-faults|up|move|documents:up|documents:move|hover|root-path|documents:hover|click|capture`,
+`test:responders:pan|shared-touches`, `test:animated`, `test:layout-animation`, `test:frame-clock`, `test:js-globals`, `test:js-errors`, `test:services`,
+`test:app-state`, `test:lists`, `test:modal`, `test:touchables`, `test:switch`, `test:focus:commands`, `test:scroll-view`, `test:modules`, `test:text-original|layout|style`,
+`test:scope-0.5`, `test:accessibility`, `test:accessibility-info`, `test:activity-indicator`, `test:appearance`, `test:performance`, `test:networking`,
+`test:device-services`, `test:os-contracts`, `test:world-input` and `test:mobile-density` all pass (52 suites, this slice's own included), and so do `test:websocket`, `test:images`, `test:images-network`, `test:examples`, `test:consumer`,
+`test:consumer:libraries` and `test:civ-lite-ui`, on the final host. There is no suite for `TextInput` under `test:text-input*`:
+the text-input behaviour lives in `test:text-original`.
+
+- **Two regressions, both of the gate and both fixed in the host** ([the stop path](#the-stop-path-the-gate-the-checkpoint-and-the-unmount-window-a-finding)). The first sweep failed
+  `test:application`, `test:app-state`, `test:appearance`, `test:focus:commands`, `test:modules`, `test:networking`, `test:accessibility-info` and `test:device-services`, all on the check that stop
+  runs a root's React cleanup: the gate refused React's own `queueMicrotask` while the roots unmounted. Hosted CI found the second, in a lane that no local suite of this list runs: the adapter
+  acceptance (`scripts/adapter-runtime-check.mjs`, `--reentrant-stop`, the `resize` mode), where a native signal requests the stop in the middle of a commit and the gate, closed by the request,
+  refused the `queueMicrotask` React calls to finish it. The sweep now includes that script, in every mode (`headless`, `external-appearance`, `reentrant-stop`, `reentrant-raf`, `reentrant-timer`
+  and the `root-*` modes), on the SDK packed from the rebuilt host, with `test:adapters:native` and `test:adapters:loader`; and the suite has the check (`reentrant/`) and the sabotage that would have caught it.
+  No suite depended on the old Immediate-task timing, and no oracle needed to follow a new RN order. One expectation changed, for the stop path and not for the flag:
+  `examples/runtime/validation.gd` asserted that a timer, an interval, an immediate, a microtask and a frame callback queued before `surface.stop()` never run; the microtask and the immediate
+  (RN's shim over `queueMicrotask`) now complete in the checkpoint at the head of the stop, so it counts them apart (two completed before teardown, none of the three others ran). The only change to an earlier suite is `tests/bootstrap-audit.test.mjs`, whose mutation tests used the `react-microtasks`
+  part as their pending example and now use `idle-callbacks`.
+- **Stale controls are not regressions.** The suites compare their current lane with the previous-host control and the sabotage reports of their own slice when those are in `build/`
+  (`optionalJson`), and they require the same bundle and host. Those reports were produced from other hosts and SDK bundles; the shared `src/runtime.js` and the host changed, so
+  they cannot match until the orchestrator runs the controls again on each preserved previous host (hosted CI has none of them and does not compare). The sweep ran with them moved
+  aside, to `build/stale-controls-gf05-d1/` (109 report and comparison files, named as they were).
+
+### The audit
+
+`docs/compatibility/bootstrap-audit-0.87.1.json` after this slice: `react-microtasks` is `replaced` (evidence in `src/runtime.js`, with the reason above), the `queue-microtask` part's evidence and
+reason now name `NativeMicrotasks` and the host's registration, and the `D2` entry of the plan says that slice adds `NativeIdleCallbacks`, imports `setUpTimers` unchanged and removes from
+`src/runtime.js` the duplicates of what it then installs. Counting a split step by its parts, the chain stands at 8 `runs`, 7 `replaced`, 4 `host`, 1 `pending` (slice D2's idle callbacks) and 12 `not-applicable`.
+
+**Evidence.** [`react-microtasks.json`](react-microtasks.json) is the committed record of the lanes above: the 19 verdicts of the current lane with the host and bundle SHA-256, the accessor log of the
+two globals, the module's counter before and after the batch, the order each case came out in with the model's orders for the flag on and off, the previous host's 14 failing checks and its SHA-256,
+each sabotage's failing checks, the orders of its cases and the oracle's verdict, and the RN sources it pinned. `scripts/react-microtasks-evidence.mjs` writes it from the reports the lanes leave in
+`build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin
+against `git show <sha>:<path>` and records the commit. It requires `--previous-host-commit <sha>` (a commit in the history of `HEAD` that has `native/js_error_path.cpp` and registers no microtasks
+module; a missing, malformed or unknown one is an error, `E_PREVIOUS_HOST_COMMIT`, never a guess) and records it as `environment.previousHost.sourceCommit`, with the attribution it checked, apart from
+`executionBaseCommit`; and it takes `executionBaseCommit` and `sourceDirtyDuringExecution` from what each lane recorded of the tree when it ran (the commit and every path that differed from it), not from
+the `HEAD` of the moment it writes: `--commit` ties the executed sources to a commit and does not say they were committed when they ran. The record is of the local run; hosted CI ran earlier heads of this
+slice (the last of the limits).
+
+**Limits.**
+
+- The cases are the handler of a `Pressable`'s `onPress` in one headless root: the order of the commit relative to other work is certified for sync-lane updates of a discrete event. A default-lane update
+  (from a timer, say) is scheduled by the same job, but its render is a RuntimeScheduler task either way; only the job that schedules that task moves.
+- The timer in a case depends on the host taking a timer that a handler registers in a later pump than the RuntimeScheduler's loop of this one (the oracle reads that order from `native/application_runtime.cpp`); RN's own platforms
+  deliver a timer when the platform does, so a `setTimeout(0)` and a Normal task queued together are not ordered by RN, and the cases do not ask for more than the host gives.
+- The registry counts the calls that reach RN's module in front of RN's own invoker; the module's C++ is compiled unchanged. The count is the suite's observable of "reaches the C++ module".
+- The gate is the host's extension (V2-D27). Exceptions thrown by a microtask callback, `setImmediate` ordering under load and a Promise storm are slice F's; idle callbacks are slice D2's.
+- The headless desktop host only; the mobile exports have not run this bundle.
+- Hosted CI ran earlier heads of this slice, not this record's tree. D1's own run 38507888050 (head `c726c78`) passed `native-suites-runtime`, the adapter runtime check included, and failed only
+  `native-suites-frontier`, on the `cpu-time-instrument` rule that #162 has since fixed on main; the stacked run 38513518839 (D2 on top of this slice, with #162) passed every job.
+
+**For slices D2, F and GF-06.** D2 adds `NativeIdleCallbacks`, imports `setUpTimers` unchanged and deletes from `src/runtime.js` what it then installs (the flag, `queueMicrotask`, `setImmediate`,
+`clearImmediate`); the gate wrapper around the module's function stays, and so do the host's checkpoint at the head of `stop()` and its unmount window, which the application, app-state, appearance,
+services and adapter acceptance suites exercise. Anything D2 puts
+before the renderer must not read `RN$enableMicrotasksInReact` early: `tests/react-microtasks-host.js` logs the write and the reads, and the probe requires the write first. F measures a throwing
+`queueMicrotask` callback against RN: RN's module lets the exception escape `drainMicrotasks`, which `RuntimeScheduler_Modern::performMicrotaskCheckpoint` reports through its task error handler, where the
+host's own `drainMicrotasks` calls (`pump()`, and the drain at the head of `stop()`) have catches of their own; slice C's catch sites table lists the rest. GF-06 (events and input) now commits a discrete update in the
+microtask that follows the beat's task: a test that reads the tree right after dispatching an event, in the same `pump()`, sees the commit, and one that expects it a task later does not.

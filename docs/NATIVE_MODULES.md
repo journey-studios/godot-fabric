@@ -58,6 +58,12 @@ failure. The same unit holds RN's `JsErrorHandler` (compiled unchanged) with fiv
 an error into C++ while the runtime is not ready. `RN$hasHandledFatalException` and
 `RN$notifyOfFatalException` are left out (V2-D26): with them RN's JS reports only the first fatal exception.
 
+The [microtasks record](evidence/runtime/README.md#react-microtask-path-slice-d1-2026-10-13) registers RN's
+`NativeMicrotasks` (`NativeMicrotasksCxx`, ReactCommon/react/nativemodule/microtasks, compiled
+unchanged): `queueMicrotask` hands its callback to the runtime's microtask queue, the one Hermes
+drains after each task, and `src/runtime.js` installs the global from RN's spec module. The registry
+counts the calls that reach it (`snapshot().nativeModules.microtasks.calls`) and does nothing else to them.
+
 The [networking record](evidence/networking/README.md) registers three more C++
 TurboModules in the same registry: `Networking` (RN's generated Android spec), `BlobModule`
 and `FileReaderModule`, created when JS first asks for them. They share one application

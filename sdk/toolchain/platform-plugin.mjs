@@ -81,6 +81,12 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
         if (importer !== path.join(platformRoot, "initialize.js")) return;
         return { path: path.join(rnRoot, "src/private/setup/setUpDOM.js") };
       });
+      builder.onResolve({ filter: /^\.\.\/node_modules\/react-native\/src\/private\/webapis\/microtasks\/specs\/NativeMicrotasks$/ }, ({ importer }) => {
+        // RN does not export its NativeMicrotasks spec. Only the host runtime (the Godot counterpart of setUpTimers, which installs
+        // queueMicrotask from it) resolves it, against the SDK's RN.
+        if (importer !== path.join(platformRoot, "runtime.js")) return;
+        return { path: path.join(rnRoot, "src/private/webapis/microtasks/specs/NativeMicrotasks.js") };
+      });
       builder.onResolve({ filter: /^react-native\/src\/private\/featureflags\/ReactNativeFeatureFlags$/ }, ({ importer }) => {
         // The original virtualized lists import this unexported RN module. Only
         // that package resolves it; other code keeps RN's package exports.

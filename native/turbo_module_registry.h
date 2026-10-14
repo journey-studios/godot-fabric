@@ -38,6 +38,9 @@ class TurboModuleRegistry {
   // setColorScheme override; it emits only when the effective scheme changes.
   void add_appearance(const std::shared_ptr<SystemAppearance> &appearance);
   void add_feature_flags();
+  // RN's NativeMicrotasks (NativeMicrotasksCxx), compiled unchanged: queueMicrotask hands its callback to the runtime's microtask queue.
+  // The registry counts the calls that reach it (snapshot().microtasks.calls) and does nothing else to them.
+  void add_microtasks();
   // RN's C++ AnimatedModule and nodes manager provider, served as
   // DefaultTurboModules serves them with the shared AnimationBackend, which the
   // runtime attaches to its UIManager before installation.

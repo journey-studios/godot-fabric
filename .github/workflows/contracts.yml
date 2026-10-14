@@ -358,6 +358,18 @@ jobs:
             build/js-errors-current.log
             build/js-errors-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:react-microtasks
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-react-microtasks
+          path: |
+            build/react-microtasks-report.json
+            build/react-microtasks-current-report.json
+            build/react-microtasks-comparison.json
+            build/react-microtasks-current.log
+            build/react-microtasks-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:text-layout
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

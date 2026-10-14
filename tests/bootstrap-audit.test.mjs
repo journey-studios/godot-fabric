@@ -318,9 +318,9 @@ test("fails when a step has no reason where one is required", () => {
     assert.ok(mentions(blank, file, `a ${status} entry needs a reason`), explain(blank));
   }
   const inPart = mutate((copy) => {
-    delete part(copy, TIMERS, "react-microtasks").reason;
+    delete part(copy, TIMERS, "idle-callbacks").reason;
   });
-  assert.ok(mentions(inPart, "part react-microtasks", "a pending entry needs a reason"), explain(inPart));
+  assert.ok(mentions(inPart, "part idle-callbacks", "a pending entry needs a reason"), explain(inPart));
   const runs = mutate((copy) => {
     delete step(copy, XHR).reason;
   });
@@ -334,9 +334,9 @@ test("fails when a pending step names a slice that is not in the plan", () => {
   });
   assert.ok(mentions(unknown, ALERT, "names a slice of the plan"), explain(unknown));
   const none = mutate((copy) => {
-    delete part(copy, TIMERS, "react-microtasks").slice;
+    delete part(copy, TIMERS, "idle-callbacks").slice;
   });
-  assert.ok(mentions(none, "part react-microtasks", "names a slice of the plan"), explain(none));
+  assert.ok(mentions(none, "part idle-callbacks", "names a slice of the plan"), explain(none));
   const misplaced = mutate((copy) => {
     step(copy, "Libraries/Core/checkNativeVersion.js").slice = "B";
   });

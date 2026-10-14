@@ -73,13 +73,15 @@ func _ready() -> void:
     verify(image_hashes.initial != image_hashes.paused and image_hashes.paused != image_hashes.complete, "Timer-driven React updates change actual painted glyphs")
   await press("runtime-start")
   verify(data().pendingTimers > 0 and data().pendingAnimationFrames > 0, "Unmount begins with a live clock and queued work")
-  surface.evaluate("globalThis.afterStopCalls=0; globalThis.savedTimeout=setTimeout; globalThis.savedInterval=setInterval; globalThis.savedFrame=requestAnimationFrame; setTimeout(()=>afterStopCalls++,0); setInterval(()=>afterStopCalls++,0); setImmediate(()=>afterStopCalls++); queueMicrotask(()=>afterStopCalls++); requestAnimationFrame(()=>afterStopCalls++)")
+  surface.evaluate("globalThis.afterStopCalls=0; globalThis.completedBeforeTeardown=0; globalThis.savedTimeout=setTimeout; globalThis.savedInterval=setInterval; globalThis.savedFrame=requestAnimationFrame; setTimeout(()=>afterStopCalls++,0); setInterval(()=>afterStopCalls++,0); setImmediate(()=>completedBeforeTeardown++); queueMicrotask(()=>completedBeforeTeardown++); requestAnimationFrame(()=>afterStopCalls++)")
   var before_stop := data()
   surface.stop()
   await frames(4)
   var stopped := data()
   var stopped_react := react()
-  verify(surface.evaluate("afterStopCalls") == "0", "Queued timer, interval, immediate, microtask and frame callbacks cannot run after stop begins")
+  # The microtask and the immediate (RN's shim over queueMicrotask) were queued before the stop, so they complete in the checkpoint that opens it;
+  # the timer, the interval and the frame callback are cleared and never run.
+  verify(surface.evaluate("afterStopCalls") == "0" and surface.evaluate("completedBeforeTeardown") == "2", "Queued timer, interval and frame callbacks cannot run after stop begins, and the microtask and immediate queued before it complete first")
   verify(surface.evaluate("savedTimeout(()=>afterStopCalls++,0)+savedInterval(()=>afterStopCalls++,0)+savedFrame(()=>afterStopCalls++)") == "0", "Previously captured scheduling functions reject work after shutdown")
   verify(stopped.stopped and stopped.pendingTimers == 0 and stopped.pendingAnimationFrames == 0 and stopped.pendingWork == 0, "Stop releases every native deadline and work item")
   verify(stopped.nodes.is_empty() and stopped.nativeTags == 0 and stopped.creates == stopped.deletes, "Stop removes every native Control")

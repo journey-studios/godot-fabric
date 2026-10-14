@@ -329,6 +329,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   bool stopped{false};
   bool stopping{false};
   bool stop_requested{false};
+  // The JS gate (godotRuntimeActive, src/runtime.js): open until stop() begins to tear the application down (stopping), and open again while
+  // stop() unmounts the roots (unmounting_roots), for the work React queues to unmount them, which with RN$enableMicrotasksInReact includes a
+  // queueMicrotask of its own. A stop request alone (stop_requested: a native signal asked for it while JS or Fabric owned the stack) does not
+  // close it: React finishes the commit in flight after the signal returns and queues its next job with queueMicrotask, and a refused call
+  // leaves React believing the job is pending, so that it never unmounts the roots. What JS queues between the request and the stop is
+  // cleared (timers, frames) or completes in the checkpoint that opens stop() (microtasks).
+  bool unmounting_roots{false};
+  // True while stop() runs the checkpoint of the microtasks pending at the stop.
+  bool draining_for_stop{false};
   bool inactive() const { return stopped || stopping || stop_requested; }
 
   static const rn::ShadowNode *find_family(const rn::ShadowNode &node, rn::Tag tag) {
@@ -531,6 +540,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       catch (const std::exception &error) { owner.fail(error.what()); }
     }
   };
+  // Holds one of the stop sequence's flags (draining_for_stop, unmounting_roots) for a scope, and releases it however the scope ends: a throw from
+  // the code inside (js_errors->handle_fatal reporting) must not leave the flag set, or every later stop() would return at once.
+  struct FlagScope {
+    bool &flag;
+    explicit FlagScope(bool &flag) : flag(flag) { flag = true; }
+    ~FlagScope() { flag = false; }
+  };
   struct ChildRemovalScope {
     int &depth;
     explicit ChildRemovalScope(int &depth) : depth(depth) { ++depth; }
@@ -664,6 +680,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     native_modules->add_game_services(game_services);
     if (scenario == "refs" || scenario == "modules") native_modules->add_fixture();
     native_modules->add_feature_flags();
+    // RN's NativeMicrotasks, which src/runtime.js installs queueMicrotask from, as setUpTimers does over RN's bridgeless modules. Its
+    // callbacks join the microtask queue that pump() drains after each task, the checkpoint RuntimeScheduler_Modern::runEventLoopTick
+    // performs after each of its own (RuntimeScheduler_Modern.cpp, performMicrotaskCheckpoint).
+    native_modules->add_microtasks();
     if (native_animated) native_modules->add_native_animated();
     native_modules->add_source_code([this] { return bundle_url; });
     native_modules->add_device_info([this] {
@@ -1041,7 +1061,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     timer_manager->attachGlobals(*runtime);
     clear_timer.emplace(runtime->global().getPropertyAsFunction(*runtime, "clearTimeout"));
     bind("godotRuntimeActive", 0, [this](auto &, auto &, const auto *, size_t) {
-      return jsi::Value(!inactive());
+      return jsi::Value(!(stopped || stopping) || unmounting_roots);
     });
     bind("requestAnimationFrame", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (!count || !args[0].isObject() || !args[0].asObject(rt).isFunction(rt))
@@ -1454,7 +1474,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (host) host->native_unmounted(runtime_id, id, gd(folly::toJson(retired)));
   }
   void stop() {
-    if (stopped || stopping) return;
+    // A stop asked for by a microtask of the checkpoint below is the one under way.
+    if (stopped || stopping || draining_for_stop) return;
     if (execution_depth) {
       stop_requested = true;
       // Revoke pointer continuations immediately; destruction and React cleanup
@@ -1463,6 +1484,20 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       return;
     }
     stop_requested = false;
+    // The microtasks pending now were queued before the stop, so they are not new entries (V2-D27): they complete first, in one microtask
+    // checkpoint (RuntimeScheduler_Modern::performMicrotaskCheckpoint's, one call to drainMicrotasks), with the JS gate still open and
+    // before any root, service or timer is torn down. That includes the microtask React queues to finish a commit that was in flight when a
+    // native signal requested the stop: a job React asks for and does not get leaves it waiting for that job for good (didScheduleMicrotask),
+    // and it never unmounts the roots. The gate closes after the checkpoint (stopping); what is queued then is refused.
+    // The bound is the one every pump() has: Hermes drains until the queue is empty (it ignores the hint of drainMicrotasks(int); measured:
+    // 200000 microtasks that queue the next one all ran in one call), so what the microtasks queue while they run completes in this same
+    // checkpoint, and one that queues itself without end starves stop() as it starves a frame (slice F measures that against RN).
+    {
+      FlagScope draining(draining_for_stop);
+      ExecutionScope execution(*this);
+      try { runtime->drainMicrotasks(); }
+      catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
+    }
     stopping = true;
     pointer_processor().setListenerInterestForGodot({});
     pointer_listener_query.reset();
@@ -1481,9 +1516,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     std::vector<int> ids;
     std::vector<std::pair<uint64_t, int>> host_ids;
     for (auto &[id, root] : roots) { ids.push_back(id); host_ids.emplace_back(root->host_id, id); }
-    for (int id : ids) {
-      auto root = roots.find(id);
-      if (root != roots.end()) finalize_unmount(id, root->second->component.empty());
+    {
+      FlagScope unmounting(unmounting_roots);
+      for (int id : ids) {
+        auto root = roots.find(id);
+        if (root != roots.end()) finalize_unmount(id, root->second->component.empty());
+      }
     }
     pending_retirements.clear();
     // Settle service cancellations even when no React root is mounted.
