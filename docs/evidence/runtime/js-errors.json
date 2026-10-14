@@ -2,11 +2,18 @@
   "schemaVersion": 1,
   "scenario": "js-errors",
   "status": "verified-local-headless-previous-host-control-seven-sabotages",
-  "at": "2026-10-13T23:01:18.485Z",
-  "executionBaseCommit": "13a2ef1d0f5986ee6dc9855bea7b496563c2ce72",
-  "sourceDirtyDuringExecution": false,
-  "implementationCommit": "13a2ef1d0f5986ee6dc9855bea7b496563c2ce72",
-  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+  "at": "2026-10-14T04:45:18.795Z",
+  "executionBaseCommit": "638b8158ab085261046a2e577c33a6f50db10b22",
+  "sourceDirtyDuringExecution": true,
+  "dirtyPathsDuringExecution": [
+    "docs/evidence/runtime/README.md",
+    "native/js_error_path.cpp",
+    "scripts/js-errors-evidence.mjs",
+    "tests/js-errors-native.test.mjs",
+    "tests/js-errors-oracle.mjs"
+  ],
+  "implementationCommit": "1c26dd8522f3d2426432c31261bbc8c6990c4966",
+  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>. The lanes ran on top of executionBaseCommit with the uncommitted paths of dirtyPathsDuringExecution, so the pins, not the commit the lanes ran on, tie what they executed to the implementation commit.",
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -15,13 +22,20 @@
     "displayServer": "headless",
     "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
     "previousHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
-    "previousHost": "built from executionBaseCommit (the tip of feat/gf-05-js-globals), with the host's bare failure recording; kept in build/gf05-errors-previous-host/ (local, not in Git)"
+    "previousHost": {
+      "sourceCommit": "2791296db884ab3bdd0b49718698155128f6876f",
+      "sourceCommitSubject": "Merge remote-tracking branch 'origin/main' into feat/gf-05-js-globals",
+      "nativeTreeAtSourceCommit": "5d5a7150ce7e05658ef158b18fc0f6191a3fb389",
+      "sha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
+      "copy": "build/gf05-errors-previous-host/fabric_godot.dylib (local, not in Git)",
+      "provenance": "The commit is given by whoever built the host (--previous-host-commit); no build receipt was recorded for the copy. It is a host with the bare failure recording and without RN's error path, taken from addons/ at the start of the slice, when the worktree was clean at that commit, and the js-globals suite passed on it then; the native/ tree of that commit is nativeTreeAtSourceCommit."
+    }
   },
   "commands": [
     "npm run test:js-errors",
     "node tests/js-errors-native.test.mjs --allow-original-negative (previous host in addons/)",
     "node scripts/js-errors-sabotage.mjs",
-    "node scripts/js-errors-evidence.mjs"
+    "node scripts/js-errors-evidence.mjs --previous-host-commit <sha> [--commit <sha>]"
   ],
   "currentLane": {
     "checks": 23,
@@ -29,7 +43,7 @@
     "oracleVerdict": null,
     "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
     "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-    "logSha256": "71bb3511c46af9116c8ef875dd0d91f1815f6a30eb903707fde2d4c1e2e6e4d6",
+    "logSha256": "04e9960aeac8744b6d26122667080eab6cc43a225d2b70097af8f12477abe776",
     "result": "JS_ERRORS_PASSED: 23",
     "checkVerdicts": [
       {
@@ -942,7 +956,7 @@
     "oracleVerdict": "The oracle fails 14 check(s), the first of them host/The host installs the five globals of ReactInstance's error family that keep a runtime running as ReactInstance defines them, and neither RN$hasHandledFatalException nor RN$notifyOfFatalException",
     "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
     "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
-    "logSha256": "ff0e2018148f5986f86cf2e248c996c6da5c69d1dee1805b967a7b80070283dd",
+    "logSha256": "0fce6c85b79aa1dd41bbd6d27f21aa1fc68fde8ae94ab1d52c6d75309f07764f",
     "sameBundleAsCurrent": true,
     "result": "JS_ERRORS_ORIGINAL_NEGATIVE: 14",
     "expectedOriginalFailures": [
@@ -1006,7 +1020,7 @@
       }
     },
     "nativeModuleLoaded": false,
-    "note": "The same bundle runs on the host that recorded an error where it caught it and had no ErrorUtils path: it fails exactly the checks that need the new host, and holds the nine that need only the JS RN runs. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit."
+    "note": "The same bundle runs on the host that recorded an error where it caught it and had no ErrorUtils path: it fails exactly the checks that need the new host, and holds the nine that need only the JS RN runs. Its native producers are pinned for the tree; the old binary was built from environment.previousHost.sourceCommit, not from executionBaseCommit."
   },
   "retainedSabotage": {
     "script": "scripts/js-errors-sabotage.mjs",
@@ -1046,7 +1060,7 @@
         "oracleVerdict": "The oracle fails 21 check(s), the first of them mount/The ready lane mounts a root through the original AppRegistry without a diagnostic",
         "bundleSha256": "d2e5aefdbe4eb2b4fb999615c175f994dbd65ed20827afa788f653ebd7616caa",
         "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-        "logSha256": "beb9b077351ded343c9bc475d9d3283bf908acf813663128e9e94bd6395d5b71"
+        "logSha256": "0f60c0d30adaf7705f553c166b098b6057d1d7f4117dc123c5980209e50e5d98"
       },
       {
         "name": "no-setup",
@@ -1070,7 +1084,7 @@
         "oracleVerdict": "The oracle fails 10 check(s), the first of them handler/ErrorUtils.getGlobalHandler() is the handler setUpErrorHandling registered, once, and console.error is ExceptionsManager's reporter",
         "bundleSha256": "03ca0ad28d7e99066a31f1c5fdd16f43664e696f833ae680e4bded0ba42e1e70",
         "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-        "logSha256": "f06d1c79503651a99790e1ef069faac8f670414d6bc20079541136f0220ded21"
+        "logSha256": "e1c6aef99238364c5b762fee9aa64a644880034f3f1b638d25e7af06ab267f15"
       },
       {
         "name": "soft-fails",
@@ -1090,7 +1104,7 @@
         "oracleVerdict": "The oracle fails 6 check(s), the first of them soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "beb4f855521eaff0fe830ebb036b90e588c1d39a0faf57bc2126561bd6252707",
-        "logSha256": "795b38f6311211c39271112434fa51efe91fa19d6ce0c96068c7282de162d842"
+        "logSha256": "4cfce69be6eb0dd6f9b0ff94dcacdf0c902e0ac1493bbc8688bfc42e0e550654"
       },
       {
         "name": "fatal-swallowed",
@@ -1109,7 +1123,7 @@
         "oracleVerdict": "The oracle fails 5 check(s), the first of them fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "c009089ca658cab1a00d41e9a437d07f9fe431d5a6f75e7240ea724b877f6754",
-        "logSha256": "06417753275f172d6cbfac031ead7d06f9a5c55cab65809cc15b40d454b1d812"
+        "logSha256": "82b5353e764d1a4148d2cd2d4157a60ee24dd241d5036e4c7bd32e9cc9513bad"
       },
       {
         "name": "scheduler-site",
@@ -1125,7 +1139,7 @@
         "oracleVerdict": "The oracle fails 2 check(s), the first of them fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "99b32c9985170643d4756857f3d6da2829e05200d66e835da22ab2ea6ebd3a4c",
-        "logSha256": "f85f32e9885e74890b3f2fde69e1ef6020800c3b2ddcf5ef3985f6d2fbeba061"
+        "logSha256": "060d68d6ddba78ff533f48427786085b9de280473daad4b54e5182c5a468890b"
       },
       {
         "name": "bundle-site",
@@ -1140,7 +1154,7 @@
         "oracleVerdict": "The oracle fails 1 check(s), the first of them escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "039b72daac1ea1d9e355f96a378040706c7e5132c63ed31c4fb28d93a587bd96",
-        "logSha256": "44c07b7298b71172581b4dc629993e2c4b437e062c36541e1333faa29b1a33bf"
+        "logSha256": "a2d4b3bae0072aeb95c10ac95ae78cf0835f90a44eb419ce22b032a08914abf6"
       },
       {
         "name": "never-ready",
@@ -1161,7 +1175,7 @@
         "oracleVerdict": "The oracle fails 7 check(s), the first of them soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "1d1cddeecbe9bb0145842c2a4cfbe05e10f73adb92fd45833c869866f272eca7",
-        "logSha256": "d8e3678ba8b43ebcb2c579683a7e5cb6d83ce7a8f99b5d9b4df2f7e4677770cd"
+        "logSha256": "499645fc85f20cf68d392ddbf4dc77f36403ed1eeff17d1da4333805e0f783b4"
       }
     ]
   },
@@ -1222,6 +1236,7 @@
       "flagDefault": false,
       "notReadyPrefix": "[runtime not ready]: ",
       "schedulerWrap": "Non-js exception: ",
+      "runtimeExecutorWrap": "Non-JS exception: ",
       "earlyModel": [
         {
           "name": "soft",
@@ -1491,7 +1506,7 @@
       "site": "RuntimeScheduler task error handler",
       "reactInstance": "ReactInstance.cpp:128-131 (handleError(runtime, error, true))",
       "before": "fail(error.what())",
-      "now": "JsErrorPath::handle_fatal -> JsErrorHandler::handleError, fatal. RN's own scheduler wraps what Hermes throws as 'Non-js exception: <what>'.",
+      "now": "JsErrorPath::handle_fatal -> JsErrorHandler::handleError, fatal. RN's own scheduler wraps what Hermes throws as 'Non-js exception: <what>' (RuntimeScheduler_Modern.cpp:402; ReactInstance's runtime executor spells its wrap 'Non-JS exception: ', ReactInstance.cpp:107, and that is the spelling of the host's own catches).",
       "certifiedBy": "fatal/An exception that escapes a task of RN's RuntimeScheduler ..."
     },
     {
@@ -1536,8 +1551,8 @@
     "tests/js-errors-host.js": "98a6c17c18c5eebe9669baa080cb08b017b768173dfac8348ced49ff4caca0ab",
     "tests/js-errors-cases.mjs": "c0cecbd5a91a9feb4fbf8c6cea76b63f4c913d3146398bb87518a007bdbeeff1",
     "tests/js-errors-probe.gd": "c0435dd23885bc23dc7d61b8dc038a617f2f57c2599fe634c981cebc7250e8b9",
-    "tests/js-errors-native.test.mjs": "8da971f210f4c356bbe0d388a541001d1a5899b1a3fea489f21b7e83fc5d7555",
-    "tests/js-errors-oracle.mjs": "e8e478eb35d1b7c486c8c25e3430d71ea6197a2978fe78d39e2aca2350ea8833",
+    "tests/js-errors-native.test.mjs": "3ec513d10cebb8383dcb9e01861fe66d7a0623ed0f9e1338986f8a39adec73d0",
+    "tests/js-errors-oracle.mjs": "64e9d35631d0037155302830f5e503fec166619159d32f217b32cc6c3fb75ee3",
     "tests/js-errors-sabotages.mjs": "2bea30d05a0577be7c28314af17dadc03352463ee658c6d1f63eb40c6db3aff4",
     "scripts/js-errors-bundle.mjs": "d521bc07d92f8ac032cbe7562ed35b274b27e8abe2f5d3146b983355261d42de",
     "scripts/js-errors-sabotage.mjs": "038a0da12df4809cae8d0cf6bb7d2c96c7d8b23b43d1b6a068fc4636aeba5a84",
@@ -1548,7 +1563,7 @@
     "native/application_runtime.cpp": "26f92d8639eced736c73bda596b2632fc0b95f206b271c881e6915512562fab2",
     "native/application_runtime.h": "ed3ace3e5d23cf3ba17755b744e601efaa48b9a46fd9eaf9fa35ab0696fd6d63",
     "native/fabric_application.cpp": "174b616f74471afbe9dfa9993a3116ee5b54abf691a5b21733bab92da2732323",
-    "native/js_error_path.cpp": "a35dcf7ffcec029da5e8a7d8dd2560561fef4f5de3f413fa0063e6a73cfa1547",
+    "native/js_error_path.cpp": "3b52ebfcad41f548a93c21037b62473cb6c6f63f1d1f191ebe71b5e8ae2cba06",
     "native/js_error_path.h": "62ab11e16c443b260403d4fa4c749af96cc271ee7f2b241b37e214c603c6844f"
   },
   "scope": {
