@@ -109,9 +109,10 @@ fixtures that cover them or a place in the pending ledger of their GF in the
 [README](README.md#fixture-catalog-polarity-tolerance-and-the-pending-ledger)); most rows
 are still pending. Its presence is not a compatibility score.
 
-`npm run parity:status` generates `build/parity-status.json`. On 2026-10-08 the
-current facade has **57 exported names awaiting differential certification, 3
-explicit placeholders and 37 missing public names** of the 97 root values, against
+`npm run parity:status` generates `build/parity-status.json`. On 2026-10-14 the
+current facade has **58 exported names awaiting differential certification, 3
+explicit placeholders and 36 missing public names** of the 97 root values, against
+57, 3 and 37 on 2026-10-08 (the GF-03 contract slice exported ReactNativeVersion),
 44, 5 and 48 on 2026-10-07 (the Image slice exported AssetRegistry and took Image and
 ImageBackground out of the placeholders, nine OS-specific names were added: ToastAndroid,
 PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid,

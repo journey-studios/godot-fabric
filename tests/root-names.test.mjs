@@ -20,8 +20,8 @@ const read = (file) => readFileSync(path.join(root, file), "utf8");
 // name the facade lacks would promise an API that fails with an undefined import.
 const MISSING = [
   "Alert", "BackHandler", "DevMenu", "DevSettings", "DeviceEventEmitter", "DeviceInfo", "EventEmitter", "Keyboard", "LogBox",
-  "NativeAppEventEmitter", "NativeComponentRegistry", "Networking", "PlatformColor", "ReactNativeVersion", "Settings", "Share",
-  "Systrace", "UTFSequence", "processColor", "registerCallableModule", "requireNativeComponent", "unstable_batchedUpdates",
+  "NativeAppEventEmitter", "NativeComponentRegistry", "Networking", "PlatformColor", "Settings", "Share", "Systrace",
+  "UTFSequence", "processColor", "registerCallableModule", "requireNativeComponent", "unstable_batchedUpdates",
   "useAnimatedColor", "usePressability",
 ];
 
