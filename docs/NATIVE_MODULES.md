@@ -64,7 +64,7 @@ unchanged): `queueMicrotask` hands its callback to the runtime's microtask queue
 drains after each task, and RN's own `setUpTimers` installs the global from RN's spec module. The registry
 counts the calls that reach it (`snapshot().nativeModules.microtasks.calls`) and does nothing else to them.
 
-The [idle callbacks record](evidence/runtime/README.md#idle-callbacks-and-settimers-unchanged-slice-d2-2026-10-14) registers RN's
+The [idle callbacks record](evidence/runtime/README.md#idle-callbacks-and-setuptimers-unchanged-slice-d2-2026-10-13) registers RN's
 `NativeIdleCallbacks` (`NativeIdleCallbacksCxx`, ReactCommon/react/nativemodule/idlecallbacks, compiled
 unchanged): `requestIdleCallback` schedules its callback as an idle-priority task of the RuntimeScheduler and returns a
 handle that holds the task, `cancelIdleCallback` cancels it, and RN's own `setUpTimers` installs both globals from
