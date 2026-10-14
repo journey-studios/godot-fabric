@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-14T13:20:00.000Z",
+  "updatedAt": "2026-10-14T18:30:00.000Z",
   "source": {
     "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
@@ -4930,6 +4930,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-07-portal-pattern-c9ecef58fb0e83a4d5da9c1c9754dd7550a976e9",
+      "at": "2026-10-14T18:30:00.000Z",
+      "taskIds": [
+        "GF-07"
+      ],
+      "message": "GF-07, padrão de overlay dentro da raiz (opção c da decisão de 2026-10-14, sem createPortal no SDK): um PortalProvider instalado por AppRegistry.setWrapperComponentProvider dá a cada raiz o seu host, uma View absoluta de tela cheia com pointerEvents box-none e zIndex, e um Portal registra o conteúdo nele por Context. O exemplo portal-pattern abre um dropdown a partir de um ScrollView, posicionado com measureInWindow; a suíte test:portal-pattern (23 checagens sem janela, com eventos reais de mouse sobre FabricSurface reais e um nó Godot atrás da superfície como mundo) certifica a posição (os Controls do dropdown são filhos do Control do host e vêm por último na ordem da árvore), o recorte (o dropdown passa da borda do ScrollView e nenhum ancestral o corta), a entrada (o item recebe o toque, uma linha fora do dropdown e a linha sob a área já fechada recebem o seu, o corpo do dropdown é opaco e a área vazia da superfície atravessa o host até o mundo, com o dropdown aberto e fechado), o ciclo de vida (fechar remove os Controls; desmontar uma raiz com portal aberto remove o host sem vazamento) e o por raiz (dois hosts, estado independente), e registra o limite conhecido: o Context do gatilho não chega ao conteúdo do portal. O oráculo independente deriva a geometria do layout (Yoga) e o roteamento das regras de ponteiro do host. A fatia não muda código nativo, então o controle é de cinco sabotagens retidas (host dentro do ScrollView, host sem box-none, provider não instalado, portal que não se remove, host sem zIndex), cada uma rejeitada pela sonda (13, 17, 20, 6 e 4 checagens) e pelo oráculo. O exemplo passa 14 checagens sem janela e 18 com o renderer nativo e três capturas. Seguem abertas a entrada entre superfícies sobrepostas (V2-D10, fatia seguinte), o Modal (GF-18) e uma biblioteca de portal (GF-27). Nenhum checkpoint, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c9ecef58fb0e83a4d5da9c1c9754dd7550a976e9/docs/evidence/portal-pattern/README.md"
+    },
     {
       "id": "gf-01-catalog-merged-suites-d199274",
       "at": "2026-10-14T13:20:00.000Z",
