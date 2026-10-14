@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "scenario": "react-microtasks",
-  "status": "verified-local-headless-previous-host-control-five-sabotages",
-  "at": "2026-10-14T01:27:48.974Z",
-  "executionBaseCommit": "8654fb6bfb610f48344e1a4441ac0b2101d84b58",
+  "status": "verified-local-headless-previous-host-control-seven-sabotages",
+  "at": "2026-10-14T03:44:21.557Z",
+  "executionBaseCommit": "066d5122927344e534365af6617fd01255b52ceb",
   "sourceDirtyDuringExecution": false,
-  "implementationCommit": "8654fb6bfb610f48344e1a4441ac0b2101d84b58",
+  "implementationCommit": "066d5122927344e534365af6617fd01255b52ceb",
   "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
   "environment": {
     "godot": "4.7.2-stable (official)",
@@ -13,7 +13,7 @@
     "node": "v22.23.3",
     "platform": "macOS arm64",
     "displayServer": "headless",
-    "nativeHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
+    "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
     "previousHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
     "previousHost": "built from executionBaseCommit (the tip of feat/gf-05-error-path), which registers no NativeMicrotasksCxx module; kept in build/gf05-microtasks-previous-host/ (local, not in Git)"
   },
@@ -24,13 +24,13 @@
     "node scripts/react-microtasks-evidence.mjs"
   ],
   "currentLane": {
-    "checks": 18,
+    "checks": 19,
     "failedChecks": [],
     "oracleVerdict": null,
-    "bundleSha256": "4539b3c4d3b798be0db9661b358599e68eef0d8fba5793adeb2998c7b43679a9",
-    "nativeHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
-    "logSha256": "10b9cc183e281fff5b908a931a060c63566348a9bcc2ba5be927887f48f8fc66",
-    "result": "REACT_MICROTASKS_PASSED: 18",
+    "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
+    "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
+    "logSha256": "e910a47f86dfea7640dc40962726bb5f7d5985a1f213b8b814e3be551378f421",
+    "result": "REACT_MICROTASKS_PASSED: 19",
     "checkVerdicts": [
       {
         "name": "mount/The root mounts through the original AppRegistry without a diagnostic",
@@ -85,19 +85,23 @@
         "passed": true
       },
       {
-        "name": "gate/A microtask and an immediate queued before the application stops do not run once it is inactive, while the Promise reaction queued with them does",
+        "name": "gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
         "passed": true
       },
       {
-        "name": "gate/Stop unmounts the root through React's own microtask: its effect cleanup runs once, although the gate is closed to what user code queued",
+        "name": "gate/Stop unmounts the root through React's own microtask: the update pending at the stop is not lost, and the root's effect cleanup runs once",
         "passed": true
       },
       {
-        "name": "gate/Once the application is inactive, queueMicrotask schedules nothing and does not reach the module",
+        "name": "gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs",
         "passed": true
       },
       {
         "name": "lifecycle/Stop releases the root, and all native Controls of the root are balanced",
+        "passed": true
+      },
+      {
+        "name": "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it",
         "passed": true
       },
       {
@@ -374,14 +378,17 @@
     ],
     "gate": {
       "state": {
+        "afterStopRan": false,
         "cleanups": 1,
-        "immediateRan": false,
-        "microtaskRan": false,
-        "promiseRan": true,
+        "immediateAlive": true,
+        "microtaskAlive": true,
+        "nativeTag": 2,
+        "promiseAlive": true,
         "queued": true
       },
       "afterStop": {
-        "calls": 34,
+        "calls": 35,
+        "ran": false,
         "result": {
           "threw": false,
           "value": null
@@ -390,11 +397,26 @@
       "finalApplication": {
         "stopped": true,
         "rootCount": 0
+      },
+      "reentrant": {
+        "requests": 1,
+        "controlFound": true,
+        "state": {
+          "afterStopRan": false,
+          "cleanups": 1,
+          "immediateAlive": null,
+          "microtaskAlive": null,
+          "nativeTag": 2,
+          "promiseAlive": null,
+          "queued": false
+        },
+        "stopped": true,
+        "rootCount": 0
       }
     }
   },
   "previousHostControl": {
-    "checks": 18,
+    "checks": 19,
     "failedChecks": [
       "mount/The root mounts through the original AppRegistry without a diagnostic",
       "module/RN's NativeMicrotasks spec module loads over the host's NativeMicrotasksCxx and exposes queueMicrotask",
@@ -406,16 +428,17 @@
       "react-microtask/A sync-lane update commits in a microtask: after the microtask queued before it, ahead of the microtask and the Promise reaction queued after it",
       "react-tasks/The commit comes before every task queued earlier through the RuntimeScheduler, an Immediate one included, and before a timer",
       "react-batched/Two updates in one handler are one commit, ahead of the microtasks queued between and after them",
-      "gate/A microtask and an immediate queued before the application stops do not run once it is inactive, while the Promise reaction queued with them does",
-      "gate/Stop unmounts the root through React's own microtask: its effect cleanup runs once, although the gate is closed to what user code queued",
-      "gate/Once the application is inactive, queueMicrotask schedules nothing and does not reach the module"
+      "gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
+      "gate/Stop unmounts the root through React's own microtask: the update pending at the stop is not lost, and the root's effect cleanup runs once",
+      "gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs",
+      "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
     ],
-    "oracleVerdict": "The oracle fails 13 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
-    "bundleSha256": "4539b3c4d3b798be0db9661b358599e68eef0d8fba5793adeb2998c7b43679a9",
+    "oracleVerdict": "The oracle fails 14 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
+    "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
     "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-    "logSha256": "6e52f7d72381188483a4380536c6c0d2befcc46036db2a58ba87f6e49b1cfe6c",
+    "logSha256": "bd5795b98ea56b5d03087102b650bd95b9855269ddb9d92062e79536130a5297",
     "sameBundleAsCurrent": true,
-    "result": "REACT_MICROTASKS_ORIGINAL_NEGATIVE: 13",
+    "result": "REACT_MICROTASKS_ORIGINAL_NEGATIVE: 14",
     "expectedOriginalFailures": [
       "mount/The root mounts through the original AppRegistry without a diagnostic",
       "module/RN's NativeMicrotasks spec module loads over the host's NativeMicrotasksCxx and exposes queueMicrotask",
@@ -427,9 +450,10 @@
       "react-microtask/A sync-lane update commits in a microtask: after the microtask queued before it, ahead of the microtask and the Promise reaction queued after it",
       "react-tasks/The commit comes before every task queued earlier through the RuntimeScheduler, an Immediate one included, and before a timer",
       "react-batched/Two updates in one handler are one commit, ahead of the microtasks queued between and after them",
-      "gate/A microtask and an immediate queued before the application stops do not run once it is inactive, while the Promise reaction queued with them does",
-      "gate/Stop unmounts the root through React's own microtask: its effect cleanup runs once, although the gate is closed to what user code queued",
-      "gate/Once the application is inactive, queueMicrotask schedules nothing and does not reach the module"
+      "gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
+      "gate/Stop unmounts the root through React's own microtask: the update pending at the stop is not lost, and the root's effect cleanup runs once",
+      "gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs",
+      "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
     ],
     "nativeModuleLoaded": false,
     "note": "The same bundle runs on the host that registers no NativeMicrotasksCxx: queueMicrotask has nothing to reach, so React's first update throws and the root does not mount. It fails exactly the checks that need the new module, and holds the three that need only the JS the bundle runs (the flag, and the global installed before the renderer reads it) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit."
@@ -437,7 +461,7 @@
   "retainedSabotage": {
     "script": "scripts/react-microtasks-sabotage.mjs",
     "table": "tests/react-microtasks-sabotages.mjs",
-    "mechanism": "flag-unset, promise-shim and gate-removed are in-memory esbuild overrides of src/runtime.js (scripts/react-microtasks-bundle.mjs), no file is edited; no-module breaks one line of native/application_runtime.cpp, rebuilds the host, keeps it in the variant's hostDirectory and restores the source byte for byte (scripts/sabotage-sources.mjs)",
+    "mechanism": "flag-unset, promise-shim and gate-removed are in-memory esbuild overrides of src/runtime.js (scripts/react-microtasks-bundle.mjs), no file is edited; no-module, gate-closed, request-closes-gate and checkpoint-gate-closed each break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
     "variants": [
       {
         "name": "flag-unset",
@@ -445,7 +469,7 @@
         "file": "src/runtime.js",
         "find": "globalThis.RN$enableMicrotasksInReact = true;\n",
         "replace": "",
-        "checks": 18,
+        "checks": 19,
         "failedChecks": [
           "flag/RN$enableMicrotasksInReact is written true by the host runtime before the renderer reads it, and the renderer reads true",
           "react-microtask/A sync-lane update commits in a microtask: after the microtask queued before it, ahead of the microtask and the Promise reaction queued after it",
@@ -453,9 +477,9 @@
           "react-batched/Two updates in one handler are one commit, ahead of the microtasks queued between and after them"
         ],
         "oracleVerdict": "The oracle fails 4 check(s), the first of them flag/RN$enableMicrotasksInReact is written true by the host runtime before the renderer reads it, and the renderer reads true",
-        "bundleSha256": "2ebea8f9d3338fb3b717daa0df67a4fe311997511e2cd67775e5a44dd77cbc46",
-        "nativeHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
-        "logSha256": "0f625a3a08591abc90b91cba906f5a889cfac9f6d98565ffbc815ed582ff0c19",
+        "bundleSha256": "f0bb33ab39744a9f39296a6ae154f54823b7a530fcf9bfb63930b5760458ba70",
+        "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
+        "logSha256": "70f78e425e3b128eff14db1de7cb7b3bd5ae5699076aab3a6c896ae485e041ed",
         "orders": {
           "fifo": [
             "handler-end",
@@ -504,15 +528,15 @@
         "file": "src/runtime.js",
         "find": "queueNative(() => { if (active()) callback(); });",
         "replace": "Promise.resolve().then(() => { if (active()) callback(); });",
-        "checks": 18,
+        "checks": 19,
         "failedChecks": [
           "module/Each queueMicrotask call through the global reaches the C++ module once",
           "module/setImmediate, RN's shim over queueMicrotask, reaches the C++ module through the global and runs"
         ],
         "oracleVerdict": "The oracle fails 2 check(s), the first of them module/Each queueMicrotask call through the global reaches the C++ module once",
-        "bundleSha256": "a9cdd4089f4c129ed7ac0d5e11151dbd47b54425bd6b5ed83a748fe16e57b1f5",
-        "nativeHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
-        "logSha256": "1a30acae491414017952e7a89c83266490cc5e9470b647cd7a440e1efeb5a78e",
+        "bundleSha256": "86843d2e5fcbc62c87300324c2c2c61589120eefd4d5e635bec4681d19581984",
+        "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
+        "logSha256": "a31a3bd38c0c9aac5c8d6d5bfa6a6149b663ed61285e02df270ee4abb81ee016",
         "orders": {
           "fifo": [
             "handler-end",
@@ -559,16 +583,16 @@
         "name": "gate-removed",
         "host": false,
         "file": "src/runtime.js",
-        "find": "queueNative(() => { if (active()) callback(); });",
-        "replace": "queueNative(callback);",
-        "checks": 18,
+        "find": "  if (active()) {\n    if (queueNative === null) {",
+        "replace": "  if (true) {\n    if (queueNative === null) {",
+        "checks": 19,
         "failedChecks": [
-          "gate/A microtask and an immediate queued before the application stops do not run once it is inactive, while the Promise reaction queued with them does"
+          "gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs"
         ],
-        "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/A microtask and an immediate queued before the application stops do not run once it is inactive, while the Promise reaction queued with them does",
-        "bundleSha256": "84cf6e9755c1a3ab94b71b03814004a57fb85d7b975773727d7703a68f6e9169",
-        "nativeHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
-        "logSha256": "f6459bed6b92f0ba426d0edd62c1794199d9f72fd33c0f42a0971eba4aa0d146",
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs",
+        "bundleSha256": "9e759870d559e59fa3d49eb588e73eee5d5d47a2dd95eee6f55ca09d43efbd42",
+        "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
+        "logSha256": "1e65288b51ecb100fc74ddd94e5d250fd28ba23a043fd2a64c54cebbaa9d5242",
         "orders": {
           "fifo": [
             "handler-end",
@@ -617,7 +641,7 @@
         "file": "native/application_runtime.cpp",
         "find": "    native_modules->add_microtasks();\n",
         "replace": "",
-        "checks": 18,
+        "checks": 19,
         "failedChecks": [
           "mount/The root mounts through the original AppRegistry without a diagnostic",
           "module/RN's NativeMicrotasks spec module loads over the host's NativeMicrotasksCxx and exposes queueMicrotask",
@@ -629,14 +653,15 @@
           "react-microtask/A sync-lane update commits in a microtask: after the microtask queued before it, ahead of the microtask and the Promise reaction queued after it",
           "react-tasks/The commit comes before every task queued earlier through the RuntimeScheduler, an Immediate one included, and before a timer",
           "react-batched/Two updates in one handler are one commit, ahead of the microtasks queued between and after them",
-          "gate/A microtask and an immediate queued before the application stops do not run once it is inactive, while the Promise reaction queued with them does",
-          "gate/Stop unmounts the root through React's own microtask: its effect cleanup runs once, although the gate is closed to what user code queued",
-          "gate/Once the application is inactive, queueMicrotask schedules nothing and does not reach the module"
+          "gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
+          "gate/Stop unmounts the root through React's own microtask: the update pending at the stop is not lost, and the root's effect cleanup runs once",
+          "gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs",
+          "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
         ],
-        "oracleVerdict": "The oracle fails 13 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
-        "bundleSha256": "4539b3c4d3b798be0db9661b358599e68eef0d8fba5793adeb2998c7b43679a9",
-        "nativeHostSha256": "d93e2b868f1b5a4ba15d81d9827426bf5d1c24e9efa008dadee8c0e1d74bc613",
-        "logSha256": "1f4798d3fc9d2dfa96d8fcf49aaadbc3a8f792c0bb70d158deff6e89cff4d75f",
+        "oracleVerdict": "The oracle fails 14 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
+        "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
+        "nativeHostSha256": "0732dedab79111ec1edaa1b10c2f02dbdb908e3fba86bae588d394280351574c",
+        "logSha256": "aac55e0eced85a2bddc7bd0d196651784ece62153324caa2ee57da16b94bcc29",
         "orders": {
           "fifo": [],
           "react-microtask": [],
@@ -648,16 +673,129 @@
         "name": "gate-closed",
         "host": true,
         "file": "native/application_runtime.cpp",
-        "find": "return jsi::Value(!inactive() || unmounting_roots);",
-        "replace": "return jsi::Value(!inactive());",
-        "checks": 18,
+        "find": "return jsi::Value(!(stopped || stopping) || unmounting_roots);",
+        "replace": "return jsi::Value(!(stopped || stopping));",
+        "checks": 19,
         "failedChecks": [
-          "gate/Stop unmounts the root through React's own microtask: its effect cleanup runs once, although the gate is closed to what user code queued"
+          "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
         ],
-        "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/Stop unmounts the root through React's own microtask: its effect cleanup runs once, although the gate is closed to what user code queued",
-        "bundleSha256": "4539b3c4d3b798be0db9661b358599e68eef0d8fba5793adeb2998c7b43679a9",
-        "nativeHostSha256": "784510292f18e1fcd7d370e0e478eacd34ce4e07ad67759b9379ed5597f5f64a",
-        "logSha256": "454bb350577eea7245f73a0ac79a56d3d654077f7a0ce8507e9221f31749a672",
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it",
+        "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
+        "nativeHostSha256": "7ae5740542b1ec03bc2f52591274a4e53128faeab8aa95b027c7fadb63af994a",
+        "logSha256": "0a5b79dde2c611ce5b87944d7629d3133ceb4f43a675d864f799557488e3f43d",
+        "orders": {
+          "fifo": [
+            "handler-end",
+            "promise-1",
+            "microtask-1",
+            "promise-2",
+            "microtask-2",
+            "immediate",
+            "microtask-1-nested",
+            "microtask-1-promise",
+            "promise-2-microtask",
+            "task-normal",
+            "timeout",
+            "end"
+          ],
+          "react-microtask": [
+            "handler-end",
+            "microtask-before",
+            "commit:1",
+            "microtask-after",
+            "promise-after",
+            "end"
+          ],
+          "react-tasks": [
+            "handler-end",
+            "commit:1",
+            "microtask-after",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "timeout",
+            "end"
+          ],
+          "react-batched": [
+            "handler-end",
+            "commit:2",
+            "microtask-1",
+            "microtask-2",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "request-closes-gate",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "return jsi::Value(!(stopped || stopping) || unmounting_roots);",
+        "replace": "return jsi::Value(!inactive() || unmounting_roots);",
+        "checks": 19,
+        "failedChecks": [
+          "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it",
+        "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
+        "nativeHostSha256": "d9cf16282903158096249c2dc851a2f13236fd117d472ae8a47ea7fbba98c373",
+        "logSha256": "d0494f8f3bea43d261dd2c4a35de6af330131a721be50e3b160691b9cb31ee23",
+        "orders": {
+          "fifo": [
+            "handler-end",
+            "promise-1",
+            "microtask-1",
+            "promise-2",
+            "microtask-2",
+            "immediate",
+            "microtask-1-nested",
+            "microtask-1-promise",
+            "promise-2-microtask",
+            "task-normal",
+            "timeout",
+            "end"
+          ],
+          "react-microtask": [
+            "handler-end",
+            "microtask-before",
+            "commit:1",
+            "microtask-after",
+            "promise-after",
+            "end"
+          ],
+          "react-tasks": [
+            "handler-end",
+            "commit:1",
+            "microtask-after",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "timeout",
+            "end"
+          ],
+          "react-batched": [
+            "handler-end",
+            "commit:2",
+            "microtask-1",
+            "microtask-2",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "checkpoint-gate-closed",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "    draining_for_stop = true;\n",
+        "replace": "    draining_for_stop = true;\n    stopping = true;\n",
+        "checks": 19,
+        "failedChecks": [
+          "gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
+          "gate/Stop unmounts the root through React's own microtask: the update pending at the stop is not lost, and the root's effect cleanup runs once"
+        ],
+        "oracleVerdict": "The oracle fails 2 check(s), the first of them gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
+        "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
+        "nativeHostSha256": "a4ee51549a9d240db16915ddb6edd0ec32991f4d08d2b070a9aaf37ebb09750d",
+        "logSha256": "17f344ca8c0056ff9f3b596e1e9d7c0df69b30ab65c3150a1cc2ba8bc14d08a5",
         "orders": {
           "fifo": [
             "handler-end",
@@ -764,21 +902,21 @@
     }
   },
   "sourcePins": {
-    "tests/react-microtasks-fixture.jsx": "e583d8386a6c961e3560968aab009cc04729ca4e88f81494a988a3eeb5c826c8",
+    "tests/react-microtasks-fixture.jsx": "418b103e09d5c91dbbb3dcfd9daac16bbdf05402780dee0d6cb2f4c0f15719eb",
     "tests/react-microtasks-host.js": "e78f4c12cfc815a8c5eb653bf6b8a2cdd7f498c95592cb1e1c3fa8b5b26519aa",
     "tests/react-microtasks-cases.mjs": "39193c3c778fc14cabad89c2ef1d25d004e9cf00d82debd12044c5677133c08c",
-    "tests/react-microtasks-probe.gd": "6e6a2cb5ae577523b025de11be53f825f6f035988efb0a7df64fad44e50f35f8",
+    "tests/react-microtasks-probe.gd": "28c9e1073651c161318ea17b5fd462b20e4e0c7ba874a80b06286a69c8b3b860",
     "tests/react-microtasks-native.test.mjs": "e6215d5d9e3c58cbad85136f1184f1db591374f23c32b2ea7a9b5ee19a3332ab",
-    "tests/react-microtasks-oracle.mjs": "dc03f315da50d4ded975285129d76ec4368fa72a732ede1a449a42d38342f5d1",
-    "tests/react-microtasks-sabotages.mjs": "4b4d6e3fe28423cf5628df8f5094f0ca0b8dd458f91cd03285148bfb3792d9ad",
+    "tests/react-microtasks-oracle.mjs": "75143e90847cbf8b3e5e0fb99ddf43d6f8b42c06c0ba81359d4a2e4614549234",
+    "tests/react-microtasks-sabotages.mjs": "8133afabd5c7da6c85f9be46cf24dd2d5812d4f74bc311c32b514ee1be394e3b",
     "scripts/react-microtasks-bundle.mjs": "af302b5911281c6bb81fecbb5fe6493da128050c8056d6021910af5e0af234fb",
     "scripts/react-microtasks-sabotage.mjs": "4171a377432e6536771f3c87d743066e989d004127beef42756b080fafcdb2d5",
     "scripts/native-probe-bundle.mjs": "f1326732fcc4d9c57d8c9905ef124101e2a54126507ad22e36b3aa8e7b086198",
-    "src/runtime.js": "7280ecaa1bb9fd93d1a3a06b339141890394ab772c228fb6cc6d751bbfeb7717",
+    "src/runtime.js": "9f63805550f5c03805843d7a7915bc31f6b25d84f51476cc2e0a1f9cceb90620",
     "src/initialize.js": "e19e51dd51da964c193d6e1763a6fb2b6e57aaf204797087fa3052f04fc64b64",
     "sdk/toolchain/platform-plugin.mjs": "2979b948f0e8d4ace5c4d9246b5479017d539db0d23ebb2830d2a7827253dc1b",
     "sdk/toolchain/metro-polyfills.mjs": "e1b371456bf1b6f33c817e552e21e5ca550016f3be2292455fd019454f643d29",
-    "native/application_runtime.cpp": "f2b3b9724ada2543bd5bf224fd19c419a1aa1a54140920e971403c6e5fffa219",
+    "native/application_runtime.cpp": "d3e0d0e2138ade1ad0c8b1c227f69416ede131bc6efc6e7c0e850fff212a98d0",
     "native/turbo_module_registry.cpp": "5ca1612c79ef0797867918d9b0de9fab176cb6e54a97b9faa2f36e55ebf3462e",
     "native/turbo_module_registry.h": "434ea07f7bdacba2bd8e8f8b5982b7da5e15d9004f093f46a16b08df8029e8ed",
     "native/CMakeLists.txt": "447d63e782b21ef1b577c32b7a73f35f6c05788f28cb5d142111e039a0732ae1"
@@ -793,7 +931,7 @@
   "limits": [
     "The cases are the handler of a Pressable's onPress in one headless root; the order of the commit relative to other work is certified for sync-lane updates of a discrete event, not for every lane.",
     "The timer cases depend on the host taking a timer registered in a handler in a later pump than the RuntimeScheduler's loop; the oracle reads that order from native/application_runtime.cpp.",
-    "The gate is the host's extension (V2-D27); callback exceptions and a Promise storm are slice F's.",
+    "The gate is the host's extension (V2-D27); callback exceptions and a Promise storm are slice F's. Hermes ignores the hint of drainMicrotasks(int), so the checkpoint at the head of stop() is bounded as every pump is: by the queue.",
     "The registry counts the calls that reach RN's module in front of RN's own invoker; the module's C++ is compiled unchanged.",
     "The headless desktop host only; no mobile export has run this bundle.",
     "Hosted CI is pending: the record is of the local run."
