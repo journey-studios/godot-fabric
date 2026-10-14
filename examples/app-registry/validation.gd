@@ -131,9 +131,17 @@ func run() -> void:
     "Without providers the root View is RN's default: it fills the surface, has no background, and nothing wraps the card")
   await capture("before")
 
-  # The providers apply from the next run: the button sets them and runs the surface again with setSurfaceProps.
+  # The card is counted before the providers, to see what the first run after them does to its state.
+  await click("app-registry-count")
+  var counted_before := await wait_for(func() -> bool: return text_of("app-registry-tag") == "rootTag %d · count 1" % tag)
+  verify(counted_before and example().get("mounts") == 1 and example().get("cleanups") == 0,
+    "Pressable updates the component's state, and the component has mounted once")
+
+  # The providers apply from the next run: the button sets them and runs the surface again with setSurfaceProps. The Frame now sits above
+  # the component, so React mounts it again and the count starts over, as it does in RN.
   await click("app-registry-apply")
   var applied := await wait_for(func() -> bool: return not node("app-registry-wrapper").is_empty() and text_of("app-registry-title") == "Providers applied")
+  var remounted := await wait_for(func() -> bool: return example().get("mounts") == 2 and example().get("cleanups") == 1)
   await frames(8)
   snap("providers")
   var root_after := node("")
@@ -149,19 +157,23 @@ func run() -> void:
   verify((calls.wrapperCalls.size() == 1 and calls.wrapperCalls[0].appKey == "AppRegistryExample" and int(calls.wrapperCalls[0].rootTag) == tag
     and calls.styleCalls.size() == 1 and int(calls.styleCalls[0].rootTag) == tag),
     "Each provider ran once for the root, with its tag and the registered key")
+  verify(remounted and text_of("app-registry-tag") == "rootTag %d · count 0" % tag and calls.mounts == 2 and calls.cleanups == 1,
+    "Applying the wrapper mounts the component again: its count starts over at 0, one cleanup ran and it has mounted twice")
   await capture("providers")
 
-  # setSurfaceProps keeps the component's state: the count survives a new run.
+  # With the Frame in place the tree keeps its shape, so a new run changes the props and keeps the state: the count survives it.
   await click("app-registry-count")
   await click("app-registry-count")
   var counted := await wait_for(func() -> bool: return text_of("app-registry-tag") == "rootTag %d · count 2" % tag)
-  verify(counted, "Pressable updates the component's state")
+  verify(counted, "Pressable updates the state of the remounted component")
   await click("app-registry-update")
   var updated := await wait_for(func() -> bool: return text_of("app-registry-title") == "Props updated")
   await frames(8)
   snap("updated")
   verify(updated and text_of("app-registry-tag") == "rootTag %d · count 2" % tag and text_of("app-registry-frame-label") == "WRAPPER · Props updated",
-    "setSurfaceProps changes the props and keeps the state: the count is still 2, and the wrapper shows the new props")
+    "A later setSurfaceProps changes the props and keeps the state: the count is still 2, and the wrapper shows the new props")
+  verify(example().get("mounts") == 2 and example().get("cleanups") == 1,
+    "The prop update neither mounted the component again nor ran a cleanup")
   verify(example().get("runs") == ["Providers applied", "Props updated"] and example().get("wrapperCalls").size() == 2,
     "Two runs of the surface called the wrapper provider twice")
   if capturing:

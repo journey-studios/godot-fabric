@@ -4362,11 +4362,12 @@ the style read from the native Controls and the `FabricSurface.update_props` pat
 that replays the registry script against a model of `AppRegistryImpl.js` and reads RN's own strings from its source. The slice
 changes no native code, so its control is **nine retained sabotages of the SDK** (`scripts/app-registry-sabotage.mjs`) that fail
 3, 1, 1, 5, 8, 1, 9, 1 and 2 checks, each rejected by the probe and by the oracle. The
-[example](examples/app-registry/README.md) passes 12 checks headless and 17 with the native renderer and two captures.
+[example](examples/app-registry/README.md) passes 15 checks headless and 20 with the native renderer and two captures; its card
+mounts again when the wrapper is first applied, as in RN, and later prop updates keep its state.
 
 Open: root replacement over many cycles with component-owned timers and requestAnimationFrame, pause and resume, scene
 change, error cleanup (V2-D26), the suspended and hidden display modes (still refused by `render-application.jsx`),
-overlays and portals, and the hosted CI run of the new step. The record is not pinned to a commit yet. No checkpoint, whole GF,
+overlays and portals. The record is pinned to the implementation commit `baa1c4cf`. Hosted run 38473856206, on head `9cdae802`, passed every job: `native-suites-frontier` passed on rerun, after the known `cpu-time-instrument` flake that PR #162 fixes separately. The implementation commit is `baa1c4cf`, not that head. No checkpoint, whole GF,
 weight or denominator closes.
 
 ## M1 — Complete the native UI tree

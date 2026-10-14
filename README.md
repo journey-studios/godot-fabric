@@ -614,13 +614,14 @@ The [AppRegistry example](examples/app-registry/README.md) runs React Native's o
 import with all 19 members RN 0.87.1 declares: components, sections, runnables and configs (a key registered once is never
 replaced), the readers, the wrapper, root view style and instrumentation providers, and `runApplication` and `setSurfaceProps`
 for a surface the scene mounted. A button there sets the two providers and runs the root again with `setSurfaceProps`, which
-puts the wrapper around the card and the style on the root Control and keeps the component's state.
+puts the wrapper around the card (React mounts the card again under it, as in RN, so its state starts over) and the style on the
+root Control, and later `setSurfaceProps` runs change the props and keep the state.
 `unmountApplicationComponentAtRootTag` only logs RN's error (a root unmounts through `FabricSurface.unmount()`), the four
 headless-task members throw `E_APP_REGISTRY_HEADLESS_TASK`, and a `rootTag` no running surface owns throws
 `E_APP_REGISTRY_UNKNOWN_ROOT`. The headless suite (41 checks) runs six real roots of one application with an independent oracle
 that replays the registry against a model of `AppRegistryImpl.js`; the slice changes no native code, so nine retained SDK
 sabotages are its control and each is rejected. Root replacement over many cycles, pause and resume, scene change, error
-cleanup and the suspended display modes are open. Hosted CI is pending. [Evidence](docs/evidence/app-registry/README.md)
+cleanup and the suspended display modes are open. Hosted run 38473856206, on head `9cdae802`, passed every job: `native-suites-frontier` passed on rerun, after the known `cpu-time-instrument` flake that PR #162 fixes separately. The implementation commit is `baa1c4cf`, not that head. [Evidence](docs/evidence/app-registry/README.md)
 and [API](docs/API.md#appregistry-members).
 
 The 0.5 milestone's reference app is **Frontier**, a small turn-based strategy game in the interaction style of

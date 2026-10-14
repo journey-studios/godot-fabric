@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppRegistry, Pressable, StyleSheet, Text, View } from "react-native";
 
 // RN's own AppRegistry through the public react-native import. The component below registers itself (and a section, so the
 // registry has something to list); a button then sets the wrapper and the root view style providers and runs the surface again
 // with setSurfaceProps, the way a React Native app decorates every one of its roots. The providers apply from the next run of
-// a root, and the run keeps the component's state because the component keeps its type.
-const observations = { renders: 0, title: "", count: 0, rootTag: 0, wrapperCalls: [], styleCalls: [], runs: [] };
+// a root. That first run puts the Frame above the component, so React mounts the component again and its state starts over, as
+// it does in RN; the runs after it keep the shape of the tree, so setSurfaceProps then changes the props and keeps the state.
+const observations = { renders: 0, mounts: 0, cleanups: 0, title: "", count: 0, rootTag: 0, wrapperCalls: [], styleCalls: [], runs: [] };
 globalThis.AppRegistryExample = {
   state: () => ({ ...observations, wrapperCalls: [...observations.wrapperCalls], styleCalls: [...observations.styleCalls], runs: [...observations.runs] }),
 };
@@ -24,6 +25,10 @@ function Frame({ children, initialProps }) {
 
 function AppRegistryExample({ title, rootTag }) {
   const [count, setCount] = useState(0);
+  useEffect(() => {
+    observations.mounts += 1;
+    return () => { observations.cleanups += 1; };
+  }, []);
   observations.renders += 1;
   observations.title = title;
   observations.count = count;

@@ -12,7 +12,9 @@ RN's original `AppRegistry` through the public `react-native` import. The compon
 list. **Apply wrapper and root style** calls `setWrapperComponentProvider` and `setRootViewStyleProvider` and then runs
 the surface again with `setSurfaceProps`: RN's registry calls both providers the next time a root runs, the wrapper's
 component goes around the card, and the style goes on the root View, which is a native Godot Control. **Count +1** is
-React state, and **Update props** is another `setSurfaceProps`, which changes the props and keeps the count. The
+React state. The first run after the wrapper is set puts the wrapper above the card, so React mounts the card again and
+its count starts over, as it does in RN; after that the tree keeps its shape, and **Update props**, another
+`setSurfaceProps`, changes the props and keeps the count. The
 launcher entry is the interactive demo; `npm run test:app-registry` is the
 [evidence](../../docs/evidence/app-registry/README.md) suite, outside the catalog.
 

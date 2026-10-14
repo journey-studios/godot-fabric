@@ -415,8 +415,8 @@
   },
   "example": {
     "id": "app-registry",
-    "headlessChecks": 12,
-    "nativeRendererChecks": 17,
+    "headlessChecks": 15,
+    "nativeRendererChecks": 20,
     "capture": "npm run example -- app-registry --capture"
   },
   "regressions": {
@@ -445,7 +445,7 @@
   "limits": [
     "root replacement over many cycles, pause and resume, scene change and error cleanup belong to later GF-07 slices",
     "suspended and hidden display modes stay refused by render-application.jsx; the display-mode check of the probe changes with the pause and resume slice",
-    "hosted CI is not run for this slice yet",
+    "hosted CI: run 38473856206, on head 9cdae802 (not the implementation commit baa1c4cf), passed every job; native-suites-frontier passed on rerun, after the known cpu-time-instrument flake that PR #162 fixes separately",
     "overlays and portals are not part of this slice"
   ]
 }

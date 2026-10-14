@@ -1239,8 +1239,8 @@ independent oracle that replays the registry script against a model of `AppRegis
 its source. The slice changes no native code, so its control is nine retained SDK sabotages (3, 1, 1, 5, 8, 1, 9, 1 and 2
 failed checks), each rejected by the probe and by the oracle. Two renderer captures of the
 [example](../../examples/app-registry/README.md) show a root before and with the providers. Root replacement over many cycles,
-pause and resume, scene change, error cleanup, the suspended display modes and the hosted CI run are open, and the record is not
-pinned to a commit yet.
+pause and resume, scene change, error cleanup and the suspended display modes are open. The record is pinned to the implementation
+commit `baa1c4cf`. Hosted run 38473856206, on head `9cdae802`, passed every job: `native-suites-frontier` passed on rerun, after the known `cpu-time-instrument` flake that PR #162 fixes separately. The implementation commit is `baa1c4cf`, not that head.
 
 These images are Godot renderer readbacks of generic fixtures, not desktop
 screenshots. They contain no other applications or game content.
