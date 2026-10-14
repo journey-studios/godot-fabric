@@ -955,10 +955,11 @@ npm run test:frontier-turn               # Frontier as a provisioned consumer, c
 npm run test:cpu-time-instrument      # the CPU-time instrument against a busy loop of 2, 5, 10 and 20 ms, headless, with an independent oracle; sabotages: node scripts/cpu-time-instrument-sabotage.mjs; local windowed lane: npm run bench:cpu-time-instrument-graphics
 npm run check:static
 npm run check:publication
-npm run test:cold                        # two disposable projects, no resource cache
+npm run test:cold                        # GF-02: three fresh installs (disposable project, empty resource cache, fresh HOME), one attempt per step
 npm run test:cold:boundary               # GF-02: the official Godot still crashes without the containment, imports with it
+npm run test:cold:negative               # GF-02: an extension that asks for a newer Godot is refused cleanly, leaves no residue, the next start is clean
 npm run parity:status                    # API gaps and current native evidence
-npm run parity:godot                     # shared core UI fixture in Godot
+npm run parity:godot                     # shared core UI fixture in Godot, run from a cold project
 npm run check -- --typography --headless
 npm run check -- --typography --capture
 npm run test:typography                  # includes real native negative cases
@@ -968,9 +969,11 @@ npm run test:recovery
 
 Run native checks sequentially: they share generated report files. Each check
 imports through the editor and rejects native errors, script errors, crashes,
-timeouts and exit without the acceptance marker. The one exception is
-`test:cold:boundary`, whose unprepared imports must crash (the engine bug GF-02 contains);
-it passes only when they all crash and every prepared import is clean. Headless proves native
+timeouts and exit without the acceptance marker. Two lanes of GF-02 expect an error by design:
+`test:cold:boundary`, whose unprepared imports must crash (the engine bug GF-02 contains; it
+passes only when they all crash and every prepared import is clean), and `test:cold:negative`,
+whose refused start must log Godot's refusal of an incompatible `compatibility_minimum`
+(it passes only when nothing else is wrong and the next start is clean). Headless proves native
 contracts; captures independently exercise rendering and logical Viewport input.
 
 [Architecture](docs/ARCHITECTURE.md) · [Architecture 2.0 direction](docs/ARCHITECTURE_V2.md) ·

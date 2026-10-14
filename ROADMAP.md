@@ -1353,6 +1353,25 @@ executable), and the `contract` checkpoint is closed on it.
 GF-02 remains In progress (comparison cases and applicable targets); see the
 [evidence record](docs/evidence/cold-start.md#executable-engine-boundary).
 
+**GF-02 checkpoint (2026-10-14):** the `parity` and `targets` lanes are prepared and wait
+for a hosted run, so neither checkpoint is closed here. By decision of 2026-10-14, parity is
+native startup cases and the target is macOS arm64 only. `npm run test:cold` now makes at
+least three fresh installs (a new project, an empty resource cache and a fresh `HOME` each),
+launching every step once: a signal, a crash or an error fails the run and a second launch of a
+step is refused. `npm run test:cold:negative` starts a fixture whose `compatibility_minimum` is
+`4.99.0` on the real engine and requires Godot's own refusal (`GDExtension only compatible with
+Godot version 4.99.0 or later`), a process that ends without a crash, no residue inside or
+outside the fixture compared with a positive control, and a clean next start with the correct
+metadata; with the metadata unchanged the same assertions must fail. `npm run parity:godot` runs
+the shared parity fixture from a cold project and its report, which the comparison with the RN
+iOS and Android references now requires, carries the hash of the fixture directory beside the
+fixture, case and runtime hashes. `compatibility_minimum` stays `4.7.2`; Linux, Windows, Android
+and iOS are recorded as not qualified here (GF-32 to GF-35). One finding is recorded: on the full
+project the unprepared import did not crash in 11 of 11 local runs, so `--without-startup` is
+not a control and the boundary lane stays the executable one. See the
+[evidence record](docs/evidence/cold-start.md#repeated-first-installs) and its
+[targets](docs/evidence/cold-start.md#targets).
+
 ### Focus command boundary complement (2026-10-04)
 
 The [original-dispatch guard fixture](docs/evidence/focus/commands.json) passes

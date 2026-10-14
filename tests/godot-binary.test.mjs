@@ -61,7 +61,7 @@ test("runner preflight failures remove prior passing reports", async () => {
       mkdirSync(path.join(fixture, "build"));
       mkdirSync(path.join(fixture, "examples"));
       for (const file of [`scripts/${script}`, "scripts/godot-binary.mjs", "scripts/examples-catalog.mjs",
-        "examples/catalog.json", "dependencies.json"])
+        "examples/catalog.json", "dependencies.json", ...(script === "cold-start.mjs" ? ["scripts/cold-lanes.mjs"] : [])])
         cpSync(path.join(root, file), path.join(fixture, file));
       const report = path.join(fixture, "build", reportName);
       writeFileSync(report, '{"status":"passed"}\n');
@@ -89,7 +89,7 @@ else if (!process.argv.includes("--editor")) console.error("SCRIPT ERROR: FABRIC
       for (const folder of ["scripts", "build", "addons"])
         mkdirSync(path.join(fixture, folder), { recursive: true });
       mkdirSync(scratch);
-      for (const file of ["scripts/cold-start.mjs", "scripts/godot-binary.mjs", "scripts/extension_startup.py",
+      for (const file of ["scripts/cold-start.mjs", "scripts/cold-lanes.mjs", "scripts/godot-binary.mjs", "scripts/extension_startup.py",
         "dependencies.json", "project.godot", "fabric.gdextension"])
         cpSync(path.join(root, file), path.join(fixture, file));
       writeFileSync(path.join(fixture, "addons/fabric_godot.dylib"), "fixture");
