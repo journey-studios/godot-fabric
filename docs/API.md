@@ -404,6 +404,39 @@ The two typed errors follow the SDK's `E_*` convention (`src/godot-fabric.js`): 
 The [evidence](evidence/app-registry/README.md) records each member against RN's source and the real host, and the
 [example](../examples/app-registry/README.md) shows the providers.
 
+### Overlays and portals
+
+Overlays follow React Native's own contract, and the SDK exports no `createPortal` or portal component (the user's decision of
+2026-10-14, in [the overlays research note](research/overlays-portals.md)):
+
+| Need | RN's public contract on Godot |
+| --- | --- |
+| Content above other content in a root | `zIndex` and absolutely positioned Views. Fabric flattens stacking contexts, so a `zIndex` orders siblings inside its stacking context and does not lift a descendant out of an ancestor that forms one or clips with `overflow`. |
+| A blocking presentation | `Modal` (GF-18). |
+| Content that has to leave a surface, or serve several | A second `FabricSurface`. |
+| A **non-blocking** overlay (dropdown, tooltip, menu) opened from inside a `ScrollView` or a list row | The in-root portal pattern below. |
+
+The pattern is Context plus a host View inside every root, installed with `AppRegistry.setWrapperComponentProvider`: a `PortalProvider`
+keeps the portal entries in state and renders the root's content followed by a `PortalHost`, an absolutely positioned full-size `View`
+with `pointerEvents="box-none"` and a `zIndex`; a `Portal` registers its children with the provider on mount, updates them when they change
+and removes them on unmount. The provider is per root, because AppRegistry runs the wrapper provider for each root, so every root has its own
+host. The code is the example's [App.jsx](../examples/portal-pattern/App.jsx) and its [README](../examples/portal-pattern/README.md) says how to
+use it and where it stops; it is copied, not imported, because it is not part of the SDK.
+
+```jsx
+AppRegistry.setWrapperComponentProvider(() => PortalProvider);   // before any root runs
+// ... anywhere in the root, even inside a ScrollView:
+{open ? <Portal><Dropdown left={left} top={top} /></Portal> : null}
+```
+
+[Certified on this host](evidence/portal-pattern/README.md) with real mouse events against real roots: the portal's Controls are the
+children of the host's Control and come last in tree order, nothing clips them though they reach past the `ScrollView`'s rectangle, a press
+on an item reaches the item, a press outside the dropdown reaches the row under it or the Godot world behind the surface (the host is
+`box-none`), closing removes the Controls, unmounting a root removes its host, and two roots have two hosts. Known limits: the Context
+around the trigger does not reach the portal's content (it renders under the host's providers: pass a value as a prop or provide it again
+inside the `Portal`), the host cannot draw outside its surface, and an overlay shared by several surfaces needs a second surface or a host
+per root. Input between overlapping surfaces is a separate question (V2-D10).
+
 ### Application and surfaces
 
 An experimental `FabricApplication` Node owns one Hermes runtime, module cache,

@@ -259,6 +259,18 @@ jobs:
             build/app-registry-current.log
             build/app-registry-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:portal-pattern
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-portal-pattern
+          path: |
+            build/portal-pattern-report.json
+            build/portal-pattern-current-report.json
+            build/portal-pattern-comparison.json
+            build/portal-pattern-current.log
+            build/portal-pattern-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:lists
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

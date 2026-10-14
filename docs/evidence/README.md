@@ -1242,6 +1242,17 @@ failed checks), each rejected by the probe and by the oracle. Two renderer captu
 pause and resume, scene change, error cleanup and the suspended display modes are open. The record is pinned to the implementation
 commit `baa1c4cf`. Hosted run 38473856206, on head `9cdae802`, passed every job: `native-suites-frontier` passed on rerun, after the known `cpu-time-instrument` flake that PR #162 fixes separately. The implementation commit is `baa1c4cf`, not that head.
 
+The [portal pattern record](portal-pattern/README.md) certifies the in-root overlay pattern of GF-07's overlays decision (a Context-fed
+`box-none` host View per root, installed with `AppRegistry.setWrapperComponentProvider`; no `createPortal` in the SDK). One bundle on two
+real roots of one application, with real mouse events and a Godot node standing for the world, runs 23 headless checks: the dropdown's
+Controls are the host's children and come last in tree order, nothing clips them though they reach past the `ScrollView`'s rectangle, an item
+press, a row outside the dropdown and the area the closed dropdown covered each reach their own target, a press on the empty area passes
+through the host to the world, closing and unmounting leave no Control behind, two roots have two hosts, and the trigger's Context does not reach
+the portal's content. An independent oracle derives the frames from the layout and the routing from the host's pointer rules. The slice
+changes no native code, so its control is five retained sabotages of the example (13, 17, 20, 6 and 4 failed checks), each rejected by the
+probe and by the oracle. Three renderer captures of the [example](../../examples/portal-pattern/README.md) show the list closed, the dropdown
+open over the `ScrollView`'s edge and after choosing. No checkpoint closes.
+
 These images are Godot renderer readbacks of generic fixtures, not desktop
 screenshots. They contain no other applications or game content.
 

@@ -930,6 +930,7 @@ npm run test:examples                    # all interactive demos, headless and s
 npm run test:runtime                     # native deadline budget and callback error recovery
 npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run test:app-registry                # RN's AppRegistry over the host: its 19 members, the providers on real roots and the typed errors; the sabotages: node scripts/app-registry-sabotage.mjs
+npm run test:portal-pattern               # the in-root portal pattern: a dropdown above a ScrollView's clip, presses through a box-none host, per-root hosts; the sabotages: node scripts/portal-pattern-sabotage.mjs
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
 npm run test:consumer:libraries -- --capture   # NativeWind and Chart Kit in an independent project with its own lockfile
 npm run test:consumer:civ-lite -- --capture    # Frontier provisioned as a consumer, ten cycles with no leak and a monotonic epoch; sabotages: node scripts/consumer-civ-lite-sabotage.mjs

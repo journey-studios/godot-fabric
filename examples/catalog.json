@@ -259,6 +259,13 @@
     "scene": "examples/app-registry/scene.tscn"
   },
   {
+    "id": "portal-pattern",
+    "title": "The in-root portal pattern over RN's AppRegistry.setWrapperComponentProvider: a dropdown opened inside a ScrollView draws above it, unclipped, through a Context-fed host View that lets a press fall through to the row beneath and to the Godot world behind the surface",
+    "api": "public",
+    "source": "examples/portal-pattern/App.jsx",
+    "scene": "examples/portal-pattern/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",

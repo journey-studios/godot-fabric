@@ -51,6 +51,7 @@
     "tests/pointer-document-up-fixture.jsx",
     "tests/app-state-fixture.jsx",
     "tests/app-registry-fixture.jsx",
+    "tests/portal-pattern-fixture.jsx",
     "tests/virtualized-list-fixture.jsx",
     "tests/scroll-view-fixture.jsx",
     "tests/scroll-view-modal-fixture.jsx",

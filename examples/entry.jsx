@@ -28,7 +28,7 @@ const typography =
   globalThis.godotScenario === "typography"
     ? require("./typography/App")
     : null;
-if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics", "services", "service-boundaries", "modules", "view", "coordinates", "transforms", "animated", "switch", "activity-indicator", "accessibility", "touchables", "virtualized-list", "appearance", "pan-responder", "networking", "images", "device-services", "text-layout", "accessibility-info", "layout-animation", "app-registry"].includes(globalThis.godotScenario)) {
+if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics", "services", "service-boundaries", "modules", "view", "coordinates", "transforms", "animated", "switch", "activity-indicator", "accessibility", "touchables", "virtualized-list", "appearance", "pan-responder", "networking", "images", "device-services", "text-layout", "accessibility-info", "layout-animation", "app-registry", "portal-pattern"].includes(globalThis.godotScenario)) {
   if (globalThis.godotScenario === "shared") require("./shared/App");
   else if (globalThis.godotScenario === "refs") require("./refs/App");
   else if (globalThis.godotScenario === "tree") require("./tree/App");
@@ -53,6 +53,7 @@ if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics
   else if (globalThis.godotScenario === "accessibility-info") require("./accessibility-info/App");
   else if (globalThis.godotScenario === "layout-animation") require("./layout-animation/App");
   else if (globalThis.godotScenario === "app-registry") require("./app-registry/App");
+  else if (globalThis.godotScenario === "portal-pattern") require("./portal-pattern/App");
   else if (globalThis.godotScenario === "services") require("./services/App");
   else if (globalThis.godotScenario === "service-boundaries") require("../tests/services-boundary-fixture");
   else if (globalThis.godotScenario === "metrics") {

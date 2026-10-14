@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://examples/portal-pattern/validation.gd" id="1"]
+
+[node name="PortalPatternExampleScene" type="Node"]
+script = ExtResource("1")
+
+; The Godot world behind the surface. Its Controls ignore the mouse (mouse_filter = 2), so a press that React Native does not take
+; reaches this scene's _unhandled_input, which counts it and moves the marker. It comes before the surface in the tree: the surface
+; claims what React Native's hit test finds first, and the world hears the rest.
+[node name="World" type="ColorRect" parent="."]
+mouse_filter = 2
+offset_right = 900.0
+offset_bottom = 680.0
+color = Color(0.06, 0.16, 0.17, 1)
+
+[node name="WorldLabel" type="Label" parent="World"]
+mouse_filter = 2
+offset_left = 440.0
+offset_top = 40.0
+offset_right = 860.0
+offset_bottom = 120.0
+theme_override_font_sizes/font_size = 18
+text = "Godot world · presses heard: 0"
+
+[node name="Marker" type="ColorRect" parent="World"]
+visible = false
+mouse_filter = 2
+offset_right = 14.0
+offset_bottom = 14.0
+color = Color(0.98, 0.75, 0.14, 1)
+
+[node name="Application" type="FabricApplication" parent="."]
+metadata/scenario = "portal-pattern"
+
+[node name="Surface" type="FabricSurface" parent="."]
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 400.0
+offset_bottom = 480.0
+application_path = NodePath("../Application")
+component_name = "PortalPatternExample"
+initial_props = {
+"name": "main"
+}

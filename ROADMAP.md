@@ -4370,6 +4370,34 @@ change, error cleanup (V2-D26), the suspended and hidden display modes (still re
 overlays and portals. The record is pinned to the implementation commit `baa1c4cf`. Hosted run 38473856206, on head `9cdae802`, passed every job: `native-suites-frontier` passed on rerun, after the known `cpu-time-instrument` flake that PR #162 fixes separately. The implementation commit is `baa1c4cf`, not that head. No checkpoint, whole GF,
 weight or denominator closes.
 
+### The in-root portal pattern (2026-10-14)
+
+GF-07 stays **In progress**; this slice is the overlays decision's fixture, and it closes no checkpoint: `slice` was closed by an earlier
+slice, and the full item, contract, parity and targets remain open. The user's decision of 2026-10-14
+([design note](docs/research/overlays-portals.md)) is RN parity (`zIndex` and absolute Views in a root, `Modal` for GF-18, a second
+surface) plus option (c), the pattern of a Context-fed host View inside a root installed with `AppRegistry.setWrapperComponentProvider`,
+documented and certified by a fixture, and **no `createPortal` in the SDK**. The pattern is plain RN code in the
+[example](examples/portal-pattern/README.md) (`PortalProvider`, `PortalHost`, `Portal`) and in [the API guide](docs/API.md#overlays-and-portals),
+and the [evidence](docs/evidence/portal-pattern/README.md) certifies it in the real host.
+
+The suite (`npm run test:portal-pattern`) runs **23 headless checks** with real mouse events against actual `FabricSurface` roots of one
+application, in front of a Godot node that stands for the game's world, and reads the native Controls: the dropdown's Controls are the
+children of the host's Control, which is the last child of the root's, so Godot draws them last; the `ScrollView`'s Control clips and nothing
+clips the dropdown though it reaches past the `ScrollView`'s rectangle; an item press reaches the item, a press on a row outside the open
+dropdown or on the area the closed dropdown covered reaches the row, the dropdown is opaque, and a press on the root's empty area passes through
+the `box-none` host to the world, open and closed; closing removes the Controls and unmounting a root with a portal open removes its host
+with none left over; two roots have two hosts and independent state; and the trigger's Context does not reach the portal's content, the
+pattern's known limit. An independent oracle derives the frames from the scenario's layout (Yoga) and RN's stacking-context rule, and the
+routing from the host's pointer rules. A finding of the slice: Fabric hoists the children of a View that forms no stacking context into the
+nearest one, so the host carries a `zIndex` (a positioned View with a `zIndex` forms one) for its children to be its own Controls. The slice
+changes no native code, so its control is **five retained sabotages of the example** (`scripts/portal-pattern-sabotage.mjs`): the host inside
+the `ScrollView`'s content, the host without `box-none`, the provider not installed, the portal not removed on unmount and the host
+without its `zIndex` fail 13, 17, 20, 6 and 4 checks, each rejected by the probe and by the oracle. The example passes 14 checks headless
+and 18 with the native renderer and three captures.
+
+Open: whether the pattern also becomes an SDK helper (not decided), a portal library on top of it (GF-27), `Modal` (GF-18), and the input
+between overlapping surfaces (V2-D10, the next GF-07 slice: the host's surface pick follows the draw order).
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
