@@ -7,7 +7,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import {
   compareVersions, createLedger, describeRefusal, fixtureProblems, INCOMPATIBLE_MINIMUM, INSTALL_STEPS, judgeStart, MIN_INSTALLS,
-  outsideProblems, parseInstalls, refusalProblems, treeDiff, verifyColdReport,
+  outsideProblems, parseInstalls, prepareStartup, refusalProblems, sameNames, treeDiff, verifyColdReport,
 } from "../scripts/cold-lanes.mjs";
 import { occurrences } from "../scripts/sabotage-sources.mjs";
 
@@ -145,6 +145,43 @@ test("versions compare numerically", () => {
   assert.equal(compareVersions("4.10.0", "4.9.9"), 1);
 });
 
+test("a cache listing is compared as a set of names, whatever order the directory returns them in", () => {
+  const folder = mkdtempSync(path.join(tmpdir(), "fabric-cold-names-"));
+  try {
+    // Created in reverse name order; the order of the listing is not forced, and the comparison must not depend on it.
+    writeFileSync(path.join(folder, "b.cfg"), "");
+    writeFileSync(path.join(folder, "a.cfg"), "");
+    const listing = readdirSync(folder);
+    for (const expected of [["a.cfg", "b.cfg"], ["b.cfg", "a.cfg"]]) {
+      assert.equal(sameNames(listing, expected), true, JSON.stringify(expected));
+      assert.equal(sameNames([...listing].reverse(), expected), true, `reversed ${JSON.stringify(expected)}`);
+    }
+    // Mutations: a name missing, extra, repeated or different is not the same set.
+    for (const expected of [["a.cfg"], ["a.cfg", "b.cfg", "c.cfg"], ["a.cfg", "a.cfg"], ["a.cfg", "c.cfg"], []]) {
+      assert.equal(sameNames(listing, expected), false, JSON.stringify(expected));
+    }
+  } finally {
+    rmSync(folder, { recursive: true, force: true });
+  }
+});
+
+test("the startup preparation returns the cache listing sorted and refuses a cache that holds anything else", () => {
+  const checkout = mkdtempSync(path.join(tmpdir(), "fabric-cold-startup-"));
+  try {
+    mkdirSync(path.join(checkout, "scripts"));
+    mkdirSync(path.join(checkout, "project/addons"), { recursive: true });
+    cpSync(path.join(root, "scripts/extension_startup.py"), path.join(checkout, "scripts/extension_startup.py"));
+    writeFileSync(path.join(checkout, "project/fabric.gdextension"), "[configuration]\n");
+    writeFileSync(path.join(checkout, "project/addons/fabric_godot.dylib"), "library");
+    assert.deepEqual(prepareStartup({ root: checkout, project: path.join(checkout, "project") }), ["extension_list.cfg"]);
+    // Mutation: a cache that already holds another file is not a fresh install.
+    writeFileSync(path.join(checkout, "project/.godot/uid_cache.bin"), "x");
+    assert.throws(() => prepareStartup({ root: checkout, project: path.join(checkout, "project") }), /unexpected cache state/);
+  } finally {
+    rmSync(checkout, { recursive: true, force: true });
+  }
+});
+
 test("Godot's own refusal, ending by itself and without a crash, is accepted", () => {
   assert.deepEqual(judgeRefused(refusedStart()), []);
   const found = describeRefusal(REFUSAL_LOG);
@@ -266,7 +303,8 @@ test("mutation: every file outside the fixture or outside the engine's user data
 
 // A Godot that is told how to misbehave by FAKE_MODE (one JSON object) and numbers its own launches in FAKE_LAUNCHES.
 // It honours compatibility_minimum, writes the caches a real start writes (in the project and under HOME), and
-// prints the lines of a real refusal. Launches of the negative lane: 1 control-import, 2 control-react, 3 refused-import,
+// prints the lines of a real refusal. badReportAtLaunch writes a validation report that is not JSON and bigFileAtLaunch leaves
+// a sparse file that node refuses to read, so that the lane meets an error of its own. Launches of the negative lane: 1 control-import, 2 control-react, 3 refused-import,
 // 4 recovered-import, 5 recovered-react.
 const FAKE_ENGINE = String.raw`#!/usr/bin/env node
 const fs = require("node:fs");
@@ -292,6 +330,7 @@ const scene = args.find((arg) => arg.startsWith("res://"));
 if (scene) {
   if (refuses) { console.error("ERROR: the extension is not loaded"); process.exit(1); }
   write(path.join(project, "build/report.json"), JSON.stringify({ scenario: scene.includes("typography") ? "typography" : "react", checks: [{ id: "a", passed: true }] }));
+  if (mode.badReportAtLaunch === launch) { write(path.join(project, "build/report.json"), "not json"); }
   console.log("FABRIC_VALIDATION_PASSED"); process.exit(0);
 }
 const home = process.env.HOME;
@@ -301,6 +340,7 @@ write(path.join(project, ".godot/imported/a.md5"));
 write(path.join(project, ".godot/global_script_class_cache.cfg"));
 write(path.join(project, ".godot/uid_cache.bin"), String(launch));
 write(path.join(project, "fabric.gdextension.uid"));
+if (mode.bigFileAtLaunch === launch) { const big = path.join(project, ".godot/big.bin"); write(big); fs.truncateSync(big, 3000000000); }
 console.log("[ DONE ] first_scan_filesystem");
 if (mode.extraAtLaunch === launch) { write(path.join(project, ".godot/leftover.bin")); }
 if (refuses) {
@@ -540,13 +580,56 @@ test("mutation: every way the failed start can misbehave is rejected by the lane
   }
 });
 
-test("a broken positive control stops the lane before it judges anything", () => {
-  withLab(({ checkout, scratch, run, launches }) => {
+// The negative lane's own sabotages: a step launched under a name that already ran, which the ledger refuses.
+const RECOVERY_REPEATS_A_STEP = {
+  file: "scripts/cold-start-negative.mjs",
+  find: 'const validated = step(sandbox, "recovered-react", REACT);', replace: 'const validated = step(sandbox, "recovered-import", REACT);',
+};
+const REFUSED_START_REPEATS_A_STEP = {
+  file: "scripts/cold-start-negative.mjs",
+  find: 'state.refused = step(sandbox, "refused-import", IMPORT, 120000);', replace: 'state.refused = step(sandbox, "control-import", IMPORT, 120000);',
+};
+
+test("mutation: an error thrown anywhere in the negative lane still writes a failed report that names it, and never a TypeError", () => {
+  // `known` lists what the report must still say about the steps that did run; the rest is null, not a crash of the lane.
+  const points = {
+    "a positive control that is broken": { mode: { failLaunch: 1 }, error: /The positive control is broken: control-import failed/, refusal: false, control: false, afterRefusal: false, afterRecovery: false },
+    "a missing bundle": { prepare: (checkout) => rmSync(path.join(checkout, "build/app.js")), error: /Missing build\/app\.js/, refusal: false, control: false, afterRefusal: false, afterRecovery: false },
+    "a step that the ledger refuses before the refused start ran": { edit: REFUSED_START_REPEATS_A_STEP, error: /Retry refused: control-import already ran once/, refusal: false, control: true, afterRefusal: false, afterRecovery: false },
+    "a tree that cannot be listed after the refused start": { mode: { bigFileAtLaunch: 3 }, error: /the lane stopped on an error: .*(2 GiB|too large)/i, refusal: true, control: true, afterRefusal: false, afterRecovery: false },
+    "a step that the ledger refuses during the recovery": { edit: RECOVERY_REPEATS_A_STEP, error: /Retry refused: recovered-import already ran once/, refusal: true, control: true, afterRefusal: true, afterRecovery: false },
+    "a validation report that is not JSON": { mode: { badReportAtLaunch: 5 }, error: /the lane stopped on an error: .*JSON/, refusal: true, control: true, afterRefusal: true, afterRecovery: false },
+  };
+  for (const [name, point] of Object.entries(points)) {
+    withLab(({ checkout, scratch, run }) => {
+      point.prepare?.(checkout);
+      if (point.edit) {
+        sabotage(checkout, point.edit);
+      }
+      const result = run("cold-start-negative.mjs", { mode: point.mode });
+      assert.equal(result.status, 1, `${name}: ${result.stderr}`);
+      assert.doesNotMatch(result.stderr, /TypeError/, name);
+      assert.match(result.stderr, /COLD_START_NEGATIVE_FAILED/, name);
+      assert.match(result.stderr, point.error, name);
+      const report = readJson(negativeReport(checkout));
+      assert.equal(report.status, "failed", name);
+      assert.match(report.problems.join("\n"), /the lane stopped on an error/, name);
+      assert.match(report.problems.join("\n"), point.error, name);
+      assert.equal(report.refusal !== null, point.refusal, `${name}: refusal`);
+      assert.equal(report.causalControl !== null, point.control, `${name}: causal control`);
+      assert.equal(report.residue.controlOutsidePaths !== null, point.control, `${name}: control residue`);
+      assert.equal(report.residue.refusedOutsidePaths !== null, point.afterRefusal, `${name}: residue after the refusal`);
+      assert.equal(report.residue.recoveredOutsidePaths !== null, point.afterRecovery, `${name}: residue after the recovery`);
+      assert.deepEqual(readdirSync(scratch), [], `${name}: a sandbox was left behind`);
+    });
+  }
+});
+
+test("a failed negative lane never leaves the report of an earlier run standing", () => {
+  withLab(({ checkout, run }) => {
+    writeFileSync(negativeReport(checkout), '{"status":"passed"}\n');
     const result = run("cold-start-negative.mjs", { mode: { failLaunch: 1 } });
-    assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /The positive control is broken: control-import failed/);
-    assert.equal(launches().length, 1);
-    assert.equal(existsSync(negativeReport(checkout)), false);
-    assert.deepEqual(readdirSync(scratch), []);
+    assert.equal(result.status, 1);
+    assert.equal(readJson(negativeReport(checkout)).status, "failed");
   });
 });

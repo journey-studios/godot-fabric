@@ -22,6 +22,10 @@ const STAGING_NAME = /^\.extension-list-|\.(?:tmp|part)$|~$/;
 
 export const sha256 = (data) => createHash("sha256").update(data).digest("hex");
 
+// Two lists of names are the same set of names whatever order a directory listing returned them in: readdirSync
+// promises no order, so every comparison of a listing with an expectation goes through here.
+export const sameNames = (listing, expected) => JSON.stringify([...listing].sort()) === JSON.stringify([...expected].sort());
+
 export function parseInstalls(value) {
   const installs = Number(value);
   if (!Number.isInteger(installs) || installs < MIN_INSTALLS) {
@@ -111,7 +115,7 @@ export function verifyColdReport(report) {
     if (run.freshResources !== true || run.freshUserData !== true) {
       problems.push(`${label}: it did not start from an empty resource cache and fresh user data`);
     }
-    if (JSON.stringify(run.startupFiles) !== JSON.stringify(startup)) {
+    if (!Array.isArray(run.startupFiles) || !sameNames(run.startupFiles, startup)) {
       problems.push(`${label}: the cache held ${JSON.stringify(run.startupFiles)} before the import, not ${JSON.stringify(startup)}`);
     }
     if (!Array.isArray(run.cases) || run.cases.length !== 2 || run.cases.some((entry) => !(entry.checks > 0))) {
@@ -341,8 +345,8 @@ export function prepareStartup({ root, project }) {
   if (prepared.error || prepared.status !== 0) {
     throw new Error(prepared.stderr || String(prepared.error));
   }
-  const files = readdirSync(path.join(project, ".godot"));
-  if (JSON.stringify(files) !== JSON.stringify(STARTUP_FILES)) {
+  const files = readdirSync(path.join(project, ".godot")).sort();
+  if (!sameNames(files, STARTUP_FILES)) {
     throw new Error("Startup copied unexpected cache state");
   }
   return files;

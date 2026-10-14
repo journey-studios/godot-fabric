@@ -380,8 +380,10 @@ Report: `build/cold-start-negative.json` (the engine and library hashes, the
 refusal with its counts, exit status and signal, the residue measurements, the
 causal control, the five steps with their attempts, and the SHA-256 and size of
 every log); logs `build/cold-start-negative-<step>.log`. A failed run writes the
-same report with `status: "failed"` and its problems; a report of an earlier run is
-removed first.
+same report with `status: "failed"` and its problems, including a run that stopped on
+an error of its own (a refused retry, a tree it could not list, a validation report that
+is not JSON, a broken positive control): what it never measured is `null` in the report;
+a report of an earlier run is removed first.
 
 **Hosted result.** The same run and job ([38560887388](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388), [job 115841370148](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388/job/115841370148), head
 `974b46e8`) ran `npm run test:cold:negative` after the boundary control:
