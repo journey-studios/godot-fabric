@@ -329,9 +329,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   bool stopped{false};
   bool stopping{false};
   bool stop_requested{false};
-  // True while stop() unmounts the roots: the JS gate (godotRuntimeActive) stays open for the work React queues to unmount them, which with
-  // RN$enableMicrotasksInReact includes a queueMicrotask of its own. It closes again when the last root is gone.
+  // The JS gate (godotRuntimeActive, src/runtime.js): open until stop() begins to tear the application down (stopping), and open again while
+  // stop() unmounts the roots (unmounting_roots), for the work React queues to unmount them, which with RN$enableMicrotasksInReact includes a
+  // queueMicrotask of its own. A stop request alone (stop_requested: a native signal asked for it while JS or Fabric owned the stack) does not
+  // close it: React finishes the commit in flight after the signal returns and queues its next job with queueMicrotask, and a refused call
+  // leaves React believing the job is pending, so that it never unmounts the roots. What JS queues between the request and the stop is
+  // cleared (timers, frames) or completes in the checkpoint that opens stop() (microtasks).
   bool unmounting_roots{false};
+  // True while stop() runs the checkpoint of the microtasks pending at the stop.
+  bool draining_for_stop{false};
   bool inactive() const { return stopped || stopping || stop_requested; }
 
   static const rn::ShadowNode *find_family(const rn::ShadowNode &node, rn::Tag tag) {
@@ -1050,11 +1056,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     });
     timer_manager->attachGlobals(*runtime);
     clear_timer.emplace(runtime->global().getPropertyAsFunction(*runtime, "clearTimeout"));
-    // godotRuntimeActive() is the host's lifecycle gate (src/runtime.js). With a true argument it is the strict one: the window in which stop()
-    // unmounts the roots is closed to it, for the callbacks of user code that React's own unmount has no part in.
+    // godotRuntimeActive() is the host's lifecycle gate (src/runtime.js): open until stop() begins to tear the application down, and open again
+    // while stop() unmounts the roots, for the work React queues (a stop request alone does not close it, so that React finishes the commit in
+    // flight). With a true argument it is the strict one, for the callbacks of user code that React has no part in (the idle callbacks): it is
+    // closed from the stop request on, and the unmount window is closed to it. Between a stop request and the teardown a task of the
+    // RuntimeScheduler can still run, when the request came from inside one: the scheduler's own loop picks the next task after it, whatever
+    // pump() checks, so an idle callback queued in that interval would run before the teardown, and the strict gate refuses it.
     bind("godotRuntimeActive", 0, [this](jsi::Runtime &, auto &, const jsi::Value *args, size_t count) {
       const bool strict = count > 0 && args[0].isBool() && args[0].getBool();
-      return jsi::Value(!inactive() || (unmounting_roots && !strict));
+      if (strict) return jsi::Value(!inactive());
+      return jsi::Value(!(stopped || stopping) || unmounting_roots);
     });
     bind("requestAnimationFrame", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (!count || !args[0].isObject() || !args[0].asObject(rt).isFunction(rt))
@@ -1467,7 +1478,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (host) host->native_unmounted(runtime_id, id, gd(folly::toJson(retired)));
   }
   void stop() {
-    if (stopped || stopping) return;
+    // A stop asked for by a microtask of the checkpoint below is the one under way.
+    if (stopped || stopping || draining_for_stop) return;
     if (execution_depth) {
       stop_requested = true;
       // Revoke pointer continuations immediately; destruction and React cleanup
@@ -1476,6 +1488,21 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       return;
     }
     stop_requested = false;
+    // The microtasks pending now were queued before the stop, so they are not new entries (V2-D27): they complete first, in one microtask
+    // checkpoint (RuntimeScheduler_Modern::performMicrotaskCheckpoint's, one call to drainMicrotasks), with the JS gate still open and
+    // before any root, service or timer is torn down. That includes the microtask React queues to finish a commit that was in flight when a
+    // native signal requested the stop: a job React asks for and does not get leaves it waiting for that job for good (didScheduleMicrotask),
+    // and it never unmounts the roots. The gate closes after the checkpoint (stopping); what is queued then is refused.
+    // The bound is the one every pump() has: Hermes drains until the queue is empty (it ignores the hint of drainMicrotasks(int); measured:
+    // 200000 microtasks that queue the next one all ran in one call), so what the microtasks queue while they run completes in this same
+    // checkpoint, and one that queues itself without end starves stop() as it starves a frame (slice F measures that against RN).
+    draining_for_stop = true;
+    {
+      ExecutionScope execution(*this);
+      try { runtime->drainMicrotasks(); }
+      catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
+    }
+    draining_for_stop = false;
     stopping = true;
     pointer_processor().setListenerInterestForGodot({});
     pointer_listener_query.reset();
@@ -1491,12 +1518,6 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (accessibility_info) accessibility_info->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
-    // The microtasks pending now drain with the JS gate closed, so that what user code queued before this stop does not run (V2-D27).
-    {
-      ExecutionScope execution(*this);
-      try { runtime->drainMicrotasks(); }
-      catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
-    }
     std::vector<int> ids;
     std::vector<std::pair<uint64_t, int>> host_ids;
     for (auto &[id, root] : roots) { ids.push_back(id); host_ids.emplace_back(root->host_id, id); }

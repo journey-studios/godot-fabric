@@ -349,6 +349,7 @@ export function idleDerivedChecks(report, expected) {
   const drained = stages.drained ?? {};
   const gate = stages.gate?.state ?? {};
   const afterStop = stages.after_stop ?? {};
+  const reentrant = stages.reentrant ?? {};
   const stop = stages.stop?.application;
   const rootState = stages.stop?.root;
   const record = key => stages[`case_${key}`]?.record;
@@ -424,6 +425,9 @@ export function idleDerivedChecks(report, expected) {
         && afterStop.requests === requests(stop) && afterStop.cancels === cancels(stop) && afterStop.requests >= 0 && afterStop.state?.afterStopRan === false),
     row("lifecycle/Stop releases the root, and all native Controls of the root are balanced",
       stop?.stopped === true && stop.rootCount === 0 && (rootState?.nativeTags ?? -1) === 0 && (rootState?.creates ?? 0) === (rootState?.deletes ?? -1)),
+    row("reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes",
+      reentrant.controlFound === true && reentrant.requests >= 1 && reentrant.application?.stopped === true && reentrant.application.rootCount === 0
+        && reentrant.state?.requested?.threw === false && reentrant.state.requested.value === true && reentrant.state.ran === false),
     row("report/The idle callbacks report is saved with any normative failure visible", true),
   ];
 }

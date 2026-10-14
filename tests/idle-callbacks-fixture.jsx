@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useLayoutEffect, useRef, useState} from "react";
 import {AppRegistry, Pressable} from "react-native";
 import {clearImmediate as shimClearImmediate, setImmediate as shimSetImmediate} from "react-native/Libraries/Core/Timers/immediateShim";
 import {bulk, cases, runCase} from "./idle-callbacks-cases.mjs";
@@ -9,8 +9,35 @@ import {bulk, cases, runCase} from "./idle-callbacks-cases.mjs";
 // The handler of a case is a Pressable's onPress, run in the host's real event path: the probe presses and releases the root with Godot mouse events, the
 // host's input adapter turns the release into a touch end, and Fabric's event beat delivers it to React's event system (EventBeat::induce, a
 // RuntimeScheduler task). Everything a case queues is therefore queued from inside a task, as it is in an application.
+const resize = {current: null};
+const reentrant = {requested: null, ran: false, nativeTag: null, aliveAtRequest: null, aliveAtRun: null};
+
+// Whether the application is still alive, as the host says it to JS: godotNode answers null once a stop is requested or under way.
+function alive() {
+  return reentrant.nativeTag !== null && typeof globalThis.godotNode === "function" && globalThis.godotNode(reentrant.nativeTag) !== null;
+}
 function IdleCallbacksApp() {
-  return <Pressable style={{flex: 1}} onPress={start} />;
+  const [narrow, setNarrow] = useState(false);
+  const target = useRef(null);
+  useLayoutEffect(() => {
+    resize.current = () => setNarrow(true);
+    reentrant.nativeTag = target.current?.tag ?? null;
+  }, []);
+  // The commit of the resize is the one in flight when the probe's signal handler asks for the stop (a native signal in the middle of a commit, as the adapter
+  // acceptance has): React finishes it after the request returns, and this effect queues an idle callback then, between the request and the stop's teardown.
+  useLayoutEffect(() => {
+    if (narrow) {
+      reentrant.aliveAtRequest = alive();
+      reentrant.requested = attempt(() => {
+        globalThis.requestIdleCallback(() => {
+          reentrant.ran = true;
+          reentrant.aliveAtRun = alive();
+        });
+        return true;
+      });
+    }
+  }, [narrow]);
+  return <Pressable ref={target} testID="pressable" style={narrow ? {width: 120, height: 60} : {flex: 1}} onPress={start} />;
 }
 AppRegistry.registerComponent("IdleCallbacksApp", () => IdleCallbacksApp);
 
@@ -286,6 +313,14 @@ globalThis.IdleCallbacksProbe = {
       return true;
     });
     return gate.queued;
+  },
+  // A stop requested by a native signal in the middle of a commit: the probe connects the signal of the root's Control and this changes its size.
+  resize() {
+    resize.current();
+    return true;
+  },
+  reentrantState() {
+    return {...reentrant};
   },
   // What the gate lets through once the application is inactive: nothing is queued, and a cancel does nothing.
   afterStop() {

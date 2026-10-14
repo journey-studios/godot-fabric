@@ -11,7 +11,7 @@ extends SceneTree
 #     path: the order idle callbacks run in against microtasks, immediates, a timer and the scheduler's priorities; what timeRemaining reads against the
 #     clock and the scheduler's yield; what the timeout option does (only didTimeout) and does not do (run a callback early); cancel;
 #   - the lifecycle gate: an idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task
-#     queued with it, and nothing is scheduled after.
+#     queued with it, and nothing is scheduled after; nor does one that a commit in flight queues after a native signal requested the stop.
 # tests/idle-callbacks-oracle.mjs derives every order, reading class and verdict again from RN's sources and V8.
 const DEVICE := 1001
 const SIZE := Vector2(200, 100)
@@ -47,6 +47,8 @@ var sabotage := false
 var bundle_file := "idle-callbacks-probe.js"
 var application: Node
 var surface: Control
+# The nodes of the lane that has ended: they are freed with the last one.
+var retired: Array = []
 
 func check(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -348,6 +350,7 @@ func run_probe() -> void:
       stages["case_" + name.replace("-", "_")] = {"labels": []}
     check_cases_missing()
   await check_gate()
+  await check_reentrant()
   await finish()
 
 # The root did not mount, so no handler ran: every case fails its check, and says so.
@@ -387,7 +390,49 @@ func check_gate() -> void:
     "lifecycle/Stop releases the root, and all native Controls of the root are balanced")
   stages.stop = {"application": stopped, "root": root_state}
 
+# A second application: a native signal asks for the stop in the middle of a React commit (the Control of the root is resized by it), as the adapter acceptance does
+# with an external Control. React finishes the commit after the signal returns, and its layout effect requests an idle callback then, between the request and the
+# stop's teardown. The gate is open there as the plain one is (nothing of the RuntimeScheduler runs while a stop is requested), and the callback must not run: the
+# teardown begins before the scheduler's next task, and the strict gate is closed from then on.
+func check_reentrant() -> void:
+  retired.append(application)
+  retired.append(surface)
+  application = ClassDB.instantiate("FabricApplication")
+  application.name = "IdleCallbacksReentrantApplication"
+  application.set("bundle_path", "res://build/" + bundle_file)
+  root.add_child(application)
+  surface = ClassDB.instantiate("FabricSurface")
+  surface.name = "IdleCallbacksReentrantRoot"
+  surface.size = SIZE
+  surface.set("application_path", NodePath("../IdleCallbacksReentrantApplication"))
+  surface.set("component_name", "IdleCallbacksApp")
+  root.add_child(surface)
+  await wait_mounted()
+  var mounted := snap()
+  var control: Node = surface.find_child("pressable", true, false)
+  var found := control != null
+  var requests: Array = []
+  if found:
+    control.connect("resized", func() -> void:
+      requests.append(1)
+      application.call("stop"))
+  js("IdleCallbacksProbe.resize()")
+  var waited := 0
+  while not bool(snap().get("stopped", false)) and waited < 300:
+    await process_frame
+    waited += 1
+  await settle()
+  var stopped := snap()
+  var state: Variant = js("IdleCallbacksProbe.reentrantState()")
+  stages.reentrant = {"mounted": mounted, "requests": requests.size(), "controlFound": found, "state": state, "application": stopped}
+  host_check((found and requests.size() >= 1 and stopped.get("stopped", false) == true and int(stopped.get("rootCount", -1)) == 0
+    and dig(state, ["requested", "threw"]) == false and dig(state, ["requested", "value"]) == true and dig(state, ["ran"]) == false),
+    "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes")
+
 func finish() -> void:
+  for node: Node in retired:
+    if is_instance_valid(node):
+      node.queue_free()
   surface.queue_free()
   application.queue_free()
   await settle(2)

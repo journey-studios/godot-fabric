@@ -633,9 +633,10 @@ the RuntimeScheduler at its idle priority: it runs after the work queued with it
 deadline is 50 ms long; `timeRemaining()` reads zero once the scheduler holds another task
 or the deadline is past; the `timeout` option only makes `didTimeout` true for a callback
 that runs after it, and does not run the callback early (RN 0.87.1's module never passes it
-on to the scheduler). Application shutdown cancels registered timers/frames and suppresses
-pending microtask/immediate/idle callbacks (the host's lifecycle gate, which RN does not
-have). Retained scheduling functions cannot
+on to the scheduler). Application shutdown cancels registered timers/frames; the
+microtask/immediate callbacks queued before it complete first, in one microtask checkpoint,
+and none is accepted once it has begun (the host's lifecycle gate, which RN does not have).
+Idle callbacks queued before it never run, and none is accepted either. Retained scheduling functions cannot
 restart them after shutdown. Individual named root unmounts preserve application
 timers/frames and module state; component effects must dispose their own subscriptions
 and clocks. Ordinary Promises are not a cancellation API.

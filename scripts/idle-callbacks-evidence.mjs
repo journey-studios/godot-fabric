@@ -99,7 +99,7 @@ const readings = (name, owner) => Object.fromEntries(idleOf(name, owner).samples
 const record = {
   schemaVersion: 1,
   scenario: "idle-callbacks",
-  status: "verified-local-headless-previous-host-control-eight-sabotages",
+  status: "verified-local-headless-previous-host-control-nine-sabotages",
   at: new Date().toISOString(),
   executionBaseCommit: git("rev-parse", "HEAD"),
   sourceDirtyDuringExecution: commit === null,
@@ -150,7 +150,7 @@ const record = {
   retainedSabotage: {
     script: "scripts/idle-callbacks-sabotage.mjs",
     table: "tests/idle-callbacks-sabotages.mjs",
-    mechanism: "set-up-timers-not-imported, timeout-ignored, reimplemented, cancel-dropped, gate-removed and window-open are in-memory esbuild overrides (scripts/idle-callbacks-bundle.mjs), no file is edited; no-module and strict-ignored break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
+    mechanism: "set-up-timers-not-imported, timeout-ignored, reimplemented, cancel-dropped, gate-removed and window-open are in-memory esbuild overrides (scripts/idle-callbacks-bundle.mjs), no file is edited; no-module, strict-ignored and strict-waits-for-teardown break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
     variants: sabotages.map(({variant, report, oracle, logSha256}) => ({name: variant.name, host: variant.host === true, file: variant.file, find: variant.find,
       replace: variant.replace, ...summary({report, oracle, logSha256}), orders: ordersOf(report)})),
   },

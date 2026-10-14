@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
   "scenario": "idle-callbacks",
-  "status": "verified-local-headless-previous-host-control-eight-sabotages",
-  "at": "2026-10-14T02:33:15.617Z",
-  "executionBaseCommit": "80e24e800210380b80de9296eb0f629a9adb26b4",
-  "sourceDirtyDuringExecution": false,
-  "implementationCommit": "80e24e800210380b80de9296eb0f629a9adb26b4",
-  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+  "status": "verified-local-headless-previous-host-control-nine-sabotages",
+  "at": "2026-10-14T04:25:23.747Z",
+  "executionBaseCommit": "504363746a74a89e7bcc6029867f23262b93bbff",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": null,
+  "pinning": "The lanes ran on the working tree on top of executionBaseCommit, before the implementation commit existed. sourcePins are the SHA-256 of the files they executed; rerun scripts/idle-callbacks-evidence.mjs --commit <sha> to check each against git show <sha>:<path> and record the commit.",
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
     "node": "v22.23.3",
     "platform": "macOS arm64",
     "displayServer": "headless",
-    "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+    "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
     "previousHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
     "previousHost": "built from executionBaseCommit (the tip of feat/gf-05-microtasks, slice D1), which registers no NativeIdleCallbacksCxx module; kept in build/gf05-idle-previous-host/ (local, not in Git)"
   },
@@ -24,13 +24,13 @@
     "node scripts/idle-callbacks-evidence.mjs"
   ],
   "currentLane": {
-    "checks": 25,
+    "checks": 26,
     "failedChecks": [],
     "oracleVerdict": null,
-    "bundleSha256": "df51dd5cd0948f7f906c950a822b0eeafb77cd6104081ac8bf0d84a3d2e16b6b",
-    "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
-    "logSha256": "dbd56bee98aea706733dc06099162349ffa5a0afc78a4d8b60daeea1ebd0385f",
-    "result": "IDLE_CALLBACKS_PASSED: 25",
+    "bundleSha256": "1afca989c86ee53b52ecd3b4493dfe0cf398974501e352329ccdd20200fd729c",
+    "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+    "logSha256": "9c8b5548639152f47a1c64e0c36bf0f8f948fa940338e36fafa74f51647befae",
+    "result": "IDLE_CALLBACKS_PASSED: 26",
     "checkVerdicts": [
       {
         "name": "mount/The root mounts through the original AppRegistry without a diagnostic",
@@ -126,6 +126,10 @@
       },
       {
         "name": "lifecycle/Stop releases the root, and all native Controls of the root are balanced",
+        "passed": true
+      },
+      {
+        "name": "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes",
         "passed": true
       },
       {
@@ -425,7 +429,7 @@
             "value": null
           },
           "number": {
-            "error": "Exception in HostFunction: Value is a number, expected an Object\n\nError: Value is a number, expected an Object\n    at cancelIdleCallback (native)\n    at anonymous (res://build/idle-callbacks-probe.js:2:246358)\n    at anonymous (res://build/idle-callbacks-probe.js:8:86029)\n    at attempt (res://build/idle-callbacks-probe.js:8:81937)\n    at edgeCancels (res://build/idle-callbacks-probe.js:8:85995)\n    at global (res://build/idle-callbacks-probe.js:1:47)",
+            "error": "Exception in HostFunction: Value is a number, expected an Object\n\nError: Value is a number, expected an Object\n    at cancelIdleCallback (native)\n    at anonymous (res://build/idle-callbacks-probe.js:2:246358)\n    at anonymous (res://build/idle-callbacks-probe.js:8:87001)\n    at attempt (res://build/idle-callbacks-probe.js:8:82909)\n    at edgeCancels (res://build/idle-callbacks-probe.js:8:86967)\n    at global (res://build/idle-callbacks-probe.js:1:47)",
             "threw": true
           },
           "plainObject": {
@@ -561,19 +565,19 @@
     },
     "readings": {
       "deadline": {
-        "entry": 49.992917,
-        "again": 49.990917,
-        "after-quick": 39.981084,
+        "entry": 49.99125,
+        "again": 49.988834,
+        "after-quick": 39.977,
         "after-deadline": 0
       },
       "yield": {
-        "entry": 49.992875,
-        "after-idle": 49.989541,
+        "entry": 49.991,
+        "after-idle": 49.987542,
         "after-task": 0,
         "again": 0
       },
       "yield-immediate": {
-        "entry": 49.991583,
+        "entry": 49.697583,
         "after-task": 0
       },
       "note": "Milliseconds, as the callback read them in the lane of record. The oracle judges each against the timestamps the report carries, not against these values."
@@ -643,7 +647,7 @@
     }
   },
   "previousHostControl": {
-    "checks": 25,
+    "checks": 26,
     "failedChecks": [
       "module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
       "module/The registry serves RN's NativeIdleCallbacks module and counts the calls that reach it",
@@ -662,14 +666,15 @@
       "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
       "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
       "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
-      "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing"
+      "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing",
+      "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes"
     ],
-    "oracleVerdict": "The oracle fails 18 check(s), the first of them module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
-    "bundleSha256": "df51dd5cd0948f7f906c950a822b0eeafb77cd6104081ac8bf0d84a3d2e16b6b",
+    "oracleVerdict": "The oracle fails 19 check(s), the first of them module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+    "bundleSha256": "1afca989c86ee53b52ecd3b4493dfe0cf398974501e352329ccdd20200fd729c",
     "nativeHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
-    "logSha256": "70a299618c5e0e37182927b1c1a527ecbb56bba45187fe415b6cefb23a29692d",
+    "logSha256": "67c6a156b06c47125dc7fa9b30ab366fcc87fe5035ac96cef970dd607287d853",
     "sameBundleAsCurrent": true,
-    "result": "IDLE_CALLBACKS_ORIGINAL_NEGATIVE: 18",
+    "result": "IDLE_CALLBACKS_ORIGINAL_NEGATIVE: 19",
     "expectedOriginalFailures": [
       "module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
       "module/The registry serves RN's NativeIdleCallbacks module and counts the calls that reach it",
@@ -688,7 +693,8 @@
       "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
       "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
       "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
-      "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing"
+      "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing",
+      "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes"
     ],
     "nativeModuleLoaded": false,
     "note": "The same bundle runs on the host that registers no NativeIdleCallbacksCxx: the idle callbacks are lazy getters, so the bundle evaluates, the root mounts and queueMicrotask and setImmediate work, and the first read of requestIdleCallback or cancelIdleCallback fails. It fails exactly the checks that need the new module, and holds the five that need only the JS the bundle runs (the flag, the globals before the bundle and the lazy getters, RN's immediateShim, setImmediate over the microtask module) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit."
@@ -696,7 +702,7 @@
   "retainedSabotage": {
     "script": "scripts/idle-callbacks-sabotage.mjs",
     "table": "tests/idle-callbacks-sabotages.mjs",
-    "mechanism": "set-up-timers-not-imported, timeout-ignored, reimplemented, cancel-dropped, gate-removed and window-open are in-memory esbuild overrides (scripts/idle-callbacks-bundle.mjs), no file is edited; no-module and strict-ignored break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
+    "mechanism": "set-up-timers-not-imported, timeout-ignored, reimplemented, cancel-dropped, gate-removed and window-open are in-memory esbuild overrides (scripts/idle-callbacks-bundle.mjs), no file is edited; no-module, strict-ignored and strict-waits-for-teardown break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
     "variants": [
       {
         "name": "set-up-timers-not-imported",
@@ -704,7 +710,7 @@
         "file": "src/initialize.js",
         "find": "import \"react-native/Libraries/Core/setUpTimers\";\n",
         "replace": "",
-        "checks": 25,
+        "checks": 26,
         "failedChecks": [
           "mount/The root mounts through the original AppRegistry without a diagnostic",
           "setUpTimers/RN$enableMicrotasksInReact is written true by RN's setUpTimers before the renderer reads it, and the renderer reads true",
@@ -728,12 +734,13 @@
           "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
           "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
           "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing",
-          "lifecycle/Stop releases the root, and all native Controls of the root are balanced"
+          "lifecycle/Stop releases the root, and all native Controls of the root are balanced",
+          "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes"
         ],
-        "oracleVerdict": "The oracle fails 23 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
-        "bundleSha256": "ef8f38998e0e4d26e700e609eca09f2d73d50b0e9a028b1f6453fdc08d0e4493",
-        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
-        "logSha256": "284d65c1485845ed0d667b13c52ee7faa3fce65de016aceb6ff05191a7ba8ce2",
+        "oracleVerdict": "The oracle fails 24 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
+        "bundleSha256": "12e41d0c069bb03320f2e6d5c95ae59096c9e1dd3765d889fadcbf3911846223",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "dc4f9b469718eabee9eca717509db518ad56536c2025d11fadb0cf5c8c76dac0",
         "orders": {
           "order": [],
           "deadline": [],
@@ -749,14 +756,14 @@
         "file": "src/runtime.js",
         "find": "request((deadline) => { if (live()) { callback(deadline); } }, ...options)",
         "replace": "request((deadline) => { if (live()) { callback(deadline); } })",
-        "checks": 25,
+        "checks": 26,
         "failedChecks": [
           "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none"
         ],
         "oracleVerdict": "The oracle fails 1 check(s), the first of them timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
-        "bundleSha256": "9c4cad6a26ac380c8a999e2f070ca4f9b72fc69f549a374c5d70eb2d8e54e13e",
-        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
-        "logSha256": "f70f3a912d9142f4cfd3b5f7148623430ae6d6778000d3b8d6c0c89bb18b91f0",
+        "bundleSha256": "25f0b313a20b5e419b3fbe8f509654fc869d6353f0fcc02ef0baa4d9252d2a1a",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "c4be5d53d68c99aa7a36130a0b34898d7ac9f7a0d874cfb8e697d237ee0afb42",
         "orders": {
           "order": [
             "handler-end",
@@ -820,7 +827,7 @@
         "file": "src/runtime.js",
         "find": "request((deadline) => { if (live()) { callback(deadline); } }, ...options)",
         "replace": "setTimeout(() => { if (live()) { callback({didTimeout: false, timeRemaining: () => 50}); } }, 0)",
-        "checks": 25,
+        "checks": 26,
         "failedChecks": [
           "module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
           "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
@@ -835,9 +842,9 @@
           "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback"
         ],
         "oracleVerdict": "The oracle fails 11 check(s), the first of them module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
-        "bundleSha256": "06156011c46ec4d1a4a0b12671eb16a571fc7614a3c3dd571be35ea15d3a20b9",
-        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
-        "logSha256": "7c7c7528059b92a9d22ffa56dc809d58077b0f6d054e7d5560597c679bb0487d",
+        "bundleSha256": "517ae5589e9001d87a08cc3c7d7f06910978002c267646e1657690949928a708",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "481a15e31b5f2c0692e665f71d30041af16e5e18c2e01d54695f85855ea5b172",
         "orders": {
           "order": [
             "handler-end",
@@ -902,16 +909,16 @@
         "file": "src/runtime.js",
         "find": "    cancel(handle);\n",
         "replace": "    void handle;\n",
-        "checks": 25,
+        "checks": 26,
         "failedChecks": [
           "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
           "module/Cancelling a handle that has already run, one already canceled or an object that is no handle does nothing; a value that is no object throws",
           "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback"
         ],
         "oracleVerdict": "The oracle fails 3 check(s), the first of them module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
-        "bundleSha256": "7240ee46ff6776a27ad2c4ffcf4943b1d9bd4b6d1bd2f0e45d355b7e9472b4dc",
-        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
-        "logSha256": "e9c769a0ce3cffbe8cae08a7ae433c3f43d7d7d14a4425464c76707abc668e23",
+        "bundleSha256": "368cd8ff4011d3d448d4400c1ee4d0a228e6660b8d7e13aba14a449c0c0515c3",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "734a1862d35ac199b55ed4b17ba304487c346a79f4629ec27f590dc9b3f7afbb",
         "orders": {
           "order": [
             "handler-end",
@@ -977,14 +984,14 @@
         "file": "src/runtime.js",
         "find": "request((deadline) => { if (live()) { callback(deadline); } }, ...options)",
         "replace": "request(callback, ...options)",
-        "checks": 25,
+        "checks": 26,
         "failedChecks": [
           "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it"
         ],
         "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
-        "bundleSha256": "7c53d2c4f74e65315924bd44af8b2e6c890efbca6368ad1997434b2f0cea339c",
-        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
-        "logSha256": "842903bc04b9e3448bb6bb6603393fad71fcc98d6729cb06c2dc46b4444fa446",
+        "bundleSha256": "0bfa39a4533f8339c4c742556117ce956ef738326b2109d4b64c9b3eb04c1522",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "18655526ebce65e2640763525f9722ef30dd87cac28564b18e17f87c95458c8c",
         "orders": {
           "order": [
             "handler-end",
@@ -1048,14 +1055,15 @@
         "file": "src/runtime.js",
         "find": "const live = () => active(true);",
         "replace": "const live = () => active();",
-        "checks": 25,
+        "checks": 26,
         "failedChecks": [
-          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it"
+          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+          "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes"
         ],
-        "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
-        "bundleSha256": "29d80093fae14506ae046a073ff80fe969790fb9f30ac4306c7df1a335e451c2",
-        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
-        "logSha256": "54539c685ee3a575c3ef21e88c3961f54606af21f81930746390d4bf1082053c",
+        "oracleVerdict": "The oracle fails 2 check(s), the first of them gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+        "bundleSha256": "846749221d3d0cf63f508c35524db9e90d16a4dd9aa25b4246d19ea6a1f3e853",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "0d1e70591a006e3b2dab0e22c8b850cd8b3a644d8d1d78a3bfebd6327f601a13",
         "orders": {
           "order": [
             "handler-end",
@@ -1119,7 +1127,7 @@
         "file": "native/application_runtime.cpp",
         "find": "    native_modules->add_idle_callbacks();\n",
         "replace": "",
-        "checks": 25,
+        "checks": 26,
         "failedChecks": [
           "module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
           "module/The registry serves RN's NativeIdleCallbacks module and counts the calls that reach it",
@@ -1138,12 +1146,13 @@
           "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
           "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
           "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
-          "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing"
+          "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing",
+          "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes"
         ],
-        "oracleVerdict": "The oracle fails 18 check(s), the first of them module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
-        "bundleSha256": "df51dd5cd0948f7f906c950a822b0eeafb77cd6104081ac8bf0d84a3d2e16b6b",
-        "nativeHostSha256": "14f266aa0e0aa9b991c9f2076b584cc7ac4645cf7e27df576e56640fc1adfebe",
-        "logSha256": "e42c49079ef893e99df6ab20a45b4298f15d47b90a6a88b33bbff6f453634e99",
+        "oracleVerdict": "The oracle fails 19 check(s), the first of them module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+        "bundleSha256": "1afca989c86ee53b52ecd3b4493dfe0cf398974501e352329ccdd20200fd729c",
+        "nativeHostSha256": "2adf9040b3ac06038ea31853cb4613202c9c9789c45bc32c971732e1186cc8ae",
+        "logSha256": "39acca84003e8608b21ebced5dfc97dca915d7743f07797026e46f640a69b535",
         "orders": {
           "order": [
             "handler-end",
@@ -1187,14 +1196,86 @@
         "file": "native/application_runtime.cpp",
         "find": "const bool strict = count > 0 && args[0].isBool() && args[0].getBool();",
         "replace": "const bool strict = false;",
-        "checks": 25,
+        "checks": 26,
         "failedChecks": [
-          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it"
+          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+          "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes"
         ],
-        "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
-        "bundleSha256": "df51dd5cd0948f7f906c950a822b0eeafb77cd6104081ac8bf0d84a3d2e16b6b",
-        "nativeHostSha256": "398830a8285bfe63c1209ba6029230d07fa55c5dacb711195cba711490e1466c",
-        "logSha256": "815b8d5c6f4c2d51b8ea69400497277dce4f118480c99616be05129dacfd8ca1",
+        "oracleVerdict": "The oracle fails 2 check(s), the first of them gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+        "bundleSha256": "1afca989c86ee53b52ecd3b4493dfe0cf398974501e352329ccdd20200fd729c",
+        "nativeHostSha256": "2a7333aaab1d8762da0eaaa896099c49f8dbc77acd331507057d62ba41365800",
+        "logSha256": "485d5899384159316099383f8985444786f62b3bccd44eed7a42fe880460f4a2",
+        "orders": {
+          "order": [
+            "handler-end",
+            "microtask",
+            "promise",
+            "immediate",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "idle-a",
+            "idle-a-microtask",
+            "idle-a-promise",
+            "idle-a-immediate",
+            "idle-b",
+            "timeout",
+            "end"
+          ],
+          "deadline": [
+            "handler-end",
+            "idle",
+            "end"
+          ],
+          "yield": [
+            "handler-end",
+            "idle-a",
+            "task-normal",
+            "idle-b",
+            "idle-nested",
+            "end"
+          ],
+          "yield-immediate": [
+            "handler-end",
+            "idle",
+            "task-immediate",
+            "end"
+          ],
+          "timeout": [
+            "handler-end",
+            "busy-1",
+            "busy-2",
+            "busy-3",
+            "idle-timeout-1",
+            "idle-timeout-60000",
+            "idle-timeout-0",
+            "idle-timeout-negative",
+            "idle-no-timeout",
+            "end"
+          ],
+          "cancel": [
+            "handler-end",
+            "idle-a",
+            "idle-c",
+            "idle-d",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "strict-waits-for-teardown",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "if (strict) return jsi::Value(!inactive());",
+        "replace": "if (strict) return jsi::Value(!(stopped || stopping));",
+        "checks": 26,
+        "failedChecks": [
+          "reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them reentrant/An idle callback that the commit in flight at a native stop request queues after the request never runs, and the stop still completes",
+        "bundleSha256": "1afca989c86ee53b52ecd3b4493dfe0cf398974501e352329ccdd20200fd729c",
+        "nativeHostSha256": "3df22eac83991d2c70c63cb0041708df3a5488bd7c2a16c92e0d4b84b8d0022c",
+        "logSha256": "6fb33b5c2f252bd974da7acbf72d6a81e2462eecab9a1b2fd7cd7000076abbf1",
         "orders": {
           "order": [
             "handler-end",
@@ -1390,22 +1471,22 @@
     }
   },
   "sourcePins": {
-    "tests/idle-callbacks-fixture.jsx": "65dceb07ca466be5220c6d9ac96acef6fa9327932715e47a59b2e8a77f283402",
+    "tests/idle-callbacks-fixture.jsx": "9273b92a3fa4e81e578bdda9bb9664006d56ff642b4d174c98a75d4d9639f3d5",
     "tests/idle-callbacks-cases.mjs": "61e6c5b1bca2c63ccd5e467b1f21fd19dacdc045460fa7532c9c713ca603c3db",
-    "tests/idle-callbacks-probe.gd": "e841ec1506daf13e06789d5aacf9ca2df3e22a7eb4f9478220c747b30a61719f",
+    "tests/idle-callbacks-probe.gd": "45e906bbe04e823aa0120fd128df6023fec65534e8bc5eed3ac8a579a7d1a83d",
     "tests/idle-callbacks-native.test.mjs": "617e8a790bf0ae982a14f6c2f2a7024f34be13c4097a87026603bebd5cad33ae",
-    "tests/idle-callbacks-oracle.mjs": "0c8653906e6deca9a19a888157c8ad43463ccde5c2b4a8d833402c28e58836cd",
-    "tests/idle-callbacks-sabotages.mjs": "d7711dc145f55ff7b3130e69a219697f86194399dfbeb83eec6eb43019eb9f8b",
+    "tests/idle-callbacks-oracle.mjs": "53ec21af6c4572eefede1396ee3307de0d1badf5100494e5910b6875ea97c6b3",
+    "tests/idle-callbacks-sabotages.mjs": "a5b98f8ba2038d467fa5370abbd8dce46263942cf583831ef571d2d08d9fd6b9",
     "tests/react-microtasks-host.js": "c17593f2a88a6e7ba6d29ff815c3f824e2ae795dff349f771f39f493eb59b88f",
-    "tests/react-microtasks-oracle.mjs": "c1d7adf4bdc010e461ea341549d6b69aea0a01876387f721e66499b72b36ed1c",
+    "tests/react-microtasks-oracle.mjs": "6146bd8cd82934186ef726a72533c08f438556f5b4a1cf29bf0b68623e2ce11d",
     "scripts/idle-callbacks-bundle.mjs": "6d0ccd9a1310f05209e8c6dc59a831f9a78cbfe99b354b8f38c9e7de124ffa2b",
     "scripts/idle-callbacks-sabotage.mjs": "a429b318885556dc76fcfbfba907abd3c6141a4fc9ec30640d2dec4fea0a0995",
     "scripts/native-probe-bundle.mjs": "a90c034ccc09dd70b0b2b625bb0ea3b2a4876ad2cc3500d7d48183935453d863",
-    "src/runtime.js": "c4e888d122f037c2b00f398d893290165fbb3544430180703ca3d8fe408f9c77",
+    "src/runtime.js": "b8fc9d76bba60022a4e281f24e2f770b663055441d96fa160de663ae9ce50840",
     "src/initialize.js": "b4b6ca7e238e40317535f8ede0920b5cefa6dff074c80a3546bc4a0576335620",
     "sdk/toolchain/platform-plugin.mjs": "37bb179a2aa2e757979cce8ec6ce3938022b427017f5555f3503d763d3c60a40",
     "sdk/toolchain/metro-polyfills.mjs": "e1b371456bf1b6f33c817e552e21e5ca550016f3be2292455fd019454f643d29",
-    "native/application_runtime.cpp": "e2630902e2cf1548b09652ebc197c2f4ac632c64b83c372e03c03b146cf3d229",
+    "native/application_runtime.cpp": "3b70d4a933c4a2b0c3ed16039f13065485f30edb469305de002e2a701a8033f3",
     "native/turbo_module_registry.cpp": "4d012cb873c56eb727bcea439e4afd377f54143f5eca3f2504254f1f20669148",
     "native/turbo_module_registry.h": "3b732bc3151aa528ab3cd6788b2484a2269f30ddd2de41826bb7d3d49a313185",
     "native/CMakeLists.txt": "f0176f1b670edd8cfb8c769b1e75f608762d0002fa4cf5140c499c1e45dafea0"

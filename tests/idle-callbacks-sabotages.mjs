@@ -13,6 +13,9 @@
 //   window-open                 the idle callbacks use the gate that stop()'s unmount window opens: an idle callback queued before the stop runs while the roots unmount.
 //   no-module                   the host does not register NativeIdleCallbacksCxx: the first read of requestIdleCallback throws, as on the host this slice replaced.
 //   strict-ignored              the host's godotRuntimeActive ignores its strict argument: the unmount window is open to the idle callbacks, in the native half of window-open.
+//   strict-waits-for-teardown   the strict gate stays open between a stop request and the teardown, as the plain one does: a stop that a native signal requests from inside a
+//                               task of the RuntimeScheduler does not stop the scheduler's own loop, and an idle callback that the commit in flight queues after the request
+//                               runs before the teardown.
 export const SABOTAGES = [
   {name: "set-up-timers-not-imported", file: "src/initialize.js", find: "import \"react-native/Libraries/Core/setUpTimers\";\n", replace: ""},
   {name: "timeout-ignored", file: "src/runtime.js", find: "request((deadline) => { if (live()) { callback(deadline); } }, ...options)", replace: "request((deadline) => { if (live()) { callback(deadline); } })"},
@@ -25,4 +28,6 @@ export const SABOTAGES = [
     find: "    native_modules->add_idle_callbacks();\n", replace: ""},
   {name: "strict-ignored", host: true, hostDirectory: "build/idle-callbacks-sabotage-strict-ignored-host", file: "native/application_runtime.cpp",
     find: "const bool strict = count > 0 && args[0].isBool() && args[0].getBool();", replace: "const bool strict = false;"},
+  {name: "strict-waits-for-teardown", host: true, hostDirectory: "build/idle-callbacks-sabotage-strict-waits-for-teardown-host", file: "native/application_runtime.cpp",
+    find: "if (strict) return jsi::Value(!inactive());", replace: "if (strict) return jsi::Value(!(stopped || stopping));"},
 ];

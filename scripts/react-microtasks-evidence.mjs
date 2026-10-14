@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import {execFileSync} from "node:child_process";
 import {createHash} from "node:crypto";
-import {readFileSync, writeFileSync} from "node:fs";
+import {existsSync, readFileSync, writeFileSync} from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import {SABOTAGES} from "../tests/react-microtasks-sabotages.mjs";
@@ -42,7 +42,10 @@ const lane = (name, {rejected}) => {
 };
 
 const current = lane("current", {rejected: false});
-const original = lane("original", {rejected: true});
+// Since slice D2 imports RN's setUpTimers unchanged, a host without NativeMicrotasksCxx cannot evaluate the bundle (the renderer reads queueMicrotask when it evaluates, which
+// resolves RN's getter), so the previous host's lane is no longer the control that fails exactly the checks that need the module: it fails all but one. The record keeps
+// the lane when its report is there and says what it is; the `no-module` sabotage is the control that the lanes still run.
+const original = existsSync(path.join(root, "build/react-microtasks-original-report.json")) ? lane("original", {rejected: true}) : null;
 const sabotages = SABOTAGES.map(variant => ({variant, ...lane(`sabotage-${variant.name}`, {rejected: true})}));
 const bundleOf = report => report.provenance.bundle;
 const ordersOf = report => Object.fromEntries(Object.keys(expected.orders.on).map(name => [name, report.stages[`case_${name.replace("-", "_")}`]?.labels ?? []]));
@@ -60,7 +63,7 @@ const pinOf = (file, variant) => {
   }
   return sha(file);
 };
-const lanes = [{...current, variant: null}, {...original, variant: null}, ...sabotages];
+const lanes = [{...current, variant: null}, ...(original === null ? [] : [{...original, variant: null}]), ...sabotages];
 for (const {report, variant} of lanes) {
   for (const [file, pin] of Object.entries(bundleOf(report).sources)) {
     assert.equal(pinOf(file, variant), pin, `${report.provenance.lane}: ${file} changed after the lane ran; run the lanes again`);
@@ -69,9 +72,11 @@ for (const {report, variant} of lanes) {
 const hostSha256 = sha("addons/fabric_godot.dylib");
 assert.equal(current.report.provenance.nativeHostSha256, hostSha256, "The current lane ran on the host that is in addons/ now");
 const previousHostSha256 = sha("build/gf05-microtasks-previous-host/fabric_godot.dylib");
-assert.equal(original.report.provenance.nativeHostSha256, previousHostSha256, "The control ran on the host that build/gf05-microtasks-previous-host/ keeps");
 assert.notEqual(previousHostSha256, hostSha256, "The control ran on another host");
-assert.equal(bundleOf(original.report).bundle.sha256, bundleOf(current.report).bundle.sha256, "The previous host ran the same bundle");
+if (original !== null) {
+  assert.equal(original.report.provenance.nativeHostSha256, previousHostSha256, "The control ran on the host that build/gf05-microtasks-previous-host/ keeps");
+  assert.equal(bundleOf(original.report).bundle.sha256, bundleOf(current.report).bundle.sha256, "The previous host ran the same bundle");
+}
 for (const {variant, report} of sabotages) {
   if (variant.host === true) {
     assert.equal(bundleOf(report).bundle.sha256, bundleOf(current.report).bundle.sha256, `${variant.name} runs the current bundle`);
@@ -102,7 +107,7 @@ const summary = ({report, oracle, logSha256}) => ({
 const record = {
   schemaVersion: 1,
   scenario: "react-microtasks",
-  status: "verified-local-headless-previous-host-control-five-sabotages",
+  status: original === null ? "verified-local-headless-seven-sabotages" : "verified-local-headless-previous-host-control-seven-sabotages",
   at: new Date().toISOString(),
   executionBaseCommit: git("rev-parse", "HEAD"),
   sourceDirtyDuringExecution: commit === null,
@@ -116,7 +121,7 @@ const record = {
     nativeHostSha256: hostSha256, previousHostSha256,
     previousHost: "built from executionBaseCommit (the tip of feat/gf-05-error-path), which registers no NativeMicrotasksCxx module; kept in build/gf05-microtasks-previous-host/ (local, not in Git)",
   },
-  commands: ["npm run test:react-microtasks", "node tests/react-microtasks-native.test.mjs --allow-original-negative (previous host in addons/)",
+  commands: ["npm run test:react-microtasks", ...(original === null ? [] : ["node tests/react-microtasks-native.test.mjs --allow-original-negative (previous host in addons/)"]),
     "node scripts/react-microtasks-sabotage.mjs", "node scripts/react-microtasks-evidence.mjs"],
   currentLane: {
     ...summary(current),
@@ -133,20 +138,25 @@ const record = {
     orders: ordersOf(current.report),
     modelOrders: expected.orders,
     casesThatDifferWithTheFlagOff: expected.differing,
-    gate: {state: stages.gate.state, afterStop: stages.after_stop, finalApplication: {stopped: stages.stop.application.stopped, rootCount: stages.stop.application.rootCount}},
+    gate: {state: stages.gate.state, afterStop: stages.after_stop, finalApplication: {stopped: stages.stop.application.stopped, rootCount: stages.stop.application.rootCount},
+      reentrant: {requests: stages.reentrant.requests, controlFound: stages.reentrant.controlFound, state: stages.reentrant.state,
+        stopped: stages.reentrant.application.stopped, rootCount: stages.reentrant.application.rootCount}},
   },
-  previousHostControl: {
+  previousHostControl: original === null ? {
+    reproducible: false,
+    note: "Not run for this record. The control of slice D1 was the bundle on the host that registers no NativeMicrotasksCxx, which fails exactly the checks that need the new module. Slice D2 imports RN's setUpTimers unchanged: the renderer reads queueMicrotask when it evaluates, which resolves RN's lazy getter, so on that host the bundle does not evaluate and every check but the report one fails, as RN's does without the module. The no-module sabotage is the same control and runs with the other sabotages.",
+  } : {
     ...summary(original),
     sameBundleAsCurrent: true,
-    result: `REACT_MICROTASKS_ORIGINAL_NEGATIVE: ${failures(original.report).length}`,
+    result: original.report.originalNegativeObserved ? `REACT_MICROTASKS_ORIGINAL_NEGATIVE: ${failures(original.report).length}` : `REACT_MICROTASKS_FAILED: ${failures(original.report).length}`,
     expectedOriginalFailures: original.report.expectedOriginalFailures,
-    nativeModuleLoaded: original.report.stages.environment.native.loaded,
-    note: "The same bundle runs on the host that registers no NativeMicrotasksCxx: queueMicrotask has nothing to reach, so React's first update throws and the root does not mount. It fails exactly the checks that need the new module, and holds the three that need only the JS the bundle runs (the flag, and the global installed before the renderer reads it) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit.",
+    nativeModuleLoaded: original.report.stages.environment?.native?.loaded ?? false,
+    note: original.report.originalNegativeObserved ? "The same bundle runs on the host that registers no NativeMicrotasksCxx: queueMicrotask has nothing to reach, so React's first update throws and the root does not mount. It fails exactly the checks that need the new module, and holds the three that need only the JS the bundle runs (the flag, and the global installed before the renderer reads it) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit." : "The same bundle on the host that registers no NativeMicrotasksCxx does not evaluate (slice D2's setUpTimers resolves the module when the renderer evaluates), so it fails more checks than the ones that need the module.",
   },
   retainedSabotage: {
     script: "scripts/react-microtasks-sabotage.mjs",
     table: "tests/react-microtasks-sabotages.mjs",
-    mechanism: "flag-unset, promise-shim and gate-removed are in-memory esbuild overrides of src/runtime.js (scripts/react-microtasks-bundle.mjs), no file is edited; no-module breaks one line of native/application_runtime.cpp, rebuilds the host, keeps it in the variant's hostDirectory and restores the source byte for byte (scripts/sabotage-sources.mjs)",
+    mechanism: "flag-unset (RN's setUpTimers.js), promise-shim and gate-removed (src/runtime.js) are in-memory esbuild overrides (scripts/react-microtasks-bundle.mjs), no file is edited; no-module, gate-closed, request-closes-gate and checkpoint-gate-closed each break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
     variants: sabotages.map(({variant, report, oracle, logSha256}) => ({name: variant.name, host: variant.host === true, file: variant.file, find: variant.find,
       replace: variant.replace, ...summary({report, oracle, logSha256}), orders: ordersOf(report)})),
     flagUnsetMatchesModel: "The flag-unset lane comes out, case by case, in the order the oracle's model gives for the flag off (modelOrders.off), which says the model describes this host in the direction the passing lane does not show.",
@@ -161,10 +171,10 @@ const record = {
   scope: {actualHermesRuntime: true, actualFabricApplication: true, headless: true, realEventPath: true, nativeMicrotasksModule: true},
   limits: ["The cases are the handler of a Pressable's onPress in one headless root; the order of the commit relative to other work is certified for sync-lane updates of a discrete event, not for every lane.",
     "The timer cases depend on the host taking a timer registered in a handler in a later pump than the RuntimeScheduler's loop; the oracle reads that order from native/application_runtime.cpp.",
-    "The gate is the host's extension (V2-D27); callback exceptions and a Promise storm are slice F's.",
+    "The gate is the host's extension (V2-D27); callback exceptions and a Promise storm are slice F's. Hermes ignores the hint of drainMicrotasks(int), so the checkpoint at the head of stop() is bounded as every pump is: by the queue.",
     "The registry counts the calls that reach RN's module in front of RN's own invoker; the module's C++ is compiled unchanged.",
     "The headless desktop host only; no mobile export has run this bundle.",
     "Hosted CI is pending: the record is of the local run."],
 };
 writeFileSync(path.join(root, "docs/evidence/runtime/react-microtasks.json"), JSON.stringify(record, null, 2) + "\n");
-console.log(`REACT_MICROTASKS_EVIDENCE_WRITTEN: ${current.report.checks.length} checks, ${original.report.checks.length - failures(original.report).length} held on the previous host, ${sabotages.length} sabotages`);
+console.log(`REACT_MICROTASKS_EVIDENCE_WRITTEN: ${current.report.checks.length} checks, ${original === null ? "no previous host lane" : `${original.report.checks.length - failures(original.report).length} held on the previous host`}, ${sabotages.length} sabotages`);

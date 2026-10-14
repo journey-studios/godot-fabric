@@ -3,10 +3,11 @@
 // clearImmediate, requestIdleCallback and cancelIdleCallback; the TimerManager the host attached before this module is evaluated provides
 // setTimeout, setInterval and requestAnimationFrame. What stays here is the host's own, which RN does not have.
 //
-// Once the application is inactive, no timer, frame, microtask or idle callback runs and none is scheduled. RN destroys its runtime with the
-// callbacks still pending; this host stops an application while its Hermes still drains microtasks and its RuntimeScheduler still runs tasks
-// (Impl::stop pumps), so the callbacks check. The host keeps the gate open while stop() unmounts the roots, because React's own unmount queues a
-// microtask (RN$enableMicrotasksInReact), and drains what user code queued before the stop with the gate closed.
+// Once stop() has begun, no timer, frame, microtask or idle callback is scheduled and none runs. RN destroys its runtime with the callbacks still
+// pending; this host stops an application while its Hermes still drains microtasks and its RuntimeScheduler still runs tasks (Impl::stop pumps), so
+// the callbacks check. The microtasks queued before the stop complete first, in one checkpoint at the head of stop(), and the host opens the gate
+// again while it unmounts the roots, because React's own jobs use queueMicrotask (RN$enableMicrotasksInReact) and a call the gate refuses leaves React
+// waiting for the job for good. A stop request alone does not close it: React finishes a commit in flight after the request returns.
 import { polyfillGlobal } from "react-native/Libraries/Utilities/PolyfillFunctions";
 
 const active = globalThis.godotRuntimeActive;
