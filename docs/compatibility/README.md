@@ -123,8 +123,8 @@ use, so that a new rule has an obvious place:
 | 50 | rows that are not RN contracts (`out`) |
 
 An **override** names one row (`id`), sets any of the same fields, and needs a `reason`. Use one for a true exception to a family,
-for example `AppRegistry`'s headless tasks (an Android service feature) or the three `Image` members that download over the network
-(GF-16 leaves network images to GF-22). The native command files are tied to their public component in `nativeComponents`, and the
+for example `AppRegistry`'s headless tasks (an Android service feature), the three `Image` members that download over the network
+(GF-16 leaves network images to GF-22) or the two globals of ReactInstance's error family that the host leaves out (V2-D26). The native command files are tied to their public component in `nativeComponents`, and the
 owner of a command follows that component's task.
 
 **The evidence is not the decision.** The S1 marker `platformImplementation`, the `@platform` annotations and the 0.5 prop
@@ -210,8 +210,8 @@ polarity. `--print-pending` prints the ledger that the current fixtures imply, i
 
 1. Add the entries for the fixtures the delivery lands, pointing at checks that exist (a suite's native test, a probe check, a case).
    A suite that is on another branch or an open pull request is not referenced from here: its rows stay pending, and the delivery
-   that lands the suite adds its entries in the same change (for example the `AppRegistry` headless-task negative fixture, or the
-   `TextDecoder` one, which wait for their GF's slice).
+   that lands the suite adds its entries in the same change (for example the `TextDecoder` negative fixture, which waits for GF-05's
+   encoding slice).
 2. Run `node scripts/parity-coverage.mjs --check`. For every pending item the new entries touch it names the new count
    (`E_PENDING_COUNT`) or tells you to remove the item (`E_STALE_PENDING`). Edit the counts, or take the ledger from `--print-pending`.
 3. A ledger only shrinks within a delivery. A gap is not added to make the gate pass; a row that enters the map (an RN upgrade, a
@@ -231,3 +231,21 @@ The seeds are what already runs, referenced conservatively: the shared different
 ActivityIndicator, touchables, Text, AppState, Appearance, accessibility, device services, OS contracts, networking, WebSocket, Animated,
 LayoutAnimation, ScrollView, lists, Modal, PanResponder, Image, click, focus) and the 0.5 prop policy. A suite counts only for the rows it
 exercises and asserts. Most rows are still pending, and each belongs to a GF whose delivery has to cover it.
+
+### History of the ledger
+
+Each delivery that adds entries is listed here with what it did to the counts (required fixtures covered, of the required ones).
+
+| Delivery | Entries added | Covered after |
+| --- | --- | --- |
+| S3 (#164) | the seed above | 369 of 5,732: positive 313 of 5,246, negative 56 of 486 |
+| The suites merged after the seed | `test:js-globals` (GF-05 slice B, #161), `test:js-errors` (GF-05 slice C, #163) and `test:app-registry` (GF-07 slice 1, #160) | 448 of 5,730: positive 388 of 5,244, negative 60 of 486 |
+
+The second delivery moved GF-05's positive pending from 114 to 80 and GF-07's from 35 to 12, and took GF-07's four headless-task
+negatives from pending to covered. Rows that those suites assert but another GF owns left that GF's ledger too: the 14 DOM globals
+that `setUpDOM` installs (12 rows of GF-08, 3 of GF-13), `RN$isNativeEventTargetEventDispatchingEnabled` (GF-13) and `__DEV__` (2 rows
+of GF-29). The host leaves `RN$hasHandledFatalException` and `RN$notifyOfFatalException` out by V2-D26, so the runtime keeps running
+after an uncaught error and GF-07's error-cleanup slice owns any change; the same delivery overrides both rows to `not-applicable` on
+Godot in the map (which removes two required positives: GF-05's went from 130 to 128, and its pending from 80 to 78) and covers their
+absence with a negative entry. What stays pending on purpose: the type rows; the Performance classes, which the suite does not certify;
+and `RN$AppRegistry`, through which the roots mount but which no check names.

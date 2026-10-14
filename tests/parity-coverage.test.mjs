@@ -105,9 +105,12 @@ test("the catalog and the map agree on the polarity rules: unavailability, decis
   // A not-applicable row that is not an upstream unavailability asks for none, and neither does an out-of-scope row.
   assert.ok(!required.has("prop:SwitchProps.ios_backgroundColor"));
   assert.ok(baseline.rows.filter((row) => row.scope !== "1_0").every((row) => !required.has(row.id)));
-  // Both are pending: no fixture exists yet, and the ledger says why.
+  // The AppRegistry suite covers the headless-task refusal, so the ledger no longer lists it; TextDecoder has no fixture yet, and the
+  // ledger says why.
+  const headless = ["cancelHeadlessTask", "registerCancellableHeadlessTask", "registerHeadlessTask", "startHeadlessTask"].map((name) => `api-member:AppRegistry.${name}`);
+  assert.ok(headless.every((id) => baseline.coverage.covered.negative.has(id)));
+  assert.equal(pendingOf({ catalog }, "GF-07", "negative", "AppRegistry"), undefined);
   assert.match(pendingOf({ catalog }, "GF-05", "negative", "TextDecoder").note, /slice E/);
-  assert.match(pendingOf({ catalog }, "GF-07", "negative", "AppRegistry").note, /#160/);
   // A row with no fixture of the polarity it requires is a gap, however many other fixtures cover it.
   const positiveOnly = mutated((copy) => {
     copy.catalog.fixtures = copy.catalog.fixtures.filter((entry) => entry.id !== "device-services-invalid-url");
@@ -385,9 +388,10 @@ test("a requirement or a decided contract that is malformed, unowned or dead fai
   assert.match(messages(contract((item) => { item.id = "upstream-unavailability"; }), "E_SHAPE"), /an id, used once, is required/);
   // A requirement that drops out of the catalog drops its rows out of the negative set: the fixtures stay and the ledger is stale.
   const dropped = mutated((copy) => {
-    copy.catalog.negativeContracts = copy.catalog.negativeContracts.filter((item) => item.id !== "headless-tasks-typed-error");
+    copy.catalog.negativeContracts = copy.catalog.negativeContracts.filter((item) => item.id !== "upstream-unavailability");
   });
-  assert.match(messages(dropped, "E_STALE_PENDING"), /GF-07 negative .*AppRegistry.* has no uncovered row left/);
+  assert.deepEqual(codes(dropped), ["E_STALE_PENDING"]);
+  assert.match(messages(dropped, "E_STALE_PENDING"), /GF-24 negative .* has no uncovered row left/);
 });
 
 test("a broken map stops the gate instead of being judged around", () => {

@@ -1027,6 +1027,604 @@
       }
     },
     {
+      "id": "js-globals-host-bindings",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "host/The host binds nativeLoggingHook and nativePerformanceNow and sets global and __DEV__"
+      },
+      "polarity": "host-provides",
+      "runsOn": ["godot"],
+      "note": "The host binds nativeLoggingHook and nativePerformanceNow and sets __DEV__ before any JS of the bundle runs: presence and type, and __DEV__ pinned to false.",
+      "select": {
+        "id": [
+          "host-global:global.nativeLoggingHook", "host-global:global.nativePerformanceNow",
+          "host-global:global.__DEV__", "global-value:global.__DEV__"
+        ]
+      }
+    },
+    {
+      "id": "js-globals-window-self",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "globals/window and self are the global object, and window is RN's fixed property"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "window and self are the global object, and window has the attributes setUpGlobals defines (not writable, not configurable), compared with the descriptor the oracle reads out of RN's source.",
+      "select": {
+        "id": ["runtime-global:global.window", "runtime-global:global.self"]
+      }
+    },
+    {
+      "id": "js-globals-process-env",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "globals/process.env.NODE_ENV is production at run time"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "process and process.env exist, and NODE_ENV is production at run time, the branch of RN's setUpGlobals that a bundle without __DEV__ takes.",
+      "select": {
+        "id": ["runtime-global:global.process", "runtime-global:process.env", "runtime-global:process.env.NODE_ENV"]
+      }
+    },
+    {
+      "id": "js-globals-navigator",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "globals/navigator.product is ReactNative, on the property RN defines"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "navigator.product is ReactNative on the property setUpNavigator defines (not writable, configurable), compared with the descriptor the oracle reads out of RN's source.",
+      "select": {
+        "id": ["runtime-global:global.navigator", "runtime-global:navigator.product"]
+      }
+    },
+    {
+      "id": "js-globals-performance-clock",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "performance/now() reads the host clock: it falls between two nativePerformanceNow() reads in every sample"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "performance.now() reads the host clock, never goes backward and advances as much as Godot's own clock; the same suite checks RN's five members and that mark, measure, clearMarks and clearMeasures return. The Performance classes are not certified and stay pending.",
+      "select": {
+        "id": ["runtime-global:global.performance"]
+      }
+    },
+    {
+      "id": "js-globals-console",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "console/console has the members of RN's polyfill, and createTask runs its callback"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The global console is RN's polyfill: its members are those the oracle reads out of console.js (plus the _errorOriginal that setUpErrorHandling keeps), and createTask runs its callback.",
+      "select": {
+        "id": ["global-value:global.console"]
+      }
+    },
+    {
+      "id": "js-globals-console-log",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "console/A lone string is logged as it is"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "console.log sends the host hook a lone string as it is, and several arguments in RN's format, at the info level.",
+      "select": {
+        "subject": "Console",
+        "kind": "global-member",
+        "name": ["log"]
+      }
+    },
+    {
+      "id": "js-globals-console-levels",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "console/info, debug, trace, warn and error carry RN's levels"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "info, debug, trace, warn and error reach the host hook at the levels of RN's polyfill, and an error whose message starts with Warning: is logged as a warning.",
+      "select": {
+        "subject": "Console",
+        "kind": "global-member",
+        "name": ["info", "debug", "trace", "warn", "error"]
+      }
+    },
+    {
+      "id": "js-globals-console-groups-table",
+      "fixture": {
+        "file": "tests/js-globals-oracle.mjs",
+        "check": "The Hermes console logs what RN's polyfill logs in Node, call by call"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The oracle compares the lines of the whole console scenario with what RN's own polyfill logs in Node, call by call: group, groupCollapsed and groupEnd indent the lines between them and table prints a text table.",
+      "select": {
+        "subject": "Console",
+        "kind": "global-member",
+        "name": ["group", "groupCollapsed", "groupEnd", "table"]
+      }
+    },
+    {
+      "id": "js-globals-dom",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "dom/RN's 14 DOM globals are lazy getters until first used, and classes after"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "setUpDOM defines 14 DOM globals as lazy getters that resolve to classes on first use. Only the installation is asserted; the members and the behavior of the classes belong to the DOM and event fixtures of their owners.",
+      "select": {
+        "id": [
+          "runtime-global:global.DOMRect", "runtime-global:global.DOMRectReadOnly",
+          "runtime-global:global.DOMRectList", "runtime-global:global.HTMLCollection",
+          "runtime-global:global.NodeList", "runtime-global:global.Node", "runtime-global:global.Document",
+          "runtime-global:global.CharacterData", "runtime-global:global.Text", "runtime-global:global.Element",
+          "runtime-global:global.HTMLElement", "runtime-global:global.Event", "runtime-global:global.EventTarget",
+          "runtime-global:global.CustomEvent", "global-value:global.DOMRect"
+        ]
+      }
+    },
+    {
+      "id": "js-globals-dom-event-dispatch",
+      "fixture": {
+        "file": "tests/js-globals-probe.gd",
+        "check": "dom/RN$isNativeEventTargetEventDispatchingEnabled is a function that answers a boolean"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "setUpDOM's RN$isNativeEventTargetEventDispatchingEnabled is a function that answers a boolean; the value follows RN's feature flag and is not asserted.",
+      "select": {
+        "id": ["runtime-global:global.RN$isNativeEventTargetEventDispatchingEnabled"]
+      }
+    },
+    {
+      "id": "js-errors-error-utils-global",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "errorutils/ErrorUtils has the members of RN's error-guard polyfill"
+      },
+      "polarity": "host-provides",
+      "runsOn": ["godot"],
+      "note": "ErrorUtils is the object RN's error-guard polyfill assigns to the global, with the members the oracle reads out of the polyfill, and the module RN reads through Libraries/vendor/core/ErrorUtils.",
+      "select": {
+        "id": ["global-value:global.ErrorUtils", "host-global:global.ErrorUtils"]
+      }
+    },
+    {
+      "id": "js-errors-report-error",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "soft/ErrorUtils.reportError reports a soft exception once"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "reportError reports a soft exception once, for an Error and for a thrown string, logs it once and records no host failure; the reports are compared with RN's own JavaScript run in V8.",
+      "select": {
+        "subject": "ErrorUtils",
+        "kind": "type-member",
+        "name": ["reportError"]
+      }
+    },
+    {
+      "id": "js-errors-apply-with-guard",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "soft/ErrorUtils.applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the call only"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "applyWithGuard reports the error it catches as a soft exception and returns null, and inGuard is true inside the guarded call only.",
+      "select": {
+        "subject": "ErrorUtils",
+        "kind": "type-member",
+        "name": ["applyWithGuard", "inGuard"]
+      }
+    },
+    {
+      "id": "js-errors-report-fatal-error",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "reportFatalError reaches NativeExceptionsManager.reportException with isFatal true and records exactly one host failure, with the message and the parsed stack.",
+      "select": {
+        "subject": "ErrorUtils",
+        "kind": "type-member",
+        "name": ["reportFatalError"]
+      }
+    },
+    {
+      "id": "js-errors-global-handler",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "handler/ErrorUtils.getGlobalHandler() is the handler setUpErrorHandling registered, once"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "setUpErrorHandling calls setGlobalHandler once, and getGlobalHandler answers that handler (named and sized as RN's source says) in place of the polyfill's default.",
+      "select": {
+        "subject": "ErrorUtils",
+        "kind": "type-member",
+        "name": ["getGlobalHandler", "setGlobalHandler"]
+      }
+    },
+    {
+      "id": "js-errors-host-error-globals",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "host/The host installs the five globals of ReactInstance's error family"
+      },
+      "polarity": "host-provides",
+      "runsOn": ["godot"],
+      "note": "The host installs the five globals of ReactInstance's error family that keep a runtime running, read-only and with ReactInstance's arities, and the flag with its pinned value. RN$hasHandledFatalException and RN$notifyOfFatalException stay out by V2-D26; their absence is the entry js-errors-omitted-fatal-globals.",
+      "select": {
+        "id": [
+          "host-global:global.RN$useAlwaysAvailableJSErrorHandling", "host-global:global.RN$isRuntimeReady",
+          "host-global:global.RN$inExceptionHandler", "host-global:global.RN$handleException",
+          "host-global:global.RN$registerExceptionListener"
+        ]
+      }
+    },
+    {
+      "id": "js-errors-runtime-ready",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "ready/Once the bundle has evaluated, RN$isRuntimeReady says so"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Once the bundle has evaluated, RN$isRuntimeReady says so, RN$handleException hands the error back to JS and RN$inExceptionHandler says nothing is being reported.",
+      "select": {
+        "id": [
+          "host-global:global.RN$isRuntimeReady", "host-global:global.RN$handleException",
+          "host-global:global.RN$inExceptionHandler"
+        ]
+      }
+    },
+    {
+      "id": "js-errors-early-listener",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "early/A listener registered with RN$registerExceptionListener sees each error"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "While the bundle evaluates, a listener registered with RN$registerExceptionListener sees each error RN$handleException takes into C++ and can prevent it, with RN$inExceptionHandler true and RN$handleException answering true.",
+      "select": {
+        "id": [
+          "host-global:global.RN$registerExceptionListener", "host-global:global.RN$handleException",
+          "host-global:global.RN$inExceptionHandler"
+        ]
+      }
+    },
+    {
+      "id": "js-errors-runtime-not-ready",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "early/A fatal error handled while the bundle evaluates leaves the runtime not ready"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "A fatal error handled while the bundle evaluates leaves the runtime not ready: RN$isRuntimeReady says so and RN$handleException keeps taking errors into C++.",
+      "select": {
+        "id": ["host-global:global.RN$isRuntimeReady", "host-global:global.RN$handleException"]
+      }
+    },
+    {
+      "id": "js-errors-refused-calls",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "ready/RN$handleException and RN$registerExceptionListener refuse the calls ReactInstance refuses"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "RN$handleException called with fewer than its three arguments, and RN$registerExceptionListener called with no argument or with a non-function, throw the messages ReactInstance refuses them with.",
+      "select": {
+        "id": ["host-global:global.RN$handleException", "host-global:global.RN$registerExceptionListener"]
+      }
+    },
+    {
+      "id": "js-errors-omitted-fatal-globals",
+      "fixture": {
+        "file": "tests/js-errors-probe.gd",
+        "check": "neither RN$hasHandledFatalException nor RN$notifyOfFatalException"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "RN$hasHandledFatalException and RN$notifyOfFatalException stay uninstalled by V2-D26, so the runtime keeps running after an uncaught error: the probe asserts their absence (typeof undefined) and the oracle derives it from ReactInstance.cpp. The map marks both not-applicable on Godot, with GF-07's error-cleanup slice owning any change.",
+      "select": {
+        "id": ["host-global:global.RN$hasHandledFatalException", "host-global:global.RN$notifyOfFatalException"]
+      }
+    },
+    {
+      "id": "app-registry-facade",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "facade/The facade is frozen and exposes exactly RN's nineteen AppRegistry members as functions"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The public AppRegistry is frozen and has exactly RN's nineteen members, all functions; the four headless-task members are the typed error below.",
+      "select": {
+        "id": ["value:react-native.AppRegistry"]
+      }
+    },
+    {
+      "id": "app-registry-register",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "registry/registerComponent and registerRunnable return the key, registerSection and registerConfig return nothing"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "registerComponent and registerRunnable return the key, registerSection and registerConfig return nothing, as RN's AppRegistryImpl does.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["registerComponent", "registerRunnable", "registerSection", "registerConfig"]
+      }
+    },
+    {
+      "id": "app-registry-app-keys",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "registry/getAppKeys lists every registered key in registration order"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "getAppKeys lists every registered key in registration order, those of a config's appKey included.",
+      "select": {
+        "id": ["api-member:AppRegistry.getAppKeys", "type-member:AppConfig.appKey"]
+      }
+    },
+    {
+      "id": "app-registry-section-keys",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "registry/A section is registerSection, a true section flag or a config's section"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "getSectionKeys lists the sections: registerSection, a true section flag and a config entry with component and section; a false flag is not a section.",
+      "select": {
+        "id": [
+          "api-member:AppRegistry.getSectionKeys", "type-member:AppConfig.section", "type-member:AppConfig.component"
+        ]
+      }
+    },
+    {
+      "id": "app-registry-sections",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "registry/getSections answers the sections with the very runnables getRunnable answers"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "getSections answers the sections with the very runnables getRunnable answers.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["getSections"]
+      }
+    },
+    {
+      "id": "app-registry-registry",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "registry/getRegistry answers the section keys and every runnable"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "getRegistry answers the section keys and every runnable, the same functions getRunnable answers.",
+      "select": {
+        "id": [
+          "api-member:AppRegistry.getRegistry", "type-member:Registry.sections", "type-member:Registry.runnables"
+        ]
+      }
+    },
+    {
+      "id": "app-registry-get-runnable",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "registry/getRunnable answers a function for a registered key and undefined for an unknown or an inherited name"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "getRunnable answers a function for a registered key and undefined for an unknown key or an inherited name.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["getRunnable"]
+      }
+    },
+    {
+      "id": "app-registry-root-tag-context",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "mount-A/The root's component gets its props and the root tag, and RootTagContext carries the same tag"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The root's component gets the root tag as a prop and through RootTagContext, and both agree with the tag the host gave the surface.",
+      "select": {
+        "id": ["value:react-native.RootTagContext"]
+      }
+    },
+    {
+      "id": "app-registry-wrapper-provider",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "mount-B/The wrapper provider's component wraps the content inside the root's padding"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The wrapper component the provider returns wraps the content, and the provider gets the appParameters and the key.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["setWrapperComponentProvider"]
+      }
+    },
+    {
+      "id": "app-registry-root-style-provider",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "mount-B/The root view style provider's style is on the root's native Control"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The style the root view style provider returns reaches the root's native Control: background, corner radius and size.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["setRootViewStyleProvider"]
+      }
+    },
+    {
+      "id": "app-registry-instrumentation-hook",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "mount-B/The instrumentation hook gets the provider and RN's logger"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The instrumentation hook gets the component provider and RN's logger, and the component it returns renders the root's component.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["setComponentProviderInstrumentationHook"]
+      }
+    },
+    {
+      "id": "app-registry-config-run",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "runnables/A runnable registered by registerRunnable or by a config's run gets the host's appParameters and display mode"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "A runnable registered by registerRunnable or by a config's run gets the host's appParameters and display mode.",
+      "select": {
+        "id": ["type-member:AppConfig.run"]
+      }
+    },
+    {
+      "id": "app-registry-set-surface-props",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "set-props/setSurfaceProps updates the running root's props and keeps its component state"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "setSurfaceProps updates the props of a running root without remounting its component: same instance, no cleanup.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["setSurfaceProps"]
+      }
+    },
+    {
+      "id": "app-registry-run-application",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "run-application/runApplication on a running surface runs its component again with the new props"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "runApplication on a running surface runs its component again with the new props, state kept.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["runApplication"]
+      }
+    },
+    {
+      "id": "app-registry-unmount-api",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "unmount-api/unmountApplicationComponentAtRootTag logs RN's error and unmounts nothing"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "unmountApplicationComponentAtRootTag does what RN's Fabric path does: it logs RN's error and unmounts nothing; the root stays until the host stops it.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["unmountApplicationComponentAtRootTag"]
+      }
+    },
+    {
+      "id": "app-registry-headless-typed-error",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "headless/The four headless-task members fail with E_APP_REGISTRY_HEADLESS_TASK"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "The four headless-task members fail with E_APP_REGISTRY_HEADLESS_TASK, an Error that names the member, and register, start and log nothing.",
+      "select": {
+        "id": [
+          "api-member:AppRegistry.cancelHeadlessTask", "api-member:AppRegistry.registerCancellableHeadlessTask",
+          "api-member:AppRegistry.registerHeadlessTask", "api-member:AppRegistry.startHeadlessTask"
+        ]
+      }
+    },
+    {
+      "id": "app-registry-unknown-root",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "unknown-root/runApplication and setSurfaceProps for a tag no surface owns fail with E_APP_REGISTRY_UNKNOWN_ROOT"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "runApplication and setSurfaceProps for a root tag no surface owns (never mounted, or already stopped) fail with E_APP_REGISTRY_UNKNOWN_ROOT and render nothing.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["runApplication", "setSurfaceProps"]
+      }
+    },
+    {
+      "id": "app-registry-key-refusals",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "diagnostics/A key registered once is refused again through component, section, runnable and config"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "V2-D01: a key registered once is refused again through registerComponent, registerSection, registerRunnable and registerConfig (twice in one config too), and the reserved keys __proto__, constructor and prototype are refused through every route.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["registerComponent", "registerSection", "registerRunnable", "registerConfig"]
+      }
+    },
+    {
+      "id": "app-registry-invalid-input",
+      "fixture": {
+        "file": "tests/app-registry-probe.gd",
+        "check": "diagnostics/An empty, blank or non-string key, a missing provider or run function and a malformed config fail with a TypeError"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "An empty, blank or non-string key, a missing provider or run function and a malformed config fail with a TypeError, and a refused call registers nothing.",
+      "select": {
+        "subject": "AppRegistry",
+        "kind": "api-member",
+        "name": ["registerComponent", "registerRunnable", "registerConfig"]
+      }
+    },
+    {
       "id": "scope-0.5-view-refused-and-ignored",
       "fixture": {
         "file": "tests/scope-0.5-native.test.mjs",
@@ -1249,8 +1847,8 @@
       { "polarity": "positive", "select": { "subject": "AbortController" }, "count": 3 },
       { "polarity": "positive", "select": { "subject": "AbortEvent" }, "count": 2 },
       { "polarity": "positive", "select": { "subject": "AbortSignal" }, "count": 13 },
-      { "polarity": "positive", "select": { "subject": "Console" }, "count": 11 },
-      { "polarity": "positive", "select": { "subject": "ErrorUtils" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "Console" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ErrorUtils" }, "count": 3 },
       { "polarity": "positive", "select": { "subject": "EventCounts" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "HermesInternal" }, "count": 2 },
       { "polarity": "positive", "select": { "subject": "Performance" }, "count": 1 },
@@ -1264,13 +1862,6 @@
       { "polarity": "positive", "select": { "subject": "PerformanceResourceTiming" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "Promise" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "RN$enableMicrotasksInReact" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "RN$handleException" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "RN$hasHandledFatalException" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "RN$inExceptionHandler" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "RN$isRuntimeReady" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "RN$notifyOfFatalException" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "RN$registerExceptionListener" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "RN$useAlwaysAvailableJSErrorHandling" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "TaskAttributionTiming" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "URL" }, "count": 15 },
       { "polarity": "positive", "select": { "subject": "URLSearchParams" }, "count": 15 },
@@ -1279,36 +1870,24 @@
       { "polarity": "positive", "select": { "subject": "clearImmediate" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "clearInterval" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "clearTimeout" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "console" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "nativeLoggingHook" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "nativePerformanceNow" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "navigator" }, "count": 2 },
-      { "polarity": "positive", "select": { "subject": "performance" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "process" }, "count": 2 },
-      { "polarity": "positive", "select": { "subject": "process.env" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "queueMicrotask" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "regeneratorRuntime" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "requestIdleCallback" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "self" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "setImmediate" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "setInterval" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "setTimeout" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "window" }, "count": 1 }
+      { "polarity": "positive", "select": { "subject": "setTimeout" }, "count": 1 }
     ],
     "GF-06": [
       { "polarity": "positive", "select": { "subject": "nativeFabricUIManager" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "unstable_batchedUpdates" }, "count": 1 }
     ],
     "GF-07": [
-      { "polarity": "negative", "select": { "subject": "AppRegistry" }, "count": 4, "note": "Waits for the AppRegistry delivery (#160), where the headless-task members throw the typed error." },
-      { "polarity": "positive", "select": { "subject": "AppConfig" }, "count": 5 },
-      { "polarity": "positive", "select": { "subject": "AppRegistry" }, "count": 16 },
+      { "polarity": "positive", "select": { "subject": "AppConfig" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "ComponentProvider" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "ComponentProviderInstrumentationHook" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "RN$AppRegistry" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "Registry" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "Registry" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "RootTag" }, "count": 2 },
-      { "polarity": "positive", "select": { "subject": "RootTagContext" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "RootViewStyleProvider" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "Runnable" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "Runnables" }, "count": 1 },
@@ -1318,23 +1897,15 @@
     "GF-08": [
       { "polarity": "negative", "select": { "subject": "ProgressBarAndroidInstance" }, "count": 48 },
       { "polarity": "positive", "select": { "subject": "ActivityIndicatorInstance" }, "count": 48 },
-      { "polarity": "positive", "select": { "subject": "CharacterData" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "DOMRect" }, "count": 12 },
+      { "polarity": "positive", "select": { "subject": "DOMRect" }, "count": 10 },
       { "polarity": "positive", "select": { "subject": "DOMRectInit" }, "count": 5 },
-      { "polarity": "positive", "select": { "subject": "DOMRectList" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "DOMRectReadOnly" }, "count": 11 },
-      { "polarity": "positive", "select": { "subject": "Document" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "Element" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "HTMLCollection" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "HTMLElement" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "DOMRectReadOnly" }, "count": 10 },
       { "polarity": "positive", "select": { "subject": "HostInstance" }, "count": 49 },
       { "polarity": "positive", "select": { "subject": "ImageInstance" }, "count": 48 },
       { "polarity": "positive", "select": { "subject": "MeasureInWindowOnSuccessCallback" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "MeasureLayoutOnSuccessCallback" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "MeasureOnSuccessCallback" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "ModalInstance" }, "count": 48 },
-      { "polarity": "positive", "select": { "subject": "Node" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "NodeList" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "PressableInstance" }, "count": 48 },
       { "polarity": "positive", "select": { "subject": "PublicRootInstance" }, "count": 2 },
       { "polarity": "positive", "select": { "subject": "PublicTextInstance" }, "count": 23 },
@@ -1344,7 +1915,6 @@
       { "polarity": "positive", "select": { "subject": "SafeAreaViewInstance" }, "count": 48 },
       { "polarity": "positive", "select": { "subject": "ScrollViewInstance" }, "count": 48 },
       { "polarity": "positive", "select": { "subject": "SwitchInstance" }, "count": 48 },
-      { "polarity": "positive", "select": { "subject": "Text" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "TextInputInstance" }, "count": 48 },
       { "polarity": "positive", "select": { "subject": "TextInstance" }, "count": 48 },
       { "polarity": "positive", "select": { "subject": "TouchableHighlightInstance" }, "count": 48 },
@@ -1443,9 +2013,6 @@
       { "polarity": "negative", "select": { "subject": "ProgressBarAndroidProps" }, "count": 62 },
       { "polarity": "positive", "select": { "subject": "ActivityIndicatorProps" }, "count": 56 },
       { "polarity": "positive", "select": { "subject": "BlurEvent" }, "count": 17 },
-      { "polarity": "positive", "select": { "subject": "CustomEvent" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "Event" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "EventTarget" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "FlatListProps" }, "count": 56 },
       { "polarity": "positive", "select": { "subject": "FocusEvent" }, "count": 17 },
       { "polarity": "positive", "select": { "subject": "GestureResponderEvent" }, "count": 18 },
@@ -1474,7 +2041,6 @@
       { "polarity": "positive", "select": { "subject": "PressableInstance" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "PressableProps" }, "count": 78 },
       { "polarity": "positive", "select": { "subject": "PressableStateCallbackType" }, "count": 2 },
-      { "polarity": "positive", "select": { "subject": "RN$isNativeEventTargetEventDispatchingEnabled" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "RefreshControlProps" }, "count": 56 },
       { "polarity": "positive", "select": { "subject": "ResponderSyntheticEvent" }, "count": 18 },
       { "polarity": "positive", "select": { "subject": "ScrollViewProps" }, "count": 56 },
@@ -1754,7 +2320,6 @@
       { "polarity": "positive", "select": { "subject": "RN$DiagnosticFlags" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "Systrace" }, "count": 9 },
       { "polarity": "positive", "select": { "subject": "__BUNDLE_LOADER_REPORTER__" }, "count": 1 },
-      { "polarity": "positive", "select": { "subject": "__DEV__" }, "count": 2 },
       { "polarity": "positive", "select": { "subject": "__FUSEBOX_HAS_FULL_CONSOLE_SUPPORT__" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "__FUSEBOX_REACT_DEVTOOLS_DISPATCHER__" }, "count": 1 },
       { "polarity": "positive", "select": { "subject": "__METRO_GLOBAL_PREFIX__" }, "count": 1 },

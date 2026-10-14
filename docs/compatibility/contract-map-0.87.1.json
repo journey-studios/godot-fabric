@@ -1866,6 +1866,26 @@
       "id": "api-member:Image.getSizeWithHeaders",
       "owner": "GF-22",
       "reason": "GF-16's acceptance ends 'Network image behavior uses GF-22': these three download over the network, while getSize, queryCache and resolveAssetSource stay with the asset pipeline"
+    },
+    {
+      "id": "host-global:global.RN$hasHandledFatalException",
+      "applicability": {
+        "godot": {
+          "status": "not-applicable",
+          "reason": "the host deliberately leaves RN$hasHandledFatalException out (V2-D26, 2026-10-13): with it ExceptionsManager.js reports only the first fatal exception, and the Godot runtime keeps running after an uncaught error; tests/js-errors-probe.gd (GF-05 slice C) asserts it absent, and GF-07's error-cleanup slice owns any change"
+        }
+      },
+      "reason": "V2-D26: Godot installs five of the seven globals of ReactInstance's error family and leaves out the two that make ExceptionsManager.js report only the first fatal exception; iOS and Android install them"
+    },
+    {
+      "id": "host-global:global.RN$notifyOfFatalException",
+      "applicability": {
+        "godot": {
+          "status": "not-applicable",
+          "reason": "the host deliberately leaves RN$notifyOfFatalException out (V2-D26, 2026-10-13): with it ExceptionsManager.js reports only the first fatal exception, and the Godot runtime keeps running after an uncaught error; tests/js-errors-probe.gd (GF-05 slice C) asserts it absent, and GF-07's error-cleanup slice owns any change"
+        }
+      },
+      "reason": "V2-D26: Godot installs five of the seven globals of ReactInstance's error family and leaves out the two that make ExceptionsManager.js report only the first fatal exception; iOS and Android install them"
     }
   ]
 }

@@ -1,9 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { withoutGitLocation } from "../scripts/git-environment.mjs";
 import { scan } from "../scripts/publication-scan.mjs";
+
+function git(directory, ...args) {
+  const result = spawnSync("git", args, { cwd: directory, encoding: "utf8", env: withoutGitLocation() });
+  assert.equal(result.status, 0, `git ${args.join(" ")}: ${result.stderr || result.error}`);
+}
 
 test("publication rejects private game references, local paths and credential-shaped fixtures", () => {
   const root = mkdtempSync(path.join(tmpdir(), "publication-scan-"));
@@ -47,6 +54,39 @@ test("encoded file URLs cannot hide private paths while public paths remain vali
       writeFileSync(path.join(root, "fixture.txt"), content);
       assert.equal(scan(root).passed, true, content);
     }
+  } finally {
+    rmSync(root, { recursive: true });
+  }
+});
+
+test("a checkout publishes tracked and unignored untracked files, never ignored ones", () => {
+  const root = mkdtempSync(path.join(tmpdir(), "publication-git-"));
+  const write = (file, content) => {
+    mkdirSync(path.dirname(path.join(root, file)), { recursive: true });
+    writeFileSync(path.join(root, file), content);
+  };
+  try {
+    git(root, "init", "-q");
+    write(".gitignore", "reports/\n");
+    write(".git/info/exclude", ".openqodex/\n");
+    write(".openqodex/reviews/latest/report.html", "/Users/example/worktree");
+    write("reports/run.json", "/Users/example/worktree");
+    write("tracked.txt", "/Users/example/worktree");
+    write("gone.txt", "Generic React UI example for Godot Fabric");
+    git(root, "add", "tracked.txt", "gone.txt");
+    rmSync(path.join(root, "gone.txt"));
+    write("untracked.txt", "/private/var/project");
+    git(root, "init", "-q", "nested");
+    write("nested/notes.txt", "Generic React UI example for Godot Fabric");
+    const result = scan(root);
+    assert.equal(result.passed, false);
+    assert.deepEqual(result.failures.map((failure) => failure.file).sort(), ["tracked.txt", "untracked.txt"]);
+    // .gitignore, tracked.txt and untracked.txt; the deleted index entry and the nested repository carry no file.
+    assert.equal(result.files, 3);
+    // Without git the walk falls back to every folder outside the fixed exclusions, ignored ones included.
+    rmSync(path.join(root, ".git"), { recursive: true });
+    rmSync(path.join(root, "nested"), { recursive: true });
+    assert.deepEqual(scan(root).failures.map((failure) => failure.file).sort(), [".openqodex/reviews/latest/report.html", "reports/run.json", "tracked.txt", "untracked.txt"]);
   } finally {
     rmSync(root, { recursive: true });
   }

@@ -414,7 +414,16 @@ test("a runtime-global is the host's when every RN site that would install it is
   assert.equal(rowOf("runtime-global:global.performance").applicability.godot.status, "applies");
   assert.equal(rowOf("runtime-global:global.PerformanceObserver").applicability.godot.status, "host-provides");
   assert.equal(rowOf("runtime-global:global.PerformanceObserver").applicability.ios.status, "applies");
-  assert.equal(hostProvides.filter((row) => row.kind === "host-global").length, inventory.counts["host-global"] - 4, "all but the four legacy-bridge globals");
+  // V2-D26: the host leaves out the two ReactInstance globals that make ExceptionsManager.js report only the first fatal exception, so the
+  // map's overrides take them out of the host-provides set on Godot and leave iOS and Android as they are.
+  for (const name of ["RN$hasHandledFatalException", "RN$notifyOfFatalException"]) {
+    const row = rowOf(`host-global:global.${name}`);
+    assert.deepEqual(["ios", "android", "godot"].map((platform) => row.applicability[platform].status), ["host-provides", "host-provides", "not-applicable"], name);
+    assert.equal(row.owner, "GF-05", name);
+    assert.equal(row.via.godot, "override", name);
+  }
+  assert.equal(hostProvides.filter((row) => row.kind === "host-global").length, inventory.counts["host-global"] - 4 - 2,
+    "all but the four legacy-bridge globals and the two that V2-D26 leaves out");
   // Gate-derived rows: dev-only and default-off flags are decided by the gates, not by name.
   assert.equal(rowOf("runtime-global:global.__ReactRefresh").owner, "GF-29");
   assert.equal(rowOf("runtime-global:global.IntersectionObserver").scope, "post_1_0");
