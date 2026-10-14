@@ -1,0 +1,510 @@
+{
+  "schemaVersion": 1,
+  "reactNative": "0.87.1",
+  "scope": "Step-by-step audit of the JavaScript environment RN builds before an application runs: the two Metro polyfills RN passes to its bundler, then InitializeCore's chain from the wrapper to the last module the entry function loads, as derived from the pinned sources by scripts/parity-upstream-scan.mjs. tests/bootstrap-audit.test.mjs fails when the chain, a condition or an installed global drifts from this file, or when the evidence it cites is stale.",
+  "derivation": {
+    "wrapper": "Libraries/Core/InitializeCore.js",
+    "entry": "src/private/setup/setUpDefaultReactNativeEnvironment.js",
+    "host": "src/initialize.js",
+    "note": "src/initialize.js replaces InitializeCore: sdk/toolchain/platform-plugin.mjs resolves ReactNativePrivateInitializeCore to it. runs is proven statically by its import of the upstream module (and its call, for a setup function), or, for a Metro polyfill, by sdk/toolchain/metro-polyfills.mjs, which lists what every host build injects ahead of the first module; replaced and host by a file and a symbol that must still occur there (an anchor says which occurrence when it occurs more than once)."
+  },
+  "statuses": {
+    "runs": "The upstream module runs unchanged: src/initialize.js imports it (and calls it, for a default-exported setup function), or, for a Metro polyfill, the build injects it ahead of the first module (sdk/toolchain/metro-polyfills.mjs).",
+    "replaced": "Our code does the step's job; evidence names the file and symbol, and the reason says why.",
+    "host": "The C++ host, or the engine it links, provides it; evidence names the file and symbol.",
+    "pending": "Not done yet; slice names the GF-05 slice that does it.",
+    "not-applicable": "RN's step does not apply to this host; the reason says why, and owner names the GF task that owns the gap when another one does."
+  },
+  "slices": {
+    "B": "JS-installed globals (done). src/initialize.js imports RN's own setUpGlobals, setUpDOM, setUpPerformance and setUpNavigator, the build injects RN's console polyfill ahead of every module, and the host no longer defines performance or console, only nativePerformanceNow and nativeLoggingHook (native build; headless probe tests/js-globals-native.test.mjs).",
+    "C": "The error path. The error-guard polyfill's ErrorUtils, RN's setUpErrorHandling and the host's RN$handleException (JsErrorHandler) replace the host's bare failure recording.",
+    "D1": "RN$enableMicrotasksInReact. React's microtask path switches on as in RN bridgeless; high regression risk, so it runs behind a full suite sweep.",
+    "D2": "Idle callbacks. The NativeIdleCallbacks module backs requestIdleCallback and cancelIdleCallback as in RN bridgeless (cold native build).",
+    "E": "The web-globals probe. URL, URLSearchParams, AbortController and AbortSignal members, and the encoding globals per the decision: TextEncoder, atob and btoa present and tested, TextDecoder absent with a negative fixture.",
+    "F": "Exceptions and starvation parity. Callback exceptions (timers, setImmediate, queueMicrotask) and a Promise storm are measured against RN bridgeless and the host behaves the same."
+  },
+  "decisions": [
+    {
+      "id": "encoding",
+      "date": "2026-10-13",
+      "topic": "Encoding globals",
+      "decision": "Parity with Hermes: TextEncoder, atob and btoa are present and tested; TextDecoder is absent, with a negative fixture, as on RN iOS and Android.",
+      "scope": "1_0",
+      "slice": "E",
+      "reason": "RN's InitializeCore chain installs none of them. They come from the engine, and Hermes on RN iOS and Android has no TextDecoder, so adding one would diverge from RN on both mobile platforms. Slice E probes the real host and reports what it finds."
+    },
+    {
+      "id": "performance",
+      "date": "2026-10-13",
+      "topic": "Performance: the 1.0 surface",
+      "decision": "performance.now, mark, measure, clearMarks and clearMeasures are in 1.0, through RN's setUpPerformance fallback. The host's {now} stub is removed in slice B.",
+      "scope": "1_0",
+      "slice": "B",
+      "globals": ["performance"],
+      "reason": "RN installs this fallback when the NativePerformance module is absent, and the fallback needs only the host's nativePerformanceNow, which exists."
+    },
+    {
+      "id": "performance-classes",
+      "date": "2026-10-13",
+      "topic": "Performance: the Web Performance classes",
+      "decision": "The 11 Web Performance classes that RN installs from NativePerformance (EventCounts, Performance, PerformanceEntry, PerformanceEventTiming, PerformanceLongTaskTiming, PerformanceMark, PerformanceMeasure, PerformanceObserver, PerformanceObserverEntryList, PerformanceResourceTiming, TaskAttributionTiming) move to post_1_0.",
+      "scope": "post_1_0",
+      "roadmap": "GF-40",
+      "parityGap": true,
+      "globals": ["EventCounts", "Performance", "PerformanceEntry", "PerformanceEventTiming", "PerformanceLongTaskTiming", "PerformanceMark", "PerformanceMeasure", "PerformanceObserver", "PerformanceObserverEntryList", "PerformanceResourceTiming", "TaskAttributionTiming"],
+      "reason": "They need the NativePerformance TurboModule (a C++ timeline and observer pipeline) that the host does not have. RN iOS and Android install them, so this is a recorded parity gap, not an equivalence."
+    },
+    {
+      "id": "starvation",
+      "date": "2026-10-13",
+      "topic": "Starvation",
+      "decision": "Parity with RN bridgeless. What RN does under a Promise storm is measured, and the host must behave the same; there is no deliberate deviation.",
+      "scope": "1_0",
+      "slice": "F",
+      "reason": "A guard that RN does not have would be a behaviour the certification cannot compare against RN. If the measurement shows RN starves too, the host starves the same way."
+    }
+  ],
+  "polyfills": [
+    {
+      "id": "console",
+      "file": "@react-native/js-polyfills/console.js",
+      "summary": "Metro polyfill that replaces global.console with RN's over nativeLoggingHook: log, info, warn, error, trace, debug, table, group, groupEnd, groupCollapsed, assert and stubs for time, timeEnd, timeStamp, count, countReset and createTask.",
+      "globals": ["console"],
+      "status": "runs",
+      "reason": "Metro evaluates the polyfills before the module system, so before any module body; an esbuild bundle has no such phase, and its `inject` option is the equivalent (esbuild puts an injected file ahead of the entry's imports). Every host build passes the list in sdk/toolchain/metro-polyfills.mjs, which the gate reads and the probe confirms: the first module of the bundle already finds RN's console. The host defines no console of its own, only the nativeLoggingHook the polyfill calls, which prints the message as a HERMES: line.",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "evaluate(\"globalThis.global=globalThis; globalThis.__DEV__=false;\");" },
+        { "file": "native/application_runtime.cpp", "symbol": "bind(\"nativeLoggingHook\"" }
+      ]
+    },
+    {
+      "id": "error-guard",
+      "file": "@react-native/js-polyfills/error-guard.js",
+      "summary": "Metro polyfill that defines global.ErrorUtils (setGlobalHandler, reportError, reportFatalError, applyWithGuard, inGuard, guard).",
+      "globals": ["ErrorUtils"],
+      "status": "pending",
+      "slice": "C",
+      "reason": "ErrorUtils does not exist, so RN modules that read it through Libraries/vendor/core/ErrorUtils get undefined and no global error handler can be set."
+    }
+  ],
+  "steps": [
+    {
+      "id": "InitializeCore",
+      "file": "Libraries/Core/InitializeCore.js",
+      "role": "wrapper",
+      "gates": [],
+      "summary": "Deprecated wrapper whose only job is to require src/setup-env.",
+      "globals": [],
+      "status": "replaced",
+      "reason": "The platform plugin resolves react-native/Libraries/ReactPrivate/ReactNativePrivateInitializeCore, the import through which the renderer reaches InitializeCore, to src/initialize.js, so the upstream wrapper files and the entry function are never evaluated and src/initialize.js is the bundle's bootstrap.",
+      "evidence": [
+        { "file": "sdk/toolchain/platform-plugin.mjs", "symbol": "ReactNativePrivateInitializeCore" },
+        { "file": "src/initialize.js", "symbol": "import \"./runtime\"" }
+      ]
+    },
+    {
+      "id": "setup-env",
+      "file": "src/setup-env.js",
+      "role": "wrapper",
+      "gates": [],
+      "summary": "The react-native/setup-env entry: calls setUpDefaultReactNativeEnvironment().",
+      "globals": [],
+      "status": "replaced",
+      "reason": "The platform plugin resolves react-native/Libraries/ReactPrivate/ReactNativePrivateInitializeCore, the import through which the renderer reaches InitializeCore, to src/initialize.js, so the upstream wrapper files and the entry function are never evaluated and src/initialize.js is the bundle's bootstrap.",
+      "evidence": [
+        { "file": "sdk/toolchain/platform-plugin.mjs", "symbol": "ReactNativePrivateInitializeCore" },
+        { "file": "src/initialize.js", "symbol": "import \"./runtime\"" }
+      ]
+    },
+    {
+      "id": "setUpDefaultReactNativeEnvironment",
+      "file": "src/private/setup/setUpDefaultReactNativeEnvironment.js",
+      "role": "entry",
+      "gates": [],
+      "summary": "The entry function: a once-only guard, then the chain below, with developer tools behind __DEV__ and enableDeveloperTools.",
+      "globals": [],
+      "status": "replaced",
+      "reason": "src/initialize.js does the entry's job. It imports the upstream setup modules this audit lists as runs in RN's order, with the host runtime where RN installs promises and timers, and the bundle's module cache is the once-only guard. The Metro polyfills RN's bundler runs first are not imported there: the build injects them. enableDeveloperTools is moot because __DEV__ is false.",
+      "evidence": [
+        { "file": "src/initialize.js", "symbol": "import \"./native-module-runtime\"" },
+        { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" }
+      ]
+    },
+    {
+      "id": "setUpGlobals",
+      "file": "Libraries/Core/setUpGlobals.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpGlobals.js",
+      "gates": [],
+      "summary": "Defines window and self as the global object, and process, process.env and process.env.NODE_ENV.",
+      "globals": ["process", "process.env", "process.env.NODE_ENV", "self", "window"],
+      "status": "runs",
+      "reason": "Imported unchanged by src/initialize.js, so window and self are the global object, and process.env.NODE_ENV is 'production' at run time as well as in the literal the bundler substitutes at build time. The host's bootstrap script defines only global and __DEV__.",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "evaluate(\"globalThis.global=globalThis; globalThis.__DEV__=false;\");" },
+        { "file": "sdk/toolchain/build.mjs", "symbol": "\"process.env.NODE_ENV\"" }
+      ]
+    },
+    {
+      "id": "setUpDOM",
+      "file": "src/private/setup/setUpDOM.js",
+      "role": "installer",
+      "installer": "src/private/setup/setUpDOM.js",
+      "gates": [],
+      "summary": "Registers lazy getters for DOMRect, DOMRectReadOnly, DOMRectList, HTMLCollection, NodeList, Node, Document, CharacterData, Text, Element, HTMLElement, Event, EventTarget and CustomEvent, and defines RN$isNativeEventTargetEventDispatchingEnabled.",
+      "globals": ["CharacterData", "CustomEvent", "DOMRect", "DOMRectList", "DOMRectReadOnly", "Document", "Element", "Event", "EventTarget", "HTMLCollection", "HTMLElement", "Node", "NodeList", "RN$isNativeEventTargetEventDispatchingEnabled", "Text"],
+      "status": "runs",
+      "reason": "Imported and called unchanged by src/initialize.js, so the 14 DOM globals resolve (lazily, over RN's own DOM modules, some of which the event-target code already imports directly) and RN$isNativeEventTargetEventDispatchingEnabled exists. RN's package exports do not reach the module, so src/initialize.js spells the import as a path into node_modules, as src/private-interface.js does for its seams, and the platform plugin resolves it for that file alone."
+    },
+    {
+      "id": "setUpPerformance",
+      "file": "Libraries/Core/setUpPerformance.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpPerformance.js",
+      "gates": [],
+      "summary": "Installs the fallback performance object (now, mark, measure, clearMarks, clearMeasures) when there is no NativePerformance module and no global.performance, otherwise runs setUpPerformanceModern.",
+      "globals": ["performance"],
+      "status": "runs",
+      "reason": "Imported unchanged by src/initialize.js. RN's fallback installs only when global.performance is missing, so the host no longer defines a performance stub (it had only now); the fallback's now() reads the host's nativePerformanceNow, and mark, measure, clearMarks and clearMeasures exist and return nothing, as on RN without NativePerformance.",
+      "decision": "performance",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "evaluate(\"globalThis.global=globalThis; globalThis.__DEV__=false;\");" },
+        { "file": "native/application_runtime.cpp", "symbol": "bind(\"nativePerformanceNow\"" }
+      ]
+    },
+    {
+      "id": "setUpPerformanceModern",
+      "file": "src/private/setup/setUpPerformanceModern.js",
+      "role": "nested",
+      "installer": "Libraries/Core/setUpPerformance.js",
+      "gates": ["NativePerformance"],
+      "summary": "With NativePerformance, installs a Performance instance as global.performance and the Web Performance classes.",
+      "globals": ["EventCounts", "Performance", "PerformanceEntry", "PerformanceEventTiming", "PerformanceLongTaskTiming", "PerformanceMark", "PerformanceMeasure", "PerformanceObserver", "PerformanceObserverEntryList", "PerformanceResourceTiming", "TaskAttributionTiming", "performance"],
+      "status": "not-applicable",
+      "reason": "It runs only when the NativePerformance module exists, and the host provides no NativePerformanceCxx (the name is reserved, so no adapter can register it). By the user's decision of 2026-10-13 the 11 Web Performance classes move to post_1_0 and are a recorded parity gap, because RN iOS and Android install them.",
+      "owner": "GF-40",
+      "decision": "performance-classes",
+      "evidence": [
+        { "file": "native/adapter_loader.cpp", "symbol": "\"NativePerformanceCxx\"" }
+      ]
+    },
+    {
+      "id": "polyfillPromise",
+      "file": "Libraries/Core/polyfillPromise.js",
+      "role": "installer",
+      "installer": "Libraries/Core/polyfillPromise.js",
+      "gates": [],
+      "summary": "Uses the engine's Promise when Hermes has one, with a __DEV__-only rejection tracker, and installs RN's JS Promise otherwise.",
+      "globals": ["Promise"],
+      "status": "host",
+      "reason": "On Hermes global.Promise is the engine's own, so the module installs nothing outside __DEV__. The host runs real Hermes, the Promise RN uses on iOS and Android, and src/initialize.js refuses to start without HermesInternal. The DEV rejection tracker belongs to GF-29.",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "makeHermesRuntime(config)" },
+        { "file": "src/initialize.js", "symbol": "HermesInternal" }
+      ],
+      "verifyIn": ["F"]
+    },
+    {
+      "id": "setUpTimers",
+      "file": "Libraries/Core/setUpTimers.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpTimers.js",
+      "gates": [],
+      "summary": "With RN$Bridgeless (which the host sets) it installs queueMicrotask, setImmediate, clearImmediate and the idle callbacks from JS and sets RN$enableMicrotasksInReact; the C++ TimerManager the host attaches provides setTimeout, setInterval, their clears and the animation frame. Without RN$Bridgeless, JSTimers installs all of them.",
+      "parts": [
+        {
+          "name": "timers",
+          "globals": ["setTimeout", "clearTimeout", "setInterval", "clearInterval"],
+          "status": "host",
+          "reason": "RN's own C++ TimerManager, compiled unchanged over the Godot deadline registry, attaches them as ReactInstance does on iOS and Android. src/runtime.js wraps setTimeout and setInterval so a stopped runtime schedules nothing.",
+          "evidence": [
+            { "file": "native/application_runtime.cpp", "symbol": "timer_manager->attachGlobals(*runtime)" },
+            { "file": "src/runtime.js", "symbol": "for (const name of [\"setTimeout\"" },
+            { "file": "native/turbo_module_registry.cpp", "symbol": "\"RN$Bridgeless\"" }
+          ],
+          "verifyIn": ["F"]
+        },
+        {
+          "name": "animation-frame",
+          "globals": ["requestAnimationFrame", "cancelAnimationFrame"],
+          "status": "host",
+          "reason": "The host rebinds both after attachGlobals, so callbacks run on the FrameClock tick with one timestamp per tick instead of TimerManager's zero-delay timer; src/runtime.js wraps requestAnimationFrame like the timers.",
+          "evidence": [
+            { "file": "native/application_runtime.cpp", "symbol": "bind(\"requestAnimationFrame\"" },
+            { "file": "native/application_runtime.cpp", "symbol": "bind(\"cancelAnimationFrame\"" },
+            { "file": "src/runtime.js", "symbol": "for (const name of [\"setTimeout\"" }
+          ],
+          "verifyIn": ["F"]
+        },
+        {
+          "name": "queue-microtask",
+          "globals": ["queueMicrotask"],
+          "status": "replaced",
+          "reason": "RN bridgeless queues through the NativeMicrotasks module over Hermes' microtask queue. The host has no such module, so src/runtime.js wraps RN's portable Libraries/Core/Timers/queueMicrotask (a job on a resolved Promise) behind the runtime-active check. Whether an exception thrown by a callback surfaces as it does in RN is certified by slice F.",
+          "evidence": [
+            { "file": "src/runtime.js", "symbol": "globalThis.queueMicrotask =" },
+            { "file": "src/runtime.js", "symbol": "import queueMicrotask from \"react-native/Libraries/Core/Timers/queueMicrotask\"" }
+          ],
+          "verifyIn": ["F"]
+        },
+        {
+          "name": "immediate",
+          "globals": ["setImmediate", "clearImmediate"],
+          "status": "replaced",
+          "reason": "src/runtime.js assigns RN's own immediateShim, the module RN bridgeless installs lazily, eagerly instead. The shim defers through global.queueMicrotask, so it inherits that part's semantics; ordering, exceptions and starvation are certified by slice F.",
+          "evidence": [
+            { "file": "src/runtime.js", "symbol": "globalThis.setImmediate = setImmediate" },
+            { "file": "src/runtime.js", "symbol": "import { setImmediate, clearImmediate } from \"react-native/Libraries/Core/Timers/immediateShim\"" }
+          ],
+          "verifyIn": ["F"]
+        },
+        {
+          "name": "react-microtasks",
+          "globals": ["RN$enableMicrotasksInReact"],
+          "status": "pending",
+          "slice": "D1",
+          "reason": "The host never sets global.RN$enableMicrotasksInReact, so the pinned renderer keeps its microtask path off (Libraries/Renderer/implementations/ReactFabric-prod.js:10422), where RN bridgeless sets it to true. Slice D1 turns it on behind a full suite sweep."
+        },
+        {
+          "name": "idle-callbacks",
+          "globals": ["requestIdleCallback", "cancelIdleCallback"],
+          "status": "pending",
+          "slice": "D2",
+          "reason": "Neither function exists: RN installs them from the NativeIdleCallbacks module, which the host does not provide (the name is reserved). Slice D2 adds the module.",
+          "evidence": [
+            { "file": "native/adapter_loader.cpp", "symbol": "\"NativeIdleCallbacksCxx\"" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "setUpReactDevTools",
+      "file": "Libraries/Core/setUpReactDevTools.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpReactDevTools.js",
+      "gates": ["__DEV__ && enableDeveloperTools"],
+      "summary": "Connects React DevTools and the Fusebox dispatcher.",
+      "globals": [],
+      "status": "not-applicable",
+      "reason": "Gated by __DEV__ && enableDeveloperTools. The bundle is always built and hosted with __DEV__ false (native/application_runtime.cpp), as RN's release builds are, so the gate is closed. React DevTools integration is GF-29.",
+      "owner": "GF-29",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" }
+      ]
+    },
+    {
+      "id": "setUpFuseboxReactDevToolsDispatcher",
+      "file": "src/private/devsupport/rndevtools/setUpFuseboxReactDevToolsDispatcher.js",
+      "role": "nested",
+      "installer": "Libraries/Core/setUpReactDevTools.js",
+      "gates": ["__DEV__ && enableDeveloperTools", "__DEV__"],
+      "summary": "Installs the Fusebox React DevTools dispatcher global that setUpReactDevTools loads.",
+      "globals": ["__FUSEBOX_REACT_DEVTOOLS_DISPATCHER__"],
+      "status": "not-applicable",
+      "reason": "Loaded only by setUpReactDevTools, behind __DEV__. The bundle is always built and hosted with __DEV__ false (native/application_runtime.cpp), as RN's release builds are, so the gate is closed.",
+      "owner": "GF-29",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" }
+      ]
+    },
+    {
+      "id": "setUpErrorHandling",
+      "file": "Libraries/Core/setUpErrorHandling.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpErrorHandling.js",
+      "gates": [],
+      "summary": "Installs ExceptionsManager's console.error reporter and registers its handler with ErrorUtils.setGlobalHandler, unless the C++ error path (RN$useAlwaysAvailableJSErrorHandling) is on.",
+      "globals": [],
+      "status": "pending",
+      "slice": "C",
+      "reason": "Not imported, and the error-guard polyfill is absent too, so ErrorUtils does not exist and no RN exception path is installed. The host only records the failures it catches around its own callbacks. Slice C installs RN's path and the host's RN$handleException.",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "void fail(const std::string &error)" }
+      ]
+    },
+    {
+      "id": "setUpRegeneratorRuntime",
+      "file": "Libraries/Core/setUpRegeneratorRuntime.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpRegeneratorRuntime.js",
+      "gates": [],
+      "summary": "Installs regeneratorRuntime when the engine has no native generators.",
+      "globals": ["regeneratorRuntime"],
+      "status": "host",
+      "reason": "Hermes implements generators natively, so the feature check passes and the module installs nothing, as on RN iOS and Android. The generator support is the engine's, which the host links.",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "makeHermesRuntime(config)" }
+      ]
+    },
+    {
+      "id": "setUpXHR",
+      "file": "Libraries/Core/setUpXHR.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpXHR.js",
+      "gates": [],
+      "summary": "Registers lazy getters for XMLHttpRequest, FormData, fetch, Headers, Request, Response, WebSocket, Blob, File, FileReader, URL, URLSearchParams, AbortController and AbortSignal.",
+      "globals": ["AbortController", "AbortSignal", "Blob", "File", "FileReader", "FormData", "Headers", "Request", "Response", "URL", "URLSearchParams", "WebSocket", "XMLHttpRequest", "fetch"],
+      "status": "runs",
+      "reason": "Imported unchanged by src/initialize.js. The members of URL, URLSearchParams, AbortController and AbortSignal are probed by slice E.",
+      "verifyIn": ["E"]
+    },
+    {
+      "id": "setUpAlert",
+      "file": "Libraries/Core/setUpAlert.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpAlert.js",
+      "gates": [],
+      "summary": "Defines global.alert over Alert.alert.",
+      "globals": ["alert"],
+      "status": "not-applicable",
+      "reason": "The facade does not export Alert, so there is nothing for the global to call. Alert and the alert global belong to GF-23's typed OS modules (docs/API.md lists Alert as open).",
+      "owner": "GF-23"
+    },
+    {
+      "id": "setUpNavigator",
+      "file": "Libraries/Core/setUpNavigator.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpNavigator.js",
+      "gates": [],
+      "summary": "Defines global.navigator, or sets navigator.product, to 'ReactNative'.",
+      "globals": ["navigator", "navigator.product"],
+      "status": "runs",
+      "reason": "Imported unchanged by src/initialize.js, so navigator.product is 'ReactNative' as on RN iOS and Android."
+    },
+    {
+      "id": "setUpBatchedBridge",
+      "file": "Libraries/Core/setUpBatchedBridge.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpBatchedBridge.js",
+      "gates": [],
+      "summary": "Registers the callable modules Systrace, RCTLog, RCTDeviceEventEmitter, RCTNativeAppEventEmitter, GlobalPerformanceLogger and HMRClient (and JSTimers on the legacy bridge).",
+      "globals": [],
+      "status": "not-applicable",
+      "reason": "The host registers none of the callable modules the step lists (its TurboModuleRegistry only provides RN$registerCallableModule) and emits device events through the global __rctDeviceEventEmitter that RN's RCTDeviceEventEmitter module installs. Nothing in the host calls RCTLog, Systrace, GlobalPerformanceLogger or HMRClient. The callable-module infrastructure is GF-25's.",
+      "owner": "GF-25",
+      "evidence": [
+        { "file": "native/turbo_module_registry.cpp", "symbol": "\"RN$registerCallableModule\"", "anchor": "setProperty(runtime, \"RN$registerCallableModule\"" },
+        { "file": "native/application_runtime.cpp", "symbol": "\"__rctDeviceEventEmitter\"" }
+      ]
+    },
+    {
+      "id": "setUpSegmentFetcher",
+      "file": "Libraries/Core/setUpSegmentFetcher.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpSegmentFetcher.js",
+      "gates": [],
+      "summary": "Defines global.__fetchSegment, which loads Metro RAM-bundle segments over NativeSegmentFetcher.",
+      "globals": ["__fetchSegment"],
+      "status": "not-applicable",
+      "reason": "The toolchain emits one esbuild bundle with no segments, and the host has no SegmentFetcher module (the name is reserved). Metro's segmented bundles are a legacy delivery format Godot does not use.",
+      "evidence": [
+        { "file": "native/adapter_loader.cpp", "symbol": "\"SegmentFetcher\"" }
+      ]
+    },
+    {
+      "id": "checkNativeVersion",
+      "file": "Libraries/Core/checkNativeVersion.js",
+      "role": "installer",
+      "installer": "Libraries/Core/checkNativeVersion.js",
+      "gates": ["__DEV__ && enableDeveloperTools"],
+      "summary": "Compares the JS and native React Native versions.",
+      "globals": [],
+      "status": "not-applicable",
+      "reason": "Gated by __DEV__ && enableDeveloperTools. The bundle is always built and hosted with __DEV__ false (native/application_runtime.cpp), as RN's release builds are, so the gate is closed.",
+      "owner": "GF-29",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" }
+      ]
+    },
+    {
+      "id": "setUpDeveloperTools",
+      "file": "Libraries/Core/setUpDeveloperTools.js",
+      "role": "installer",
+      "installer": "Libraries/Core/setUpDeveloperTools.js",
+      "gates": ["__DEV__ && enableDeveloperTools"],
+      "summary": "In DEV, wraps console for HMR logging, loads Fast Refresh and defines __loadBundleAsync.",
+      "globals": ["__loadBundleAsync"],
+      "status": "not-applicable",
+      "reason": "Gated by __DEV__ && enableDeveloperTools. The bundle is always built and hosted with __DEV__ false (native/application_runtime.cpp), as RN's release builds are, so the gate is closed. Dev tools, Fast Refresh and bundle loading are GF-29.",
+      "owner": "GF-29",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" }
+      ]
+    },
+    {
+      "id": "setUpReactRefresh",
+      "file": "Libraries/Core/setUpReactRefresh.js",
+      "role": "nested",
+      "installer": "Libraries/Core/setUpDeveloperTools.js",
+      "gates": ["__DEV__ && enableDeveloperTools", "__DEV__"],
+      "summary": "Injects react-refresh into the global hook and defines __ReactRefresh.",
+      "globals": ["__ReactRefresh"],
+      "status": "not-applicable",
+      "reason": "Loaded only by setUpDeveloperTools, behind __DEV__. The bundle is always built and hosted with __DEV__ false (native/application_runtime.cpp), as RN's release builds are, so the gate is closed.",
+      "owner": "GF-29",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" }
+      ]
+    },
+    {
+      "id": "LogBox",
+      "file": "Libraries/LogBox/LogBox.js",
+      "role": "installer",
+      "installer": "Libraries/LogBox/LogBox.js",
+      "gates": ["__DEV__ && enableDeveloperTools"],
+      "summary": "LogBox.install() hooks console.error and console.warn into the in-app overlay.",
+      "globals": [],
+      "status": "not-applicable",
+      "reason": "Gated by __DEV__ && enableDeveloperTools. The bundle is always built and hosted with __DEV__ false (native/application_runtime.cpp), as RN's release builds are, so the gate is closed. LogBox is GF-29.",
+      "owner": "GF-29",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "globalThis.__DEV__=false" }
+      ]
+    },
+    {
+      "id": "AppRegistry",
+      "file": "Libraries/ReactNative/AppRegistry.js",
+      "role": "installer",
+      "installer": "Libraries/ReactNative/AppRegistry.js",
+      "gates": [],
+      "summary": "Registers a default LogBox surface, sets global.RN$AppRegistry and registers the AppRegistry callable module.",
+      "globals": ["RN$AppRegistry"],
+      "status": "replaced",
+      "reason": "src/app-registry.js sets RN$AppRegistry from RN's own AppRegistryImpl, the registry AppRegistry.js wraps, and the host reads that global to run an application. It registers neither the AppRegistry callable module nor the default LogBox surface, which is a no-op outside DEV. Surface lifecycle is GF-07's.",
+      "evidence": [
+        { "file": "src/app-registry.js", "symbol": "globalThis.RN$AppRegistry" },
+        { "file": "native/application_runtime.cpp", "symbol": "\"RN$AppRegistry\"" }
+      ]
+    },
+    {
+      "id": "setUpIntersectionObserver",
+      "file": "src/private/setup/setUpIntersectionObserver.js",
+      "role": "installer",
+      "installer": "src/private/setup/setUpIntersectionObserver.js",
+      "gates": ["require('../../../src/private/featureflags/ReactNativeFeatureFlags').enableIntersectionObserverByDefault()"],
+      "summary": "Registers lazy getters for IntersectionObserver and IntersectionObserverEntry.",
+      "globals": ["IntersectionObserver", "IntersectionObserverEntry"],
+      "status": "not-applicable",
+      "reason": "Gated by the enableIntersectionObserverByDefault native flag, which is false in RN 0.87.1's own defaults (ReactNativeFeatureFlagsDefaults.h) and which the host serves unchanged through the upstream feature-flags module, so RN does not run it either. The NativeIntersectionObserverCxx module is not provided.",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "native_modules->add_feature_flags()" },
+        { "file": "native/adapter_loader.cpp", "symbol": "\"NativeIntersectionObserverCxx\"" }
+      ]
+    },
+    {
+      "id": "setUpMutationObserver",
+      "file": "src/private/setup/setUpMutationObserver.js",
+      "role": "installer",
+      "installer": "src/private/setup/setUpMutationObserver.js",
+      "gates": ["require('../../../src/private/featureflags/ReactNativeFeatureFlags').enableMutationObserverByDefault()"],
+      "summary": "Registers lazy getters for MutationObserver and MutationRecord.",
+      "globals": ["MutationObserver", "MutationRecord"],
+      "status": "not-applicable",
+      "reason": "Gated by the enableMutationObserverByDefault native flag, which is false in RN 0.87.1's own defaults (ReactNativeFeatureFlagsDefaults.h) and which the host serves unchanged through the upstream feature-flags module, so RN does not run it either. The NativeMutationObserverCxx module is not provided.",
+      "evidence": [
+        { "file": "native/application_runtime.cpp", "symbol": "native_modules->add_feature_flags()" },
+        { "file": "native/adapter_loader.cpp", "symbol": "\"NativeMutationObserverCxx\"" }
+      ]
+    }
+  ]
+}

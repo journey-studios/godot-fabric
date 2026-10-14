@@ -654,6 +654,31 @@ export function scanUpstream({ ts, upstream }) {
   };
 }
 
+// The setup chain as the bootstrap audit (tests/bootstrap-audit.test.mjs) reads it: every module InitializeCore runs, in order,
+// with the conditions around it and the names it installs. It comes from the same derivation as the runtime-global rows above and
+// changes nothing in scanUpstream's output.
+export function scanBootstrap({ ts, upstream }) {
+  const syntax = createSyntax(ts);
+  const sources = loadSources(ts, upstream);
+  const { chain } = setupChain(syntax, sources);
+  const { rows } = chainRows(syntax, sources, chain);
+  const installed = new Map();
+  for (const row of rows) {
+    const name = row.owner === "global" ? row.name : `${row.owner}.${row.name}`;
+    for (const site of row.sites) {
+      installed.set(site.source, [...(installed.get(site.source) ?? []), name]);
+    }
+  }
+  return {
+    wrapper: SETUP_WRAPPER,
+    entry: SETUP_ENTRY,
+    steps: chain.map((entry) => ({
+      file: entry.file, role: entry.role, ...(entry.installer ? { installer: entry.installer } : {}), gates: entry.gates,
+      globals: [...new Set(installed.get(entry.file) ?? [])].sort(byText),
+    })),
+  };
+}
+
 // A mechanical marker: the module of a public value has an iOS or Android implementation file next to its generic one, or
 // one of `names` (the value's, and for a member also its member's) says it. It is not a decision about what applies to Godot.
 export function platformImplementation(upstream, declarationSource, names) {

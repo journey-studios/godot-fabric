@@ -334,6 +334,18 @@ jobs:
             build/performance-current.log
             build/performance-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:js-globals
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-js-globals
+          path: |
+            build/js-globals-report.json
+            build/js-globals-current-report.json
+            build/js-globals-comparison.json
+            build/js-globals-current.log
+            build/js-globals-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:text-layout
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

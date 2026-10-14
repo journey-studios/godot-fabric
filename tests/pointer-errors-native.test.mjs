@@ -10,6 +10,7 @@ import { transformAsync } from "@babel/core";
 import { build } from "esbuild";
 import { ensureGodotBinary } from "../scripts/godot-binary.mjs";
 import { platformPlugin } from "../sdk/toolchain/platform-plugin.mjs";
+import { metroPolyfills } from "../sdk/toolchain/metro-polyfills.mjs";
 import { godotExtensions } from "../sdk/toolchain/platform-resolution.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -25,6 +26,7 @@ test("real JSX pointer listener faults recover and reentrant native stop revokes
   const bundle = await build({absWorkingDir: root, entryPoints: ["tests/pointer-errors-fixture.jsx"],
     outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"},
+    inject: metroPolyfills(id => requireSdk.resolve(id)),
     mainFields: ["main"], resolveExtensions: godotExtensions,
     plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id))]});
   assert.ok(Object.keys(bundle.metafile.inputs).includes("node_modules/react-native/Libraries/Renderer/implementations/ReactFabric-prod.js"));

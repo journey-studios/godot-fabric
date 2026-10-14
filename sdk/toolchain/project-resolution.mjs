@@ -4,6 +4,7 @@ import {createHash} from "node:crypto";
 import {isDeepStrictEqual} from "node:util";
 import ts from "typescript";
 import {isSdkOwnedSpecifier} from "./platform-plugin.mjs";
+import {metroPolyfills} from "./metro-polyfills.mjs";
 import {godotExtensions} from "./platform-resolution.mjs";
 import {projectCompilerProfiles} from "./project-config.mjs";
 import {checkNativeTypes} from "./native-typecheck.mjs";
@@ -207,6 +208,18 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
     return result;
   }
 
+  // The Metro polyfills the build injects ahead of the first module are SDK files that no project import names: esbuild resolves each as an
+  // entry point with no importer. Only those exact files pass; they are looked up when first needed, since a provisioned SDK without the
+  // package is refused by the build before it injects anything.
+  let injected;
+  const injectedByBuild = filename => {
+    if (injected === undefined) {
+      try { injected = new Set(metroPolyfills(resolveSdk).map(file => fs.realpathSync(file))); }
+      catch { injected = new Set(); }
+    }
+    try { return injected.has(fs.realpathSync(filename)); }
+    catch { return false; }
+  };
   const skip = Symbol("project-resolution-recursion");
   const plugin = {
     name: "project-owned-resolution",
@@ -216,6 +229,7 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
       });
       builder.onResolve({filter: /.*/}, async args => {
         if (args.pluginData === skip || (args.namespace && args.namespace !== "file")) return;
+        if (args.kind === "entry-point" && !args.importer && path.isAbsolute(args.path) && injectedByBuild(args.path)) return;
         const importer = args.importer ? fs.realpathSync(args.importer) : null;
         const sdkOwned = isSdkOwnedSpecifier(args.path);
         // SDK internals keep their provisioned dependency graph and original

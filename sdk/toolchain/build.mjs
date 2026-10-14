@@ -8,6 +8,7 @@ import { createHash } from "node:crypto";
 import { build } from "esbuild";
 import { transformAsync } from "@babel/core";
 import { platformPlugin } from "./platform-plugin.mjs";
+import { metroPolyfills } from "./metro-polyfills.mjs";
 import { prepareProjectResolution } from "./project-resolution.mjs";
 import { selectedAdapterInputs, prepareAdapterBuild } from "./adapter-plugin.mjs";
 import { resolveNativeCompiler } from "./native-compiler.mjs";
@@ -90,6 +91,7 @@ async function main() {
     tsconfigRaw: resolution.tsconfigRaw, conditions: resolution.conditions,
     bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: { "process.env.NODE_ENV": '"production"', __DEV__: "false" },
+    inject: metroPolyfills(id => requireSdk.resolve(id)),
     mainFields: ["main"], resolveExtensions: resolution.resolveExtensions,
     plugins: [
       assets.plugin,

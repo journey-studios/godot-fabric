@@ -44,8 +44,9 @@ each API through a lazy getter, so importing the root constructs none of them.
 | `TouchableNativeFeedback` | 156-158 | Resolves and works as a Pressability touchable that clones its single child: `getBackgroundProp` is `null` off Android, so neither `nativeBackgroundAndroid` nor `nativeForegroundAndroid` reaches the child, and the press and hotspot native commands run only for `Platform.OS === 'android'`. The statics are RN's: `SelectableBackground`, `SelectableBackgroundBorderless`, `Ripple` and `canUseNativeForeground` (false) | `TouchableNativeFeedback.js:128-190,208,224-263,384-392` |
 | `StatusBar` | 137-139 | Requires `NativeStatusBarManagerAndroid` and `NativeStatusBarManagerIOS` at import, each with `getEnforcing('StatusBarManager')` at the top of the spec, so the import throws on a host without the module | `StatusBar.js:15-16`; `NativeStatusBarManagerIOS.js:39`, `NativeStatusBarManagerAndroid.js:29` |
 
-`console.*` is the host's: it prints `HERMES: <message>` through `nativeLoggingHook`
-(`native/application_runtime.cpp:894-897`, the console installed at 1058-1059).
+`console.*` is RN's polyfill (the GF-05 JS globals slice; before it, a console of the host's) over
+the host's `nativeLoggingHook`, which prints `HERMES: <message>` (`native/application_runtime.cpp`).
+A lone string is logged as it is, and every warning these APIs make is a one-string call.
 
 ## What this host did
 
