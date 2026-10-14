@@ -20,8 +20,12 @@ extends SceneTree
 #              (the field truth) and its median must be T to within 1%.
 #   CPU        the instrument reads CPU time and not the interval between frames: the idle total is at most IDLE_SHARE of the idle interval
 #              reference (the median of the half-sums of consecutive pairs of the idle window's intervals, as the baseline's idleReference
-#              computes it) at the median and IDLE_P95_SHARE at the 95th percentile, and the process term of a load block takes at least DISTINCT_MINIMUM
-#              values and never repeats more than RUN_MAXIMUM frames in a row (a monitor refreshed once a second would).
+#              computes it) at the median and IDLE_P95_SHARE at the 95th percentile.
+#   inclusion  the instrument reads the frame's own clock and not a monitor the engine refreshes once a second: in every frame of a load block (the
+#              settle frames too, the loop runs in them as well) the process term is at least as long as the busy loop that frame ran, which the
+#              step it spans contains. A clock reading cannot be shorter than that, on any runner; a monitor starts every block with the value of
+#              the second before, taken before the load began. How much the term repeats from frame to frame is recorded and not judged: the loop
+#              is the same length in every frame and the clock ticks in microseconds, so on a quiet runner most of a block's terms are one value.
 #   render     (a window only) the render term answers the render pulse and lands on the frame that caused it.
 # A window that no display presented (it did not draw nine in ten of the idle frames, or its idle reference is under half of the refresh
 # period) is not a measurement: the checks that need the display are recorded as not judged, with the reason, and the report says so.
@@ -47,9 +51,6 @@ const DRAIN_FRAMES := 12
 const IDLE_SHARE := 0.25
 const IDLE_P95_SHARE := 0.5
 const BURN_TOLERANCE := 0.01
-# A clock gives a load block many values and never the same one for long; the engine's monitor, refreshed once a second, gives a handful.
-const DISTINCT_MINIMUM := 8
-const RUN_MAXIMUM := 10
 const PULSE_MINIMUM_GAIN_MS := 0.3
 const SIZE := Vector2i(640, 360)
 const VSYNC_NAMES := ["disabled", "enabled", "adaptive", "mailbox"]
@@ -265,6 +266,16 @@ func measured_of(columns: Dictionary, kind: String, target_ms: int = -1) -> Arra
       positions.append(index)
   return positions
 
+# Every frame of the blocks of a kind and a target, the settle frames included: the busy loop runs in all of them.
+func block_frames_of(columns: Dictionary, kind: String, target_ms: int) -> Array:
+  var positions: Array = []
+  var block_of: Array = columns["block"]
+  for index in range(block_of.size()):
+    var block: Dictionary = blocks[block_of[index]]
+    if block.kind == kind and int(block.targetMs) == target_ms:
+      positions.append(index)
+  return positions
+
 func values_at(column: Array, positions: Array) -> Array:
   return positions.map(func(index: int) -> float: return float(column[index]))
 
@@ -326,9 +337,22 @@ func evaluate(frames: Dictionary) -> Dictionary:
   summary["cpu"] = {"idleTotalMedianMs": idle_total_median, "idleTotalP95Ms": idle_total_p95, "idleIntervalReferenceMs": interval_reference}
   check(idle_total_median <= IDLE_SHARE * interval_reference and idle_total_p95 <= IDLE_P95_SHARE * interval_reference,
     "cpu/The idle total is a small part of the idle interval: the instrument reads CPU time and not the interval between frames", skipped)
-  var varies := true
+  # The process term of a load frame contains the busy loop of that frame: a clock reading does, a monitor refreshed once a second does not. The stamps
+  # are whole microseconds, so the reported milliseconds are rounded back to them.
+  var contains := true
+  var inclusion := {}
   var variation := {}
   for target: int in TARGETS_MS:
+    var frames_of_target := block_frames_of(columns, "load", target)
+    var shortest := 1 << 62
+    var shorter := 0
+    for index: int in frames_of_target:
+      var margin := roundi(float(columns["processMs"][index]) * 1000.0) - int(columns["burnUsec"][index])
+      shortest = mini(shortest, margin)
+      shorter += 1 if margin < 0 else 0
+    inclusion[str(target)] = {"frames": frames_of_target.size(), "shortestMarginUs": shortest, "shorterThanTheLoad": shorter}
+    contains = contains and frames_of_target.size() > 0 and shorter == 0
+    # What the term repeats is recorded for the reader, not judged.
     var seen := {}
     var run := 0
     var longest := 0
@@ -340,9 +364,9 @@ func evaluate(frames: Dictionary) -> Dictionary:
       longest = maxi(longest, run)
       previous = term
     variation[str(target)] = {"distinct": seen.size(), "longestRun": longest}
-    varies = varies and seen.size() >= DISTINCT_MINIMUM and longest <= RUN_MAXIMUM
+  summary["processTermInclusion"] = inclusion
   summary["processTermVariation"] = variation
-  check(varies, "cpu/The process term changes from frame to frame in the load blocks, as a clock does and a monitor refreshed once a second does not")
+  check(contains, "cpu/The process term of every frame of a load block contains the load that frame ran, as a clock does and a monitor refreshed once a second does not")
   if windowed:
     var render := evaluate_render(frames)
     summary["render"] = render
