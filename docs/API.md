@@ -101,8 +101,8 @@ implementation. They are checked as
 project source with strict TypeScript. Third-party declaration bodies use
 `skipLibCheck`; the upstream contract inventory still checks their source hashes
 and signatures. Positive consumer assignments and negative unsupported-prop
-fixtures run in CI. AppRegistry's registration subset and RootTagContext are
-also typed, and so are the exports declared from RN's own types: AppState, AccessibilityInfo, Linking,
+fixtures run in CI. AppRegistry (the 19 members RN declares, with RN's own
+types) and RootTagContext are also typed, and so are the exports declared from RN's own types: AppState, AccessibilityInfo, Linking,
 Clipboard, Vibration, the OS-specific APIs (ToastAndroid, PermissionsAndroid, DynamicColorIOS,
 ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView and
 PushNotificationIOS), Appearance and useColorScheme, the four lists, Animated, Easing and the two
@@ -377,9 +377,34 @@ The [shared example](../examples/shared/README.md) registers named root
 components with the original RN AppRegistry. Godot's `renderApplication`
 container supplies the original RootTagContext and invokes the original
 production Fabric renderer. Component children require no registration.
-The typed public subset is `AppRegistry.registerComponent(key, provider)` and
-`getAppKeys()`. Empty/duplicate/reserved keys and a section argument fail;
-headless-task, section, instrumentation and public mounting APIs are not exposed.
+`AppRegistry` exposes all 19 members RN 0.87.1 declares, each delegating to RN's
+own `AppRegistryImpl` where RN's behavior applies; the table below says where it
+does not.
+
+### AppRegistry members
+
+| Member | On Godot |
+| --- | --- |
+| `registerComponent(key, provider, section?)`, `registerSection(key, provider)`, `registerRunnable(key, run)`, `registerConfig(configs)` | RN's registry, sections included. A key registered once is refused again through any of the four, and so are `__proto__`, `constructor` and `prototype`: an `Error` that says `AppRegistry component key is already registered or reserved: <key>` (RN overwrites silently). An empty or non-string key, a missing provider or run function and a malformed config throw a `TypeError`. A config entry with neither `run` nor `component` fails with RN's own invariant, after the entries before it. |
+| `getAppKeys()`, `getSectionKeys()`, `getSections()`, `getRegistry()` | RN's; the answers are copies. There is no `LogBox` entry: the facade does not load RN's `AppRegistry.js`, which registers it. |
+| `getRunnable(key)` | RN's, but `undefined` for a name nobody registered (RN reads a plain object, which answers `Object.prototype`'s function for `toString`). |
+| `setWrapperComponentProvider(provider)`, `setRootViewStyleProvider(provider)`, `setComponentProviderInstrumentationHook(hook)` | RN's. They apply the next time a root runs: a mount, `setSurfaceProps`, `runApplication` or `FabricSurface.update_props`, so a root that was already running takes them at its next run. The wrapper's component gets the root's `initialProps`; the style replaces RN's default root style (`{flex: 1}`) on the native root Control, as RN's AppContainer does; the hook gets the provider and RN's deprecated no-op performance logger. |
+| `runApplication(key, appParameters, displayMode?)`, `setSurfaceProps(key, appParameters, displayMode?)` | RN's, for a surface the scene mounted: `appParameters.rootTag` is its tag (a root gets it as a prop and in `RootTagContext`), and the root renders again with the new `initialProps`. Its component keeps its state while the element tree above it keeps its shape; the first run after a wrapper provider or an instrumentation hook is set puts a new element above the root component, so React mounts the component again and its state starts over, as in RN. A tag that no running surface owns, because it never existed or the root was stopped, throws `E_APP_REGISTRY_UNKNOWN_ROOT`: Godot creates a surface from the scene (`FabricSurface.mount()`), not from JS. A display mode other than visible still throws `Godot AppRegistry does not implement suspended/hidden display modes`, until the pause and resume slice of GF-07. |
+| `unmountApplicationComponentAtRootTag(rootTag)` | RN's: it logs `Unexpected call to unmountApplicationComponentAtRootTag in Fabric.` through `console.error` and unmounts nothing. A root is unmounted by `FabricSurface.unmount()`. |
+| `registerHeadlessTask`, `registerCancellableHeadlessTask`, `startHeadlessTask`, `cancelHeadlessTask` | Throw `E_APP_REGISTRY_HEADLESS_TASK`. A headless task is an Android service (`HeadlessJsTaskService`) that runs JS with no UI, and a Godot application has no background service to run one. Nothing is registered or started. |
+
+The two typed errors follow the SDK's `E_*` convention (`src/godot-fabric.js`): the code leads the message, which is
+`<code>: <what and why>`, and is also `error.code`.
+
+| Code | When |
+| --- | --- |
+| `E_APP_REGISTRY_HEADLESS_TASK` | any of the four headless-task members is called |
+| `E_APP_REGISTRY_UNKNOWN_ROOT` | `runApplication` or `setSurfaceProps` names a `rootTag` no running surface owns |
+
+The [evidence](evidence/app-registry/README.md) records each member against RN's source and the real host, and the
+[example](../examples/app-registry/README.md) shows the providers.
+
+### Application and surfaces
 
 An experimental `FabricApplication` Node owns one Hermes runtime, module cache,
 UIManager, scheduler and timer/frame queues. Set its `bundle_path` before first

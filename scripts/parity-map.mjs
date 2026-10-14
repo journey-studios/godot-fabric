@@ -73,7 +73,7 @@ export function derive(rows, gates) {
 }
 
 // A matcher is a string (exact), a list of strings (any of), {"pattern": "<regular expression>"} or {"absent": true}.
-function predicate(spec) {
+export function predicate(spec) {
   if (typeof spec === "string") {
     return (value) => value === spec;
   }
@@ -88,7 +88,7 @@ function predicate(spec) {
   return (value) => typeof value === "string" && expression.test(value);
 }
 
-function validMatcher(spec) {
+export function validMatcher(spec) {
   if (typeof spec === "string") {
     return true;
   }

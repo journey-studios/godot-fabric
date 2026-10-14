@@ -68,9 +68,10 @@ DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS and TouchableNative
 slice of GF-24), and LayoutAnimation (the second slice of GF-19) are the eighteen names added to the 39 and subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
 keeps those counts and a per-area table of the evidence below. The tables further
 down and the machine-readable [97-name audit](compatibility/react-native-0.87.1.json)
-remain the 2026-10-01 snapshot, except the three GF-23 entries, the nine GF-24 entries and the
-GF-19 `LayoutAnimation` entry now updated (5 usable components, 21 environment names, 14 unavailable
-names and 57 missing), and must not be read as current counts.
+remain the 2026-10-01 snapshot, except the three GF-23 entries, the nine GF-24 entries, the
+GF-19 `LayoutAnimation` entry and the two GF-07 entries (`AppRegistry` and `RootTagContext`, which the facade had
+exported since the shared-roots slice) now updated (5 usable components, 23 environment names, 14 unavailable
+names and 55 missing), and must not be read as current counts.
 
 Since the 2026-10-03 checkpoint these slices ran on macOS arm64 over original RN
 source, each with retained negative controls and a hosted CI run that repeated its
@@ -234,9 +235,9 @@ explain the scope.
 | Current public facade classification | Count | Meaning |
 | --- | ---: | --- |
 | Usable component subset | 5 | View, Text, Pressable, ScrollView, TouchableNativeFeedback; none certifies its complete upstream contract |
-| Environment/utility subset | 21 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, LayoutAnimation, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS |
+| Environment/utility subset | 23 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, LayoutAnimation, AppRegistry, RootTagContext, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS |
 | Exported but unavailable | 14 | TextInput, Image/ImageBackground, Switch, touchables, ActivityIndicator, StatusBar, FlatList, VirtualizedList, KeyboardAvoidingView, PanResponder, useColorScheme throw when used |
-| Missing public export | 57 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
+| Missing public export | 55 | Includes Button, SectionList, Modal, Animated, Keyboard, Networking and module/codegen entrypoints |
 
 The inventory assigns **84 exports to 1.0** and **13 experimental/unstable
 exports to post-1.0 review**. These are scope assignments, not promises already
