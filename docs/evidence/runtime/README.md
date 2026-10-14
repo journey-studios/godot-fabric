@@ -397,7 +397,7 @@ previous host's three failing checks and its SHA-256, and each sabotage's failin
 verdict. `scripts/js-globals-evidence.mjs` writes it from the reports the lanes leave in `build/`, after
 re-judging each with the oracle and checking that every lane bundled the files on disk and that the current
 lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin against
-`git show <sha>:<path>` and records the commit. Hosted CI is pending.
+`git show <sha>:<path>` and records the commit. Hosted execution: [hosted run 38459689769](https://github.com/journey-studios/godot-fabric/actions/runs/38459689769).
 
 **Limits.** (Later note: the error path is [slice C's](#error-path-slice-c-2026-10-13) and now exists.)
 The error path is slice C's: `ErrorUtils` and `RN$handleException` do not exist yet, and
@@ -581,7 +581,7 @@ slice's suite was needed and is the only one: slice B's check that `console` has
 `_errorOriginal` as well, which `installConsoleErrorReporter` adds in RN too (the oracle reads the name out of `ExceptionsManager.js`).
 The gate's own mutation tests (`tests/bootstrap-audit.test.mjs`) used `setUpErrorHandling` and `error-guard` as their pending
 examples; they now make a pending entry out of `setUpAlert`, and one test is new (the gate notices when `setUpErrorHandling` is not
-imported or `error-guard` is not injected). The sweep of the other native suites runs on hosted CI.
+imported or `error-guard` is not injected). The sweep of the other native suites ran on hosted CI: [hosted run 38481790977](https://github.com/journey-studios/godot-fabric/actions/runs/38481790977) passed every job.
 
 **Evidence.** [`js-errors.json`](js-errors.json) is the committed record of the lanes above: the 23 verdicts of the current lane with
 the host and bundle SHA-256, the polyfill's place in the bundle's inputs (`tests/js-errors-host.js` first, then `console.js`, then `error-guard.js`),
@@ -592,7 +592,7 @@ checking that every lane bundled the files on disk and that the current lane ran
 each pin against `git show <sha>:<path>` and records the commit. It requires `--previous-host-commit <sha>` (a commit in the history of `HEAD`;
 a missing or unknown one is an error, never a guess), and it takes `executionBaseCommit` and `sourceDirtyDuringExecution` from what each
 lane recorded of the tree when it ran (the commit and every path that differed from it), not from the `HEAD` of the moment it writes:
-`--commit` ties the executed sources to a commit and does not say they were committed when they ran. Hosted CI is pending.
+`--commit` ties the executed sources to a commit and does not say they were committed when they ran. Hosted execution: [hosted run 38481790977](https://github.com/journey-studios/godot-fabric/actions/runs/38481790977) passed every job.
 
 **Limits.**
 
@@ -803,7 +803,7 @@ reason now name `NativeMicrotasks` and the host's registration, and the `D2` ent
 two globals, the module's counter before and after the batch, the order each case came out in with the model's orders for the flag on and off, the previous host's 14 failing checks and its SHA-256,
 each sabotage's failing checks, the orders of its cases and the oracle's verdict, and the RN sources it pinned. `scripts/react-microtasks-evidence.mjs` writes it from the reports the lanes leave in
 `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin
-against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
+against `git show <sha>:<path>` and records the commit. Hosted execution: [hosted run 38507888050](https://github.com/journey-studios/godot-fabric/actions/runs/38507888050), where `native-suites-runtime` passed and the frontier job failed only on the rule that predates #162.
 
 **Limits.**
 
@@ -991,7 +991,7 @@ Counting a split step by its parts, the chain stands at 10 `runs`, 4 `replaced`,
 **Evidence.** [`idle-callbacks.json`](idle-callbacks.json) is the committed record of the lanes above: the 26 verdicts of the current lane with the host and bundle SHA-256, the accessor log of the flag and `queueMicrotask`, the module's counters
 before and after each batch, the order each case came out in with the model's, the readings and the `didTimeout` flags, the previous host's 19 failing checks and its SHA-256, each sabotage's failing checks, the orders of its cases and the oracle's
 verdict, and the RN sources it pinned. `scripts/idle-callbacks-evidence.mjs` writes it from the reports the lanes leave in `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current
-lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
+lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin against `git show <sha>:<path>` and records the commit. Hosted execution: [hosted run 38513518839](https://github.com/journey-studios/godot-fabric/actions/runs/38513518839) (the D2 stack).
 
 **Limits.**
 
@@ -1193,7 +1193,7 @@ ran once more together. It is in the `native-suites-runtime` job of `contracts.y
 SHA-256, the identity and descriptor records, the network outcomes and the server's holds and requests, the member tables, the 14 deviations with what Hermes and Node each answered, the
 scan of the nine binaries, each sabotage's failing checks and the oracle's verdict, and the RN sources and repository files it pinned. `scripts/web-globals-evidence.mjs` writes it from the
 reports the lanes leave in `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk, ran on the host and the Hermes in `addons/` and judged
-against the expectation file on disk; with `--commit <sha>` it also checks each pin against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
+against the expectation file on disk; with `--commit <sha>` it also checks each pin against `git show <sha>:<path>` and records the commit. Hosted execution: [hosted run 38517888939](https://github.com/journey-studios/godot-fabric/actions/runs/38517888939).
 
 **Limits.**
 
@@ -1320,7 +1320,16 @@ the Promise reactions, the storm, and the order in which the rest of every queue
 `docs/compatibility/bootstrap-audit-0.87.1.json`: `slices.F` is "(done)", and the reasons this slice made stale are updated (`setUpErrorHandling`, the `timers`, `animation-frame`, `queue-microtask` and `immediate` parts, `polyfillPromise`, the `starvation` decision, which now says what was measured). No status changed (10 `runs`, 4 `replaced`, 4 `host`, 0 `pending`, 12 `not-applicable`) and the gate passes.
 
 **Evidence.** [`js-exceptions.json`](js-exceptions.json) is the committed record: the 41 verdicts, every case's journal and failures, the previous host's 10 failing checks with its SHA-256 and the commit it was built from, each sabotage, the facts read from RN, the step 1 table with its citations, and the catch sites.
-`scripts/js-exceptions-evidence.mjs` writes it from the reports the lanes leave in `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; it requires `--previous-host-commit <sha>` and, with `--commit <sha>`, checks each pin against `git show`. Hosted CI is pending (the suite is in the `native-suites-runtime` job of `contracts.yml`, artifact `native-js-exceptions`).
+`scripts/js-exceptions-evidence.mjs` writes it from the reports the lanes leave in `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; it requires `--previous-host-commit <sha>` and, with `--commit <sha>`, checks each pin against `git show`. Hosted CI is pending (the suite is in the `native-suites-runtime` job of `contracts.yml`, artifact `native-js-exceptions`). The first hosted execution, [hosted run 38524500170](https://github.com/journey-studios/godot-fabric/actions/runs/38524500170), stopped in that job at `npm run test:transforms:guards`, so the later steps of the job did not run there; see "The transform guards" below.
+
+### The transform guards (a regression the first hosted run found)
+
+`npm run test:transforms:guards` (`scripts/transform-guards-check.mjs` and `examples/transforms/guards.gd`) mounts six public transforms that the host rejects on purpose (`E_TRANSFORM_3D` for perspective, `rotateX` and a weight other than 1; `E_TRANSFORM_RANGE` for three matrices past the native range) and judges the failure the host records. It expected the bare `error.what()` text of the old catch site, so [hosted run 38524500170](https://github.com/journey-studios/godot-fabric/actions/runs/38524500170) failed there, in `native-suites-runtime`, and the steps after it in that job did not run. The slice's local sweep had not included the suite.
+
+- **The path.** The host function `completeRoot` throws; Hermes turns it into a JS `Exception in HostFunction: E_*` that React does not catch; the commit runs in a callback that React's scheduler schedules with `setTimeout` in these bundles (the exception's stack ends at `performWorkOnRootViaSchedulerTask`, and a hook on `setTimeout` saw that callback throw). So it is a timer's work item, the site this slice routes, and RN's counterpart is a `TimerManager` task whose exception is **fatal** (the `setTimeout` row of the table above): the new report is the RN-parity route.
+- **Once per rejection.** The application's module counters are one fatal report, no soft one and none from the C++ pipeline, before and after twelve more pumps and after the stop, and the failure list has one entry. The old route reported once as well, so nothing is reported twice.
+- **What the suite expects now.** The same `E_*` code and message, in slice C's format: `Error: Exception in HostFunction: <E_*: message>, stack:` and one `method@file:line:column` line per frame, among them `commitRoot@` (RN's stack parser drops the native frame `completeRoot (native)` that the old text carried); exactly one fatal report of the ExceptionsManager module (`jsErrors`); exactly one `FABRIC_ERROR` line per case, with that first line; and, in the log, exactly one `HERMES: [Error: Exception in HostFunction: ...]` line per rejection, which is RN's `ExceptionsManager` logging a fatal error once. The suite is as strict as before: one precise rejection, no flood, nothing added at the shutdown. On the previous host the same suite fails exactly the three checks that name the rejection, in each of the six modes (18 checks).
+- **The other lanes** of the script (the input guards, uniform scale and singular) pass unchanged: their branches that read the old text belong to their preceding-host controls, which this run does not use. Three stale local controls of the singular and uniform-scale lanes (a sabotage receipt that names an older `native/pointer_geometry.cpp`, and two comparisons) were moved to `build/stale-controls-gf05-f/`.
 
 ### Regressions
 
@@ -1329,7 +1338,7 @@ This changes how the host catches a timer's and a frame callback's exception and
 `test:events:original|ancestry|dispatch|integrated`, `test:pointers:processor|geometry|interest|query-faults|documents|resolver-faults|up|move|documents:up|documents:move|hover|root-path|documents:hover|click|capture`,
 `test:responders:pan|shared-touches`, `test:animated`, `test:layout-animation`, `test:frame-clock`, `test:services`, `test:modules`, `test:app-state`, `test:lists`, `test:modal`, `test:touchables`, `test:scroll-view`,
 `test:switch`, `test:focus:commands`, `test:accessibility`, `test:accessibility-info`, `test:activity-indicator`, `test:appearance`, `test:performance`, `test:networking`, `test:device-services`, `test:os-contracts`,
-`test:world-input`, `test:mobile-density`, `test:scope-0.5`, `test:text-original|layout|style` and `test:examples` (56 suites) all pass, with the stale controls moved aside (`build/stale-controls-gf05-f/`, 34 report files named as they were:
+`test:world-input`, `test:mobile-density`, `test:scope-0.5`, `test:text-original|layout|style` and `test:examples` (56 suites) all pass, with the stale controls moved aside (`build/stale-controls-gf05-f/`, 34 report files named as they were, and later three of the transform lanes:
 the previous-host and sabotage reports of earlier slices, produced from other hosts and bundles, which each suite compares its current lane with when they are in `build/`). The consumer adapter runtime check
 (`scripts/adapter-runtime-check.mjs`, over an SDK packed as CI packs it: `sdk:native:pack --build-dir .deps/build`, `sdk:native:verify`, then `test:adapters:native` with 213 checks and `test:adapters:loader` with 89) passes in all 13 modes
 (`headless`, `external-appearance`, `reentrant-stop`, `reentrant-raf`, `reentrant-timer` and the eight `root-*` modes), the reentrant stop included.
@@ -1339,7 +1348,13 @@ Two oracles of earlier slices changed, and only because the behaviour they read 
 - `tests/react-microtasks-oracle.mjs` (`hostFacts`, which the idle callbacks suite imports) anchored on the text `if (!stop_requested) runtime->drainMicrotasks();` in the pump to check that the host drains after each item of its work queue; the drain is now `microtask_checkpoint();`, RN's `performMicrotaskCheckpoint` (`RuntimeScheduler_Modern.cpp:414-451`). It checks the same fact.
 - `tests/js-errors-oracle.mjs` asserted that `native/js_error_path.cpp` spells the wrap of a non-JS exception once; it now spells each of RN's two wraps once (`Non-js exception: ` as `RuntimeScheduler_Modern.cpp:402` and `:442` spell it, for the checkpoint's catch, and `Non-JS exception: ` as `ReactInstance.cpp:107` spells it) and the oracle reads both from the pinned sources.
 
-No expectation of any suite changed. The gate of the audit (`tests/bootstrap-audit.test.mjs`, 42 tests), the anchors of every retained sabotage (`tests/sabotage-anchors.test.mjs`, 40 tests), `type-check`, `check:static`, the dashboard (`test:dashboard`)
+**The job's suites, in the job's order.** [Hosted run 38524500170](https://github.com/journey-studios/godot-fabric/actions/runs/38524500170) stopped at `test:transforms:guards`, so the steps after it in `native-suites-runtime` never ran there. All of the job's local steps were then run in its order, each one at a time:
+`test:adapters:native` and `test:adapters:loader` (over the packed SDK; fresh output directories), `test:examples`, `test:charts`, `test:transforms:guards`, `test:runtime`, `scroll_motion_test`, `test:application`, `test:app-state`, `test:lists`, `test:scroll-view`, `test:appearance`, `test:animated`, `test:frame-clock`, `test:performance`, `test:js-globals`, `test:js-errors`, `test:react-microtasks`, `test:idle-callbacks`, `test:web-globals`,
+`test:js-exceptions`, `test:text-layout`, `test:text-original`, `test:text-style`, `test:networking`, `test:device-services`, `test:world-input`, `test:os-contracts`, `test:websocket`, `test:images`, `test:images-network`, `test:images-visual`, `test:modal`, `test:mobile-density`, `test:consumer`, `test:consumer:libraries`, `test:consumer:civ-lite`, `test:civ-lite-ui` and the adapter runtime check in its 13 modes.
+Beyond the job, every suite that reads the text of a recorded failure (found by `grep` for `FABRIC_ERROR`, `errors` and `error.what` in the native tests and probes) was run too, and passes: the input and frontier jobs' suites, `test:recovery`, `test:typography` and `test:cold:boundary`. The two macOS export steps of the job (`test:export:macos`, `test:export:civ-lite`) could not be run: they need the locked 1.28 GB export template archive, which is not in the worktree. They parse no failure text: both only reject any `FABRIC_ERROR` or `ERROR:` line of an exported run that must have none.
+All of them pass.
+
+One suite's expectations changed, for the reason above: the transform guards (`examples/transforms/guards.gd`, `scripts/transform-guards-check.mjs`). The gate of the audit (`tests/bootstrap-audit.test.mjs`, 42 tests), the anchors of every retained sabotage (`tests/sabotage-anchors.test.mjs`, 40 tests), `type-check`, `check:static`, the dashboard (`test:dashboard`)
 and the milestone guards (`scripts/milestone-guards.mjs --check` and its 36 tests) pass, and `npm run test:contracts` ran once at the end: parity 82 tests, dashboard 44, the contract list 789 tests with 788 passing and one skipped because `MACOS_EXPORT_TEMPLATE` is unset, and 37 Python tests.
 
 **Limits.**

@@ -31,13 +31,29 @@ func snapshot(node: Node) -> Dictionary:
   var value: Variant = JSON.parse_string(node.call("snapshot"))
   return value if value is Dictionary else {}
 
+# A rejection is a fatal error for RN's JsErrorHandler (slice F): the exception leaves a timer's callback (React's scheduler runs the commit from a setTimeout here),
+# the host reports it as RN does a fatal error, and the failure it records is slice C's format: the message RN composed (the name, then the message Hermes gave the
+# HostFunction's exception), ", stack:" and a "method@file:line:column" line per frame of the JS stack. The native frame of completeRoot is not part of the parsed stack;
+# the frames are the commit that called it. Compare the complete text; never truncate the stored diagnostic.
 func rejection_matches(errors: Array, mode: String) -> bool:
   if errors.size() != 1 or not errors[0] is String:
     return false
-  # Hermes wraps a thrown C++ HostFunction error and retains its real JS stack.
-  # Compare the complete first line; never truncate the stored diagnostic.
   var message: String = errors[0]
-  return message.get_slice("\n", 0) == "Exception in HostFunction: " + EXPECTED[mode]
+  var expected: String = EXPECTED[mode]
+  var head: String = "Error: Exception in HostFunction: " + expected + ", stack:\n"
+  if not message.begins_with(head):
+    return false
+  var lines := Array(message.substr(head.length()).split("\n", false))
+  var pattern := RegEx.create_from_string("^.*@.+:-?\\d+(:\\d+)?$")
+  return (not lines.is_empty() and lines.all(func(line: String) -> bool: return pattern.search(line) != null)
+    and lines.any(func(line: String) -> bool: return line.begins_with("commitRoot@")))
+
+# The one rejection is one fatal report of the ExceptionsManager module and nothing else: not a second report through another route, and no soft one.
+func reported_once(status: Dictionary) -> bool:
+  var reports: Dictionary = status.get("jsErrors", {})
+  var module: Dictionary = reports.get("module", {})
+  var handler: Dictionary = reports.get("handler", {})
+  return (int(module.get("fatal", -1)) == 1 and int(module.get("soft", -1)) == 0 and int(handler.get("fatal", -1)) == 0 and int(handler.get("soft", -1)) == 0)
 
 func run_case(mode: String) -> void:
   var owner := Node.new()
@@ -62,11 +78,11 @@ func run_case(mode: String) -> void:
   var native_rejected := snapshot(surface)
   check(rejected.get("runtimeInitialized", false) and rejected.get("bundleEvaluations", -1) == 1 and rejected.get("runtimeId", 0) > 0,
     "Fresh Hermes application evaluates the real public RN guard bundle once: " + mode)
-  check(Time.get_ticks_msec() < deadline and rejection_matches(rejected.get("errors", []), mode),
+  check(Time.get_ticks_msec() < deadline and rejection_matches(rejected.get("errors", []), mode) and reported_once(rejected),
     "The actual public transform reaches its one precise native rejection: " + mode)
   await frames(12)
-  check(rejection_matches(snapshot(app).get("errors", []), mode) and snapshot(app).get("errors", []) == rejected.get("errors", []),
-    "Repeated pumps do not flood transform diagnostics: " + mode)
+  check(rejection_matches(snapshot(app).get("errors", []), mode) and snapshot(app).get("errors", []) == rejected.get("errors", [])
+    and reported_once(snapshot(app)), "Repeated pumps do not flood transform diagnostics: " + mode)
   # Populate real registries immediately before stop so cancellation is tested,
   # including runtimes whose mounting transaction was interrupted by rejection.
   app.call("evaluate", "globalThis.transformGuardTimer=setInterval(()=>{},10000); globalThis.transformGuardFrame=requestAnimationFrame(()=>{})")
@@ -88,14 +104,14 @@ func run_case(mode: String) -> void:
   var services: Dictionary = stopped.get("gameServices", {})
   check(modules.get("stopped", false) and modules.get("loaded", -1) == 0 and services.get("stopped", false) and
     services.get("pendingHostTasks", -1) == 0, "Rejected transform teardown disposes native modules and game service work: " + mode)
-  check(rejection_matches(stopped.get("errors", []), mode) and stopped.get("errors", []) == rejected.get("errors", []),
+  check(rejection_matches(stopped.get("errors", []), mode) and stopped.get("errors", []) == rejected.get("errors", []) and reported_once(stopped),
     "Shutdown adds no error beyond the original expected transform rejection: " + mode)
   app.call("stop")
   await frames(2)
   check(snapshot(app) == stopped and snapshot(surface).get("creates", -1) == native_stopped.get("creates", -2) and
     snapshot(surface).get("deletes", -1) == native_stopped.get("deletes", -2), "Repeated stop preserves finalized transform guard lifetime: " + mode)
   cases.append({"mode": mode, "expectedError": EXPECTED[mode], "expectedCode": EXPECTED[mode].split(":")[0],
-    "expectedHostErrorLine": "Exception in HostFunction: " + EXPECTED[mode],
+    "expectedHostErrorLine": "Error: Exception in HostFunction: " + String(EXPECTED[mode]) + ", stack:",
     "applicationInstanceId": app.get_instance_id(), "surfaceInstanceId": surface.get_instance_id(),
     "afterRejection": rejected, "nativeAfterRejection": native_rejected, "beforeStop": before_stop,
     "afterStop": stopped, "nativeAfterStop": native_stopped})

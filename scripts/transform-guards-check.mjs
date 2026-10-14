@@ -89,12 +89,19 @@ for (const [index, entry] of report.cases.entries()) {
   if (planarMessages[entry.mode] !== undefined) {
     assert.equal(entry.expectedError, planarMessages[entry.mode], entry.mode);
   }
-  assert.equal(entry.expectedHostErrorLine, `Exception in HostFunction: ${entry.expectedError}`);
+  // The rejection is a fatal error for RN's JsErrorHandler, reported once (slice F): the host records slice C's format, "Error: ", the HostFunction's message, ", stack:"
+  // and one method@file:line:column line per frame of the commit that called completeRoot (RN's stack parser drops the native frame).
+  assert.equal(entry.expectedHostErrorLine, `Error: Exception in HostFunction: ${entry.expectedError}, stack:`);
   assert.equal(entry.afterRejection.errors.length, 1);
   assert.equal(entry.afterRejection.errors[0].split("\n")[0], entry.expectedHostErrorLine);
-  assert.match(entry.afterRejection.errors[0], /\n\nError: Exception in HostFunction: /);
-  assert.match(entry.afterRejection.errors[0], /\n\s+at completeRoot \(native\)/);
+  const frames = entry.afterRejection.errors[0].split("\n").slice(1).filter(line => line !== "");
+  assert.ok(frames.length > 0 && frames.every(line => /^.*@.+:-?\d+(:\d+)?$/.test(line)), JSON.stringify(frames));
+  assert.ok(frames.some(line => line.startsWith("commitRoot@")), "The rejection comes out of the commit that called completeRoot");
   assert.deepEqual(entry.afterStop.errors, entry.afterRejection.errors);
+  for (const status of [entry.afterRejection, entry.afterStop]) {
+    assert.deepEqual([status.jsErrors.module, status.jsErrors.handler], [{fatal: 1, soft: 0}, {fatal: 0, soft: 0}],
+      `${entry.mode}: one fatal report of the ExceptionsManager module and no other`);
+  }
   assert.equal(entry.afterRejection.bundleEvaluations, 1);
   assert.ok(entry.beforeStop.pendingTimers > 0 && entry.beforeStop.pendingAnimationFrames > 0);
   assert.equal(entry.afterStop.stopped, true);
@@ -109,6 +116,9 @@ for (const [index, entry] of report.cases.entries()) {
 // diagnostic of one mode. Missing, repeated or unrelated errors fail the run.
 const visibleErrors = [...log.matchAll(/^ERROR: (.+)$/gm)].map(match => match[1]);
 assert.deepEqual(visibleErrors.sort(), report.cases.map(entry => `FABRIC_ERROR: ${entry.expectedHostErrorLine}`).sort(), log);
+// RN's ExceptionsManager logs a fatal error once through the console (level error, so a HERMES: line): one line for each rejection, and the same message.
+const consoleLines = [...log.matchAll(/^HERMES: \[(Error: Exception in HostFunction: E_[^\]]+)\]$/gm)].map(match => match[1]);
+assert.deepEqual(consoleLines.sort(), report.cases.map(entry => `Error: Exception in HostFunction: ${entry.expectedError}`).sort(), log);
 console.log(`TRANSFORM_GUARDS_VERIFIED: ${report.cases.length} fresh applications; ${report.checks.length} executed checks`);
 
 const inputOutput = path.join(directory, "transforms-input-guards.json");
