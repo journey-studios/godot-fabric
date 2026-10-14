@@ -103,8 +103,11 @@ not recursive. Private deep imports, every possible value/combination and RN's
 entire transitive dependency API are outside this inventory, and so are the
 callable modules `setUpBatchedBridge` registers for the host to call. Rows
 carry an owner, scope and applicability in the [contract map](contract-map-0.87.1.json)
-(see the [README](README.md#contract-map-owner-scope-and-applicability)) and no fixture
-assignment yet. Its presence is not a compatibility score.
+(see the [README](README.md#contract-map-owner-scope-and-applicability)), and either the
+fixtures that cover them or a place in the pending ledger of their GF in the
+[fixture catalog](fixture-catalog-0.87.1.json) (see the
+[README](README.md#fixture-catalog-polarity-tolerance-and-the-pending-ledger)); most rows
+are still pending. Its presence is not a compatibility score.
 
 `npm run parity:status` generates `build/parity-status.json`. On 2026-10-08 the
 current facade has **57 exported names awaiting differential certification, 3
