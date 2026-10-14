@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-14T13:30:00.000Z",
+  "updatedAt": "2026-10-14T17:34:00.000Z",
   "source": {
     "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
@@ -4930,6 +4930,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-03-root-name-types-8c083cb",
+      "at": "2026-10-14T17:34:00.000Z",
+      "taskIds": [
+        "GF-03"
+      ],
+      "message": "GF-03, fatia A do contrato (só Node, tipos e dados, sem execução nativa e sem mudar a fachada): todo nome de raiz 1_0 que a fachada exporta passa a ter tipo público, e o consumidor TSX independente importa e usa todos eles. Dos 84 nomes de valor do escopo 1_0, 57 são exportados, 3 são placeholders que lançam ao renderizar (KeyboardAvoidingView, do GF-12, RefreshControl, do GF-14, e StatusBar, do GF-24) e 24 estão ausentes. Faltavam 8 declarações em types/react-native.ts: TouchableWithoutFeedback, PanResponder e PixelRatio entram com o tipo do RN; TouchableHighlight com o estilo restrito ao subconjunto de View do Godot, como o TouchableOpacity, e as demais props do RN; I18nManager só com isRTL, o que a fachada tem; e os três placeholders como componentes com as props do RN e sem as estáticas do RN, que a fachada não tem, de modo que chamar StatusBar.setBarStyle é erro de compilação e não um TypeError em execução. O consumidor (tests/types/consumer.tsx, conferido por npm run type-check) passa de 50 a 60 nomes importados e usados, com um @ts-expect-error por recusa. Um censo novo, tests/root-names.test.mjs, no test:contracts, reprova um nome exportado ou placeholder sem tipo, um tipo para um nome que a fachada não exporta, um nome tipado que o consumidor não importa ou não usa e a lista dos 24 ausentes que muda sem ser atualizada no teste: implementar um deles obriga a declarar o tipo, usá-lo no consumidor e tirá-lo da lista. O censo classifica a fachada pela regra de parity:status, extraída para scripts/parity-facade.mjs sem duplicar código, e a saída de parity:status é byte a byte a de antes (57 exportados, 3 placeholders e 37 ausentes, os 24 mais os 13 do post_1_0). Os 24 ausentes seguem sem implementação e sem tipo, de propósito. Localmente passam o type-check, o check:static e o test:contracts (795 testes Node, 794 passam e 1 é pulado por falta do template de export do macOS, como antes). O contract do GF-03 continua aberto (faltam esses 24 nomes e a V2-D20) e a certificação diferencial segue sendo o parity. Nenhum checkpoint, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/8c083cb7ac48c2d26429d37972544b687a8fb3eb/docs/evidence/gf-03-root-names/README.md"
+    },
     {
       "id": "gf-07-overlays-design-50ac2ae",
       "at": "2026-10-14T13:30:00.000Z",
