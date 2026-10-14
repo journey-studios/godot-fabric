@@ -7,7 +7,7 @@ import { Pressable, useWindowDimensions, type PressableProps } from "react-nativ
 import { Dimensions, Platform, StyleSheet, type EmitterSubscription, type ScaledSize } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
-import { I18nManager, KeyboardAvoidingView, PanResponder, PixelRatio, RefreshControl, StatusBar, TouchableHighlight, TouchableWithoutFeedback, codegenNativeCommands, codegenNativeComponent, type HostComponent, type TouchableHighlightProps, type ViewProps } from "react-native";
+import { I18nManager, KeyboardAvoidingView, PanResponder, PixelRatio, ReactNativeVersion, RefreshControl, StatusBar, TouchableHighlight, TouchableWithoutFeedback, codegenNativeCommands, codegenNativeComponent, type HostComponent, type TouchableHighlightProps, type ViewProps } from "react-native";
 import type { AppConfig, ComponentProvider, ComponentProviderInstrumentationHook, Registry, RootTag, RootViewStyleProvider, Runnable, Runnables, TaskProvider, WrapperComponentProvider } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
@@ -534,6 +534,13 @@ const platformIsGodot: boolean = Platform.OS === "godot";
 const pickedNumber: number = Platform.select({ godot: 1, native: 2, default: 3 });
 const pickedOptional: string | undefined = Platform.select({ native: "native" });
 const reactNativeMinor: number = Platform.constants.reactNativeVersion.minor;
+// ReactNativeVersion is RN's own class, and the version Platform.constants reports comes from it.
+const rnVersionString: string = ReactNativeVersion.getVersionString();
+const rnMajor: number = ReactNativeVersion.major;
+const rnPrerelease: string | null = ReactNativeVersion.prerelease;
+const rnMinorMatchesPlatform: boolean = ReactNativeVersion.minor === Platform.constants.reactNativeVersion.minor;
+// @ts-expect-error the major version is a number, not a string
+const rnMajorAsString: string = ReactNativeVersion.major;
 // @ts-expect-error "ios" is not the OS of this platform
 const platformIsIOS = Platform.OS === "ios";
 // @ts-expect-error the ios key of select is never selected
@@ -541,6 +548,7 @@ const iosKey = Platform.select({ ios: 1, default: 2 });
 // @ts-expect-error Version is not part of the Godot Platform
 const platformVersion = Platform.Version;
 void platformIsGodot; void pickedNumber; void pickedOptional; void reactNativeMinor; void platformIsIOS; void iosKey; void platformVersion;
+void rnVersionString; void rnMajor; void rnPrerelease; void rnMinorMatchesPlatform; void rnMajorAsString;
 // Dimensions: get takes window or screen, and the change handler may destructure what it receives.
 const windowSize: ScaledSize = Dimensions.get("window");
 const screenScale: number = Dimensions.get("screen").scale;

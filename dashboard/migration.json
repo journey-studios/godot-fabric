@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-14T17:34:00.000Z",
+  "updatedAt": "2026-10-14T18:06:00.000Z",
   "source": {
     "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
@@ -4930,6 +4930,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-03-react-native-version-6022226",
+      "at": "2026-10-14T18:06:00.000Z",
+      "taskIds": [
+        "GF-03"
+      ],
+      "message": "GF-03, fatia C do contrato (só Node, tipos e dados, sem execução nativa): ReactNativeVersion, o único dos 24 nomes de raiz 1_0 ausentes que é do GF-03 pelo mapa de contratos (regra api-gf03-root-names), passa a ser exportado pela fachada como o original do RN (export { default as ReactNativeVersion } de react-native/Libraries/Core/ReactNativeVersion, sem wrapper), com o tipo do RN (typeof RN.ReactNativeVersion) e usado no consumidor TSX, que agora importa e usa 61 nomes, com um @ts-expect-error que mostra o tipo agindo. O Platform.constants.reactNativeVersion deixa de ser uma cópia escrita à mão (0, 87, 1) e passa a ler major, minor e patch da mesma classe do RN, de modo que a versão tem uma fonte só; o formato do objeto não muda (sem prerelease, que seria uma mudança do contrato 0.5) e o manifesto 0.5 e tests/scope-0.5.test.mjs passam sem edição. Um teste novo, tests/react-native-version.test.mjs, no test:contracts, empacota a fachada pelo plugin da plataforma do SDK e a roda num vm: o ReactNativeVersion exportado é o mesmo objeto do original do RN; getVersionString() é igual à versão do package.json do react-native instalado; Platform.constants.reactNativeVersion tem major, minor e patch iguais; e, com uma classe de substituição no lugar do arquivo do RN, a fachada e o Platform mudam juntos (uma cópia escrita à mão falha). A fachada inteira só inicia sobre os bindings de Hermes e de Fabric do host nativo, então o teste empacota o arquivo da fachada reduzido às próprias instruções de export desses dois nomes, lidas do arquivo, e a execução no host Godot não foi feita. O censo dos nomes ausentes passa de 24 a 23 e parity:status passa de 57 exportados, 3 placeholders e 37 ausentes a 58, 3 e 36 (os 23 mais os 13 do post_1_0). Os 23 ausentes são de outros GFs e seguem sem implementação e sem tipo, de propósito. Localmente passam o type-check, o check:static, o check:publication e o test:contracts (798 testes Node, 797 passam e 1 é pulado por falta do template de export do macOS, como antes). O contract do GF-03 continua aberto (falta a V2-D20) e a certificação diferencial segue sendo o parity. Nenhum checkpoint, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6022226db94a88249d7b4cee7c05726706c0ae22/docs/evidence/gf-03-react-native-version/README.md"
+    },
     {
       "id": "gf-03-root-name-types-8c083cb",
       "at": "2026-10-14T17:34:00.000Z",

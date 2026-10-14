@@ -20,6 +20,8 @@ export type RootTag = RN.RootTag;
 export declare const RootTagContext: typeof RN.RootTagContext;
 export declare const NativeModules: typeof RN.NativeModules;
 export declare const NativeEventEmitter: typeof RN.NativeEventEmitter;
+/** RN's original ReactNativeVersion, the source of the version that `Platform.constants` reports. */
+export declare const ReactNativeVersion: typeof RN.ReactNativeVersion;
 /** RN's original AppState, fed by the Godot application lifecycle. */
 export declare const AppState: typeof RN.AppState;
 export type AppStateStatus = RN.AppStateStatus;

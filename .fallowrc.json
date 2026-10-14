@@ -205,6 +205,7 @@
         "AccessibilityInfo",
         "PixelRatio",
         "I18nManager",
+        "ReactNativeVersion",
         "Pressable",
         "Image",
         "Switch",
@@ -385,6 +386,7 @@
             "PanResponder",
             "PixelRatio",
             "I18nManager",
+            "ReactNativeVersion",
             "KeyboardAvoidingView",
             "RefreshControl",
             "StatusBar"

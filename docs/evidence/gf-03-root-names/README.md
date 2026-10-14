@@ -8,6 +8,9 @@ acrescenta um censo que mantém as duas coisas.
 
 Ela não muda a fachada, o host, o SDK nem o código nativo, e não fecha checkpoint nenhum: o `contract` do GF-03 continua aberto.
 
+> Os números deste registro são os do fim da fatia A. A [fatia C](../gf-03-react-native-version/README.md) exportou
+> `ReactNativeVersion` depois dela: hoje são 58 exportados, 3 placeholders e 36 ausentes, 61 nomes no consumidor e 23 ausentes `1_0`.
+
 ## A contagem
 
 Os nomes de raiz são as 97 linhas `value` do inventário de contratos do RN 0.87.1
@@ -100,4 +103,4 @@ npm run parity:status
 ```
 
 `npm run type-check` falha se um dos oito tipos sumir ou mudar de forma, porque o consumidor os usa. O teste imprime a lista de
-problemas, cada um com o que fazer. `parity:status` imprime `exported_unverified` 57, `explicit_placeholder` 3 e `missing` 37, como antes.
+problemas, cada um com o que fazer. `parity:status` imprimia `exported_unverified` 57, `explicit_placeholder` 3 e `missing` 37, como antes (hoje 58, 3 e 36, pela fatia C).

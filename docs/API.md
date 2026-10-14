@@ -112,10 +112,13 @@ Dimensions, useWindowDimensions and StyleSheet are declared too, and a fixture g
 positive per supported prop and one `@ts-expect-error` per refused prop the types leave out (`tests/scope-0.5-types.mjs`).
 Every name of RN's 1.0 root that the facade exports has a type: the placeholders (KeyboardAvoidingView,
 RefreshControl and StatusBar, which throw where they render) and TouchableWithoutFeedback, TouchableHighlight,
-PanResponder, PixelRatio and I18nManager among them. The independent TSX consumer imports and uses all 60, and a census
+PanResponder, PixelRatio and I18nManager among them. `ReactNativeVersion` is RN's own class (`getVersionString()`, `major`,
+`minor`, `patch` and `prerelease`), and `Platform.constants.reactNativeVersion` reads its `major`, `minor` and `patch`
+from it, so the version is written once ([record](evidence/gf-03-react-native-version/README.md)). The independent TSX consumer
+imports and uses all 61, and a census
 (`tests/root-names.test.mjs`) fails when the facade exports a root name that has no type, when a type names something the
-facade does not export, or when the 24 root names that the facade does not export yet change without the pinned list being
-updated. This is not the complete typed SDK: those 24 names have neither an implementation nor a type. The
+facade does not export, or when the 23 root names that the facade does not export yet change without the pinned list being
+updated. This is not the complete typed SDK: those 23 names have neither an implementation nor a type. The
 [independent consumer](../consumers/minimal/README.md) now packages this bounded
 type surface with a provisioned addon; full SDK types remain open.
 
