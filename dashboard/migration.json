@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-14T13:00:00.000Z",
+  "updatedAt": "2026-10-14T13:20:00.000Z",
   "source": {
     "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
@@ -4939,6 +4939,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-01-catalog-merged-suites-d199274",
+      "at": "2026-10-14T13:20:00.000Z",
+      "taskIds": [
+        "GF-01",
+        "GF-05",
+        "GF-07"
+      ],
+      "message": "GF-01, catálogo de fixtures (só Node e dados, sem execução nativa): as três suítes que aterrissaram depois da semente do catálogo entram nele, e os ledgers de pendências do GF-05 e do GF-07 encolhem. As entradas apontam para checks que já existem e só cobrem a linha que um check afirma: test:js-globals (GF-05, fatia B: window, self, process.env, navigator.product, performance, console e seus membros log, info, debug, trace, warn, error, group, groupCollapsed, groupEnd e table, e o que o host liga, nativeLoggingHook, nativePerformanceNow e __DEV__), test:js-errors (GF-05, fatia C: ErrorUtils, com os membros reportError, reportFatalError, applyWithGuard, inGuard, getGlobalHandler e setGlobalHandler, e os cinco globals RN$* da família de erros que o host instala, mais a recusa dos argumentos inválidos) e test:app-registry (GF-07, fatia 1: os 15 membros do AppRegistry que o Godot expõe, os campos de AppConfig e de Registry, a recusa tipada E_APP_REGISTRY_HEADLESS_TASK dos 4 membros de tarefa headless, que era a pendência negativa do GF-07, e as recusas E_APP_REGISTRY_UNKNOWN_ROOT, de chave repetida ou reservada e de entrada inválida). Números, sem arredondar a favor: positivas 388 de 5.244 cobertas (eram 313 de 5.246) e 4.856 pendentes; negativas 60 de 486 cobertas (eram 56) e 426 pendentes; no total 448 de 5.730 (eram 369 de 5.732); das 67 linhas host-provides, 20 cobertas (eram 8). GF-05: positivas 50 de 128 (eram 16 de 130), a negativa do TextDecoder segue pendente. GF-07: positivas 23 de 35 (eram 0) e negativas 4 de 4 (eram 0). Linhas que essas suítes afirmam e que pertencem a outro GF saíram do ledger dele: GF-08 (12 linhas, os globals do DOM que o setUpDOM instala), GF-13 (4) e GF-29 (2, __DEV__). O host omite RN$hasHandledFatalException e RN$notifyOfFatalException pela V2-D26 (o runtime segue rodando depois de um erro não capturado, e a fatia de limpeza por erro do GF-07 é dona de qualquer mudança): o mapa de contratos ganha dois overrides que as marcam não aplicáveis no Godot (duas positivas a menos exigidas) e uma entrada negativa cobre a ausência delas, que a sonda da fatia C afirma. Seguem pendentes de propósito as linhas de tipo, as classes Performance e RN$AppRegistry. O README do contrato ganha o histórico do ledger. Nenhum checkpoint, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/d1992746cf5ca09be1a752539e91fdf2556fb34d/docs/compatibility/README.md#history-of-the-ledger"
+    },
     {
       "id": "gf-02-parity-targets-221913d",
       "at": "2026-10-14T13:00:00.000Z",
