@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "scenario": "react-microtasks",
   "status": "verified-local-headless-previous-host-control-seven-sabotages",
-  "at": "2026-10-14T03:44:21.557Z",
-  "executionBaseCommit": "066d5122927344e534365af6617fd01255b52ceb",
+  "at": "2026-10-14T12:48:55.493Z",
+  "executionBaseCommit": "83c94f202ebf2de70d42e610b4af9eee420bf744",
   "sourceDirtyDuringExecution": false,
-  "implementationCommit": "066d5122927344e534365af6617fd01255b52ceb",
+  "implementationCommit": "83c94f202ebf2de70d42e610b4af9eee420bf744",
   "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
   "environment": {
     "godot": "4.7.2-stable (official)",
@@ -13,7 +13,7 @@
     "node": "v22.23.3",
     "platform": "macOS arm64",
     "displayServer": "headless",
-    "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
+    "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
     "previousHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
     "previousHost": "built from executionBaseCommit (the tip of feat/gf-05-error-path), which registers no NativeMicrotasksCxx module; kept in build/gf05-microtasks-previous-host/ (local, not in Git)"
   },
@@ -27,9 +27,9 @@
     "checks": 19,
     "failedChecks": [],
     "oracleVerdict": null,
-    "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
-    "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
-    "logSha256": "e910a47f86dfea7640dc40962726bb5f7d5985a1f213b8b814e3be551378f421",
+    "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
+    "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
+    "logSha256": "eeb88201beb0e930ea2e75e329df40d43d34a0f88a49bcdaa3630dbef5a8d5f5",
     "result": "REACT_MICROTASKS_PASSED: 19",
     "checkVerdicts": [
       {
@@ -434,9 +434,9 @@
       "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
     ],
     "oracleVerdict": "The oracle fails 14 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
-    "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
+    "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
     "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-    "logSha256": "bd5795b98ea56b5d03087102b650bd95b9855269ddb9d92062e79536130a5297",
+    "logSha256": "1c94d651104e454c94dc216b0cb17ba5c0095b3d9e0c826db437e736aa92da36",
     "sameBundleAsCurrent": true,
     "result": "REACT_MICROTASKS_ORIGINAL_NEGATIVE: 14",
     "expectedOriginalFailures": [
@@ -477,9 +477,9 @@
           "react-batched/Two updates in one handler are one commit, ahead of the microtasks queued between and after them"
         ],
         "oracleVerdict": "The oracle fails 4 check(s), the first of them flag/RN$enableMicrotasksInReact is written true by the host runtime before the renderer reads it, and the renderer reads true",
-        "bundleSha256": "f0bb33ab39744a9f39296a6ae154f54823b7a530fcf9bfb63930b5760458ba70",
-        "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
-        "logSha256": "70f78e425e3b128eff14db1de7cb7b3bd5ae5699076aab3a6c896ae485e041ed",
+        "bundleSha256": "8dd09b5d99a58ebafb9f7c3687bc6bf822bb584cc18a159336db9300b1406920",
+        "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
+        "logSha256": "ebeeda016df2738b3ee57d91fb14cf941fb659868a266459c03e62a225db396e",
         "orders": {
           "fifo": [
             "handler-end",
@@ -534,9 +534,9 @@
           "module/setImmediate, RN's shim over queueMicrotask, reaches the C++ module through the global and runs"
         ],
         "oracleVerdict": "The oracle fails 2 check(s), the first of them module/Each queueMicrotask call through the global reaches the C++ module once",
-        "bundleSha256": "86843d2e5fcbc62c87300324c2c2c61589120eefd4d5e635bec4681d19581984",
-        "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
-        "logSha256": "a31a3bd38c0c9aac5c8d6d5bfa6a6149b663ed61285e02df270ee4abb81ee016",
+        "bundleSha256": "32d844d18ab77f3e41d266bce60b7d38a94ea9268d016e441f62a34e70378e65",
+        "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
+        "logSha256": "2abfd9dbe13273e1440b07a042722a01f4fbd205147bb470ad7a8677dc548a8e",
         "orders": {
           "fifo": [
             "handler-end",
@@ -590,9 +590,9 @@
           "gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs"
         ],
         "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs",
-        "bundleSha256": "9e759870d559e59fa3d49eb588e73eee5d5d47a2dd95eee6f55ca09d43efbd42",
-        "nativeHostSha256": "67577db37c5da1f579a59e2db3811f353dfc9c2067ab4514959a6a6f8651d4a7",
-        "logSha256": "1e65288b51ecb100fc74ddd94e5d250fd28ba23a043fd2a64c54cebbaa9d5242",
+        "bundleSha256": "b997388aa5fbf8767ec774ef9de8f94f62b0dc27a70b313e55a1b11e6a971fc3",
+        "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
+        "logSha256": "dc95b483f1e0306e4fba5662c6c54f9ba4ac75bd0fb32abfa9133e34e97ebceb",
         "orders": {
           "fifo": [
             "handler-end",
@@ -659,9 +659,9 @@
           "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
         ],
         "oracleVerdict": "The oracle fails 14 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
-        "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
-        "nativeHostSha256": "0732dedab79111ec1edaa1b10c2f02dbdb908e3fba86bae588d394280351574c",
-        "logSha256": "aac55e0eced85a2bddc7bd0d196651784ece62153324caa2ee57da16b94bcc29",
+        "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
+        "nativeHostSha256": "298aaeca88854bfa97d329c3bad4df5f3bfcaa28613186972a3e8a525b4ed13b",
+        "logSha256": "d0bdb78b048f530c7134fa594d7597a9da77a7b8c637ad34767abd70fcdc170b",
         "orders": {
           "fifo": [],
           "react-microtask": [],
@@ -680,9 +680,9 @@
           "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
         ],
         "oracleVerdict": "The oracle fails 1 check(s), the first of them reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it",
-        "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
-        "nativeHostSha256": "7ae5740542b1ec03bc2f52591274a4e53128faeab8aa95b027c7fadb63af994a",
-        "logSha256": "0a5b79dde2c611ce5b87944d7629d3133ceb4f43a675d864f799557488e3f43d",
+        "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
+        "nativeHostSha256": "fdb6e2a79864807b8238a57a52edce78a25c7638dc647934bd951644c231f629",
+        "logSha256": "096eed480d8e70f7475a503897214ae77c76d061a054040c36f1543ae5e935b1",
         "orders": {
           "fifo": [
             "handler-end",
@@ -736,9 +736,9 @@
           "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
         ],
         "oracleVerdict": "The oracle fails 1 check(s), the first of them reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it",
-        "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
-        "nativeHostSha256": "d9cf16282903158096249c2dc851a2f13236fd117d472ae8a47ea7fbba98c373",
-        "logSha256": "d0494f8f3bea43d261dd2c4a35de6af330131a721be50e3b160691b9cb31ee23",
+        "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
+        "nativeHostSha256": "f0c8d28b9754416d5b4d446146a0180c938498da8b791e8715a698ff0ec96ae3",
+        "logSha256": "e8392fcf8d2d83d4a85a6f516568ed01be82197d13aa6393157932842c46388b",
         "orders": {
           "fifo": [
             "handler-end",
@@ -785,17 +785,17 @@
         "name": "checkpoint-gate-closed",
         "host": true,
         "file": "native/application_runtime.cpp",
-        "find": "    draining_for_stop = true;\n",
-        "replace": "    draining_for_stop = true;\n    stopping = true;\n",
+        "find": "      FlagScope draining(draining_for_stop);\n",
+        "replace": "      FlagScope draining(draining_for_stop);\n      stopping = true;\n",
         "checks": 19,
         "failedChecks": [
           "gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
           "gate/Stop unmounts the root through React's own microtask: the update pending at the stop is not lost, and the root's effect cleanup runs once"
         ],
         "oracleVerdict": "The oracle fails 2 check(s), the first of them gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
-        "bundleSha256": "d13777b8a70d325895144b09486b350a53ca446fd19a1fdce7860c22cc890eba",
-        "nativeHostSha256": "a4ee51549a9d240db16915ddb6edd0ec32991f4d08d2b070a9aaf37ebb09750d",
-        "logSha256": "17f344ca8c0056ff9f3b596e1e9d7c0df69b30ab65c3150a1cc2ba8bc14d08a5",
+        "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
+        "nativeHostSha256": "6d9feb0716b0c0cad2d92860585ce4c4a98cbec36dd34cfef5b0140b995efcd1",
+        "logSha256": "c933d30340a77f70e6d7d8012f22e8fc43bfaf49c60007e69d7d1f65bb718986",
         "orders": {
           "fifo": [
             "handler-end",
@@ -907,8 +907,8 @@
     "tests/react-microtasks-cases.mjs": "39193c3c778fc14cabad89c2ef1d25d004e9cf00d82debd12044c5677133c08c",
     "tests/react-microtasks-probe.gd": "28c9e1073651c161318ea17b5fd462b20e4e0c7ba874a80b06286a69c8b3b860",
     "tests/react-microtasks-native.test.mjs": "e6215d5d9e3c58cbad85136f1184f1db591374f23c32b2ea7a9b5ee19a3332ab",
-    "tests/react-microtasks-oracle.mjs": "75143e90847cbf8b3e5e0fb99ddf43d6f8b42c06c0ba81359d4a2e4614549234",
-    "tests/react-microtasks-sabotages.mjs": "8133afabd5c7da6c85f9be46cf24dd2d5812d4f74bc311c32b514ee1be394e3b",
+    "tests/react-microtasks-oracle.mjs": "4b24bbbd99533f2009ea5e8ef07929af2c128fc604c5b6bcfd27d4d61b5fae21",
+    "tests/react-microtasks-sabotages.mjs": "a8835a881e62d5cd54ea2fa8fc3232148588f9dc92081c26f84142199aa89136",
     "scripts/react-microtasks-bundle.mjs": "af302b5911281c6bb81fecbb5fe6493da128050c8056d6021910af5e0af234fb",
     "scripts/react-microtasks-sabotage.mjs": "4171a377432e6536771f3c87d743066e989d004127beef42756b080fafcdb2d5",
     "scripts/native-probe-bundle.mjs": "f1326732fcc4d9c57d8c9905ef124101e2a54126507ad22e36b3aa8e7b086198",
@@ -916,7 +916,7 @@
     "src/initialize.js": "e19e51dd51da964c193d6e1763a6fb2b6e57aaf204797087fa3052f04fc64b64",
     "sdk/toolchain/platform-plugin.mjs": "2979b948f0e8d4ace5c4d9246b5479017d539db0d23ebb2830d2a7827253dc1b",
     "sdk/toolchain/metro-polyfills.mjs": "e1b371456bf1b6f33c817e552e21e5ca550016f3be2292455fd019454f643d29",
-    "native/application_runtime.cpp": "d3e0d0e2138ade1ad0c8b1c227f69416ede131bc6efc6e7c0e850fff212a98d0",
+    "native/application_runtime.cpp": "c7cfa58e45c1c89d1affcfd69d9fa4c9698ec7fe5e07b42713bc227db46c3712",
     "native/turbo_module_registry.cpp": "5ca1612c79ef0797867918d9b0de9fab176cb6e54a97b9faa2f36e55ebf3462e",
     "native/turbo_module_registry.h": "434ea07f7bdacba2bd8e8f8b5982b7da5e15d9004f093f46a16b08df8029e8ed",
     "native/CMakeLists.txt": "447d63e782b21ef1b577c32b7a73f35f6c05788f28cb5d142111e039a0732ae1"
@@ -934,6 +934,6 @@
     "The gate is the host's extension (V2-D27); callback exceptions and a Promise storm are slice F's. Hermes ignores the hint of drainMicrotasks(int), so the checkpoint at the head of stop() is bounded as every pump is: by the queue.",
     "The registry counts the calls that reach RN's module in front of RN's own invoker; the module's C++ is compiled unchanged.",
     "The headless desktop host only; no mobile export has run this bundle.",
-    "Hosted CI is pending: the record is of the local run."
+    "The record is of the local run. Hosted CI ran earlier heads of this slice: D1's own run 38507888050 (head c726c78) passed native-suites-runtime, adapter runtime check included, and failed only native-suites-frontier, on the cpu-time-instrument rule that #162 has since fixed on main; the stacked run 38513518839 (D2 on top of this slice, with #162) passed every job."
   ]
 }
