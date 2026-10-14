@@ -79,11 +79,11 @@
           "evidence": [
             {
               "label": "Contrato do GF-01 completo como definido (S1 a S3): inventário de 6.447 linhas, mapa de dono, escopo e aplicabilidade e catálogo de fixtures com polaridade e ledger de pendências imposto por gate. Quase todas as linhas seguem pendentes de fixture dos GFs donos (313 de 5.246 positivas e 56 de 486 negativas cobertas); a paridade contra o RN original e os alvos seguem abertos",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/PINXR/docs/compatibility/README.md#fixture-catalog-polarity-tolerance-and-the-pending-ledger"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/19500fa16e89f85647a643dd62ff8793e53076c6/docs/compatibility/README.md#fixture-catalog-polarity-tolerance-and-the-pending-ledger"
             },
             {
               "label": "PR da fatia S3: o catálogo, o gate scripts/parity-coverage.mjs --check e os testes de mutação",
-              "url": "https://github.com/journey-studios/godot-fabric/pull/PINPR"
+              "url": "https://github.com/journey-studios/godot-fabric/pull/164"
             }
           ]
         },
@@ -4940,13 +4940,13 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/5f30b4f4593c2da1cce38940acc3a0480b204151/docs/evidence/cpu-time-instrument/README.md#a-regra-do-termo-de-processo-corrigida-2026-10-13"
     },
     {
-      "id": "gf-01-fixture-catalog-s3-PINID",
+      "id": "gf-01-fixture-catalog-s3-19500fa",
       "at": "2026-10-13T22:00:00.000Z",
       "taskIds": [
         "GF-01"
       ],
       "message": "GF-01, fatia S3 do contrato (só Node e dados, sem execução nativa): o catálogo de fixtures (docs/compatibility/fixture-catalog-0.87.1.json) e o gate que o impõe, scripts/parity-coverage.mjs --check, no test:parity. O catálogo liga linhas do mapa de contratos (seletores por dono, tipo, API, nome, escopo, aplicabilidade ou id) a checks executáveis que já existem: um caso de tests/parity/cases.json, uma frase de check de um probe ou oráculo nativo, ou um teste dos runners tests/*-native.test.mjs e dos testes Node. Cada entrada traz a polaridade (positive, negative ou host-provides), onde roda (godot, rn-ios, rn-android) e, nas fixtures de layout, a tolerância (0 nos casos compartilhados, 1e-3 no texto e 5e-4 na animação de layout). O gate exige fixture positiva para toda linha 1_0 em que o Godot aplica ou o host fornece (5.246 linhas) e fixture negativa onde o contrato é uma recusa, uma entrada inválida ou a indisponibilidade que o RN define (486 linhas: 477 não aplicáveis cujo motivo diz que a indisponibilidade upstream é o contrato, as 4 tarefas headless do AppRegistry, que por decisão lançam erro tipado, 4 linhas em que o próprio RN recusa a entrada, e o TextDecoder ausente por paridade com o Hermes, que não tem linha no inventário e entra como contrato decidido). O que falta não some: toda linha sem fixture está num ledger de pendências por GF, com seletor e contagem, e o gate reprova lacuna fora do ledger, item do ledger já coberto, contagem errada, referência de fixture que não existe (o caso, o arquivo, o nome do check ou do teste, conferidos no código), entrada que não casa nenhuma linha e polaridade ou plataforma sem sentido; os testes mutam o catálogo para cada modo de falha. Números, sem arredondar a favor: positivas 313 de 5.246 cobertas e 4.933 pendentes (das 67 linhas host-provides, 8 cobertas); negativas 56 de 486 cobertas e 430 pendentes; linhas com fixture por polaridade: positive 313, negative 520 (as 56 exigidas, 447 da política de props do 0.5, que registra recusas e props ignoradas, e 17 de recusas de Text, Linking, fetch e foco que nenhuma regra exige), host-provides 0. A semente cobre os 6 casos com contrato do protocolo compartilhado (os outros 7 são de React e não nomeiam linha) e as suítes nativas de Switch, ActivityIndicator, touchables, Text, AppState, Appearance, acessibilidade, serviços de dispositivo, contratos de SO, rede, WebSocket, Animated, LayoutAnimation, ScrollView, listas, Modal, PanResponder, Image, clique, foco, relógio de quadros e densidade móvel. Suítes de outros PRs abertos (globals JS, AppRegistry, erros) não são referenciadas: suas linhas seguem pendentes e a entrega que as aterrissar acrescenta as entradas e baixa a contagem. Com S1 a S3 o contrato do GF-01 (inventário, mapa de dono e aplicabilidade e catálogo de fixtures com polaridade e ledger imposto) fica completo como definido, ainda que quase todas as linhas sigam pendentes de fixture dos GFs donos. Fecha só o checkpoint contract do GF-01; parity (rodar as fixtures nos apps RN originais e no Godot e comparar relatórios) e targets seguem abertos. Nenhum peso ou denominador muda.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/PINXR/docs/compatibility/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/19500fa16e89f85647a643dd62ff8793e53076c6/docs/compatibility/README.md"
     },
     {
       "id": "gf-01-inventory-noise-ac77791",
