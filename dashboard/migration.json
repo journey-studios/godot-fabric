@@ -4922,6 +4922,15 @@
   ],
   "activity": [
     {
+      "id": "gf-05-web-globals-slice-e-7f0a264",
+      "at": "2026-10-14T05:30:00.000Z",
+      "taskIds": [
+        "GF-05"
+      ],
+      "message": "GF-05, fatia E: sonda dos globais da web, sem mudança de código nativo nem do SDK. O setUpXHR do RN instala URL, URLSearchParams, AbortController e AbortSignal a partir dos módulos do próprio RN, e TextEncoder, atob e btoa são do motor (Hermes 250829098.0.17); a decisão de 2026-10-13 manda seguir o Hermes do RN em iOS e Android, ou seja, TextDecoder ausente, com fixture negativa. Nada disso estava certificado membro a membro. A sonda headless (npm run test:web-globals, 59 checagens, no Hermes e no Fabric reais) roda 177 casos: 92 de URL, URLSearchParams, AbortController e AbortSignal, cujos resultados precisam ser idênticos, chamada a chamada, aos que o V8 dá aos arquivos do RN empacotados sem nada do SDK (nove casos, cujo erro tem texto do motor, comparam só o nome); 78 de codificação, 64 idênticos aos do Node e 14 divergências documentadas do Hermes, que o oráculo exige que o Node ainda não tenha (encode() sem argumento codifica o texto undefined, btoa() idem, e atob e btoa lançam Error em vez de DOMException InvalidCharacterError); e 7 da fixture negativa do TextDecoder (typeof undefined, ausente do objeto global, ReferenceError «Property 'TextDecoder' doesn't exist», e o nome não está em nenhum dos nove binários hermesvm da versão fixada, que têm todos TextEncoder, encodeInto, atob e btoa). A integração usa o servidor do suite de rede: fetch com um signal abortado enquanto o servidor segura o pedido rejeita com o AbortError «Aborted» do whatwg-fetch (ignora o motivo dado ao abort(), que o signal guarda) e fecha a conexão; um signal já abortado nunca leva o pedido ao servidor; um XMLHttpRequest ligado ao signal termina em readystatechange, abort e loadend. Achados do RN 0.87.1: a URL não tem membro que lance «not implemented» (só search tem setter, e canParse e parse não existem); a URL lê URLSearchParams como global; URLSearchParams não itera Map nem iterador (lê como objeto); o renderer lê o AbortController ao avaliar. Nada no host, no src/ nem no toolchain sombreia os oito nomes (varredura, módulo injetado antes do bundle e identidade com os exports). Sem controle de host anterior porque nenhum código nativo mudou; quatro sabotagens (URL reimplementada, TextDecoder com polyfill, AbortController que não despacha, URLSearchParams.delete ignorado) são rejeitadas pela sonda e pelo oráculo. A auditoria mantém todos os status. Nenhum GF, checkpoint, peso ou denominador fecha; a execução hospedada está pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7f0a2648f5d539477298d05a8772ebba8fdf02c6/docs/evidence/runtime/README.md#web-globals-slice-e-2026-10-14"
+    },
+    {
       "id": "cpu-time-instrument-flake-5f30b4f",
       "at": "2026-10-13T23:30:00.000Z",
       "taskIds": [
