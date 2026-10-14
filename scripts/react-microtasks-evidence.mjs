@@ -17,8 +17,18 @@ import {derivedChecks, explainedByModel, oracleRejection, rnExpectations, verify
 // The lanes run before it: `node tests/react-microtasks-native.test.mjs --allow-original-negative` with the previous host in addons/ (the
 // current host put back after), `node scripts/react-microtasks-sabotage.mjs` (the sabotages, then the current lane). With --commit <sha> it
 // also checks every pin of a repository file against `git show <sha>:<path>` and records the commit, which is how the pins are tied
-// to the implementation commit once it exists. Run with:
-//   node scripts/react-microtasks-evidence.mjs [--commit <sha>]
+// to the implementation commit once it exists.
+//
+// Two commits are recorded and neither is derived from the HEAD of the moment the record is written:
+//   - executionBaseCommit and sourceDirtyDuringExecution are what each lane saw when it ran (tests/react-microtasks-native.test.mjs records the
+//     commit it stood on and every path that differed from it in the report's provenance). The lanes must agree on the commit; the record is dirty
+//     when the current lane ran with any uncommitted path, whether or not --commit is given: --commit ties the executed sources to a commit, it does
+//     not say they were committed when they ran.
+//   - environment.previousHost.sourceCommit is the commit the previous host's binary was built from, which only the person who built it knows. It is
+//     required: --previous-host-commit <sha>, a commit in the history of HEAD that has the error path and does not register the microtasks module. A
+//     missing, malformed or unknown one is an error (E_PREVIOUS_HOST_COMMIT), never a guess.
+// Run with:
+//   node scripts/react-microtasks-evidence.mjs --previous-host-commit <sha> [--commit <sha>]
 const root = fileURLToPath(new URL("..", import.meta.url));
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const readJson = file => JSON.parse(readFileSync(path.join(root, file), "utf8"));
@@ -26,6 +36,39 @@ const sha = file => digest(readFileSync(path.join(root, file)));
 const git = (...args) => execFileSync("git", args, {cwd: root, encoding: "utf8", maxBuffer: 64 * 1024 * 1024}).trim();
 const commitArgument = process.argv.indexOf("--commit");
 const commit = commitArgument === -1 ? null : process.argv[commitArgument + 1];
+const previousArgument = process.argv.indexOf("--previous-host-commit");
+const previousHostCommit = previousArgument === -1 ? null : process.argv[previousArgument + 1];
+// The commit the previous host was built from cannot be read from the host or from HEAD, so it is an input, and a checked one.
+if (!/^[0-9a-f]{40}$/.test(previousHostCommit ?? "")) {
+  throw new Error("E_PREVIOUS_HOST_COMMIT: pass --previous-host-commit <40-character sha>, the commit build/gf05-microtasks-previous-host/fabric_godot.dylib was built from; "
+    + "it is not HEAD and the script does not guess it");
+}
+try {
+  git("cat-file", "-e", `${previousHostCommit}^{commit}`);
+  git("merge-base", "--is-ancestor", previousHostCommit, "HEAD");
+} catch {
+  throw new Error(`E_PREVIOUS_HOST_COMMIT: ${previousHostCommit} is not a commit in the history of HEAD`);
+}
+// What that commit's tree says about the binary it is claimed to have built: the previous host has the error path (slice C) and no NativeMicrotasks module. A
+// commit whose native/ registers the module cannot have built it.
+const treeHas = file => {
+  try {
+    git("cat-file", "-e", `${previousHostCommit}:${file}`);
+    return true;
+  } catch {
+    return false;
+  }
+};
+const registersMicrotasks = (() => {
+  try {
+    return git("grep", "-l", "-e", "add_microtasks", "-e", "nativemodule/microtasks", previousHostCommit, "--", "native").length > 0;
+  } catch {
+    return false;
+  }
+})();
+if (!treeHas("native/js_error_path.cpp") || registersMicrotasks) {
+  throw new Error(`E_PREVIOUS_HOST_COMMIT: ${previousHostCommit} ${registersMicrotasks ? "registers the microtasks module" : "has no native/js_error_path.cpp"}, so it cannot be the commit of the module-free host with RN's error path`);
+}
 
 const expected = await rnExpectations(root);
 const failures = report => report.checks.filter(row => !row.passed).map(row => row.name);
@@ -82,6 +125,21 @@ for (const {variant, report} of sabotages) {
     assert.equal(report.provenance.nativeHostSha256, hostSha256);
   }
 }
+// What the lanes saw of the tree when they ran. A lane that could not ask git has no state, and a record cannot say the sources were clean then.
+const gitOf = ({report}) => {
+  const state = report.provenance.git;
+  assert.ok(state != null && typeof state.head === "string" && Array.isArray(state.dirtyPaths), `${report.provenance.lane}: the lane recorded no git state; run the lanes again`);
+  return state;
+};
+const executionGit = gitOf(current);
+for (const entry of [original, ...sabotages]) {
+  assert.equal(gitOf(entry).head, executionGit.head, `${entry.report.provenance.lane} ran on another commit than the current lane; run the lanes again`);
+}
+for (const {variant, report} of sabotages) {
+  if (variant.host === true) {
+    assert.ok(gitOf({report}).dirtyPaths.includes(variant.file), `${variant.name} ran with ${variant.file} broken, which git sees`);
+  }
+}
 const flagUnset = sabotages.find(entry => entry.variant.name === "flag-unset");
 assert.equal(explainedByModel(flagUnset.report, expected), null, "The flag-unset lane comes out in the order the model gives for the flag off");
 assert.equal(explainedByModel(current.report, expected), null, "The current lane comes out in the order the model gives for the flag on");
@@ -104,20 +162,30 @@ const record = {
   scenario: "react-microtasks",
   status: "verified-local-headless-previous-host-control-seven-sabotages",
   at: new Date().toISOString(),
-  executionBaseCommit: git("rev-parse", "HEAD"),
-  sourceDirtyDuringExecution: commit === null,
+  executionBaseCommit: executionGit.head,
+  sourceDirtyDuringExecution: executionGit.dirtyPaths.length > 0,
+  dirtyPathsDuringExecution: executionGit.dirtyPaths,
   implementationCommit: commit,
   pinning: commit === null
-    ? "The lanes ran on the working tree on top of executionBaseCommit, before the implementation commit existed. sourcePins are the SHA-256 of the files they executed; rerun scripts/react-microtasks-evidence.mjs --commit <sha> to check each against git show <sha>:<path> and record the commit."
-    : "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+    ? "The lanes ran on the working tree on top of executionBaseCommit, before the implementation commit existed (dirtyPathsDuringExecution lists what differed from it). sourcePins are the SHA-256 of the files they executed; rerun scripts/react-microtasks-evidence.mjs --previous-host-commit <sha> --commit <sha> to check each against git show <sha>:<path> and record the commit."
+    : `Every sourcePins entry equals git show <implementationCommit>:<path>. ${executionGit.dirtyPaths.length > 0 ? "The lanes ran on top of executionBaseCommit with the uncommitted paths of dirtyPathsDuringExecution, so the pins, not the commit the lanes ran on, tie what they executed to the implementation commit." : "The lanes ran on a clean tree at executionBaseCommit."}`,
   environment: {
     godot: current.report.godot, reactNative: current.report.reactNative, node: current.report.provenance.node, platform: "macOS arm64",
     displayServer: current.report.displayServer,
     nativeHostSha256: hostSha256, previousHostSha256,
-    previousHost: "built from executionBaseCommit (the tip of feat/gf-05-error-path), which registers no NativeMicrotasksCxx module; kept in build/gf05-microtasks-previous-host/ (local, not in Git)",
+    previousHost: {
+      sourceCommit: previousHostCommit,
+      sourceCommitSubject: git("log", "-1", "--format=%s", previousHostCommit),
+      nativeTreeAtSourceCommit: git("rev-parse", `${previousHostCommit}:native`),
+      sha256: previousHostSha256,
+      copy: "build/gf05-microtasks-previous-host/fabric_godot.dylib (local, not in Git)",
+      attribution: {hasJsErrorPath: treeHas("native/js_error_path.cpp"), registersMicrotasksModule: registersMicrotasks,
+        checkedBy: "git cat-file -e <sourceCommit>:native/js_error_path.cpp, and git grep -e add_microtasks -e nativemodule/microtasks <sourceCommit> -- native (no match)"},
+      provenance: "The commit is given by whoever ran the slice (--previous-host-commit); no build receipt was recorded for the copy. The host was copied from addons/ when the slice's branch was created, from slice C's tip, and equals slice C's host; the native/ tree of that commit is nativeTreeAtSourceCommit. The script checks that the commit has native/js_error_path.cpp and registers no microtasks module (attribution), which is what a host without NativeMicrotasksCxx and with RN's error path means; it cannot check the bytes against a build of that commit.",
+    },
   },
   commands: ["npm run test:react-microtasks", "node tests/react-microtasks-native.test.mjs --allow-original-negative (previous host in addons/)",
-    "node scripts/react-microtasks-sabotage.mjs", "node scripts/react-microtasks-evidence.mjs"],
+    "node scripts/react-microtasks-sabotage.mjs", "node scripts/react-microtasks-evidence.mjs --previous-host-commit <sha> [--commit <sha>]"],
   currentLane: {
     ...summary(current),
     result: `REACT_MICROTASKS_PASSED: ${current.report.checks.length}`,
@@ -143,7 +211,7 @@ const record = {
     result: `REACT_MICROTASKS_ORIGINAL_NEGATIVE: ${failures(original.report).length}`,
     expectedOriginalFailures: original.report.expectedOriginalFailures,
     nativeModuleLoaded: original.report.stages.environment.native.loaded,
-    note: "The same bundle runs on the host that registers no NativeMicrotasksCxx: queueMicrotask has nothing to reach, so React's first update throws and the root does not mount. It fails exactly the checks that need the new module, and holds the three that need only the JS the bundle runs (the flag, and the global installed before the renderer reads it) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit.",
+    note: "The same bundle runs on the host that registers no NativeMicrotasksCxx: queueMicrotask has nothing to reach, so React's first update throws and the root does not mount. It fails exactly the checks that need the new module, and holds the three that need only the JS the bundle runs (the flag, and the global installed before the renderer reads it) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from environment.previousHost.sourceCommit, not from executionBaseCommit.",
   },
   retainedSabotage: {
     script: "scripts/react-microtasks-sabotage.mjs",

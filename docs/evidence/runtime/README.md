@@ -738,7 +738,7 @@ Every verdict of the probe is derived again from the report's raw observations a
 
 ### Controls
 
-**The previous host** (the tip of `feat/gf-05-error-path`, built before this slice, kept in `build/gf05-microtasks-previous-host/`; `node tests/react-microtasks-native.test.mjs
+**The previous host** (the host of slice C, built before this slice from `26a3a9087dbb`, this branch's point on slice C, recorded as `environment.previousHost.sourceCommit` of the evidence; kept in `build/gf05-microtasks-previous-host/`; `node tests/react-microtasks-native.test.mjs
 --allow-original-negative` while it is `addons/fabric_godot.dylib`, then the current host is put back) runs the same bundle and fails exactly 14 of the 19
 checks, the ones that need the new module, and the oracle rejects it. It registers no `NativeMicrotasksCxx`, so the first `queueMicrotask` throws, React's first update throws with it, and the root
 does not mount. The 5 that hold on both hosts are the three about the flag and the global installed before the renderer reads it (pure JS), the lifecycle and the report.
@@ -789,7 +789,11 @@ reason now name `NativeMicrotasks` and the host's registration, and the `D2` ent
 two globals, the module's counter before and after the batch, the order each case came out in with the model's orders for the flag on and off, the previous host's 14 failing checks and its SHA-256,
 each sabotage's failing checks, the orders of its cases and the oracle's verdict, and the RN sources it pinned. `scripts/react-microtasks-evidence.mjs` writes it from the reports the lanes leave in
 `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin
-against `git show <sha>:<path>` and records the commit. The record is of the local run; hosted CI ran earlier heads of this slice (the last of the limits).
+against `git show <sha>:<path>` and records the commit. It requires `--previous-host-commit <sha>` (a commit in the history of `HEAD` that has `native/js_error_path.cpp` and registers no microtasks
+module; a missing, malformed or unknown one is an error, `E_PREVIOUS_HOST_COMMIT`, never a guess) and records it as `environment.previousHost.sourceCommit`, with the attribution it checked, apart from
+`executionBaseCommit`; and it takes `executionBaseCommit` and `sourceDirtyDuringExecution` from what each lane recorded of the tree when it ran (the commit and every path that differed from it), not from
+the `HEAD` of the moment it writes: `--commit` ties the executed sources to a commit and does not say they were committed when they ran. The record is of the local run; hosted CI ran earlier heads of this
+slice (the last of the limits).
 
 **Limits.**
 
