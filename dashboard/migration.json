@@ -4922,6 +4922,15 @@
   ],
   "activity": [
     {
+      "id": "cpu-time-instrument-flake-5f30b4f",
+      "at": "2026-10-13T23:30:00.000Z",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "0.5, instrumento de tempo de CPU: o check «o termo de processo muda de quadro a quadro» reprovava de forma intermitente em runner hospedado quieto (run 38473856206 e, antes, 38403991586, tentativa 1 de cada; a nova tentativa passou com o mesmo código). Nos artefatos, o termo de um bloco de carga é o laço (T µs) mais um resto de poucos µs em passos de 1 µs, e 118 dos 200 quadros do bloco de 10 ms valem 10,001 ms, 12 seguidos: contar valores e repetições mede o ruído do runner, não o relógio. A regra passa a ser a de inclusão: o termo de cada quadro de carga é no mínimo o laço que o próprio quadro rodou, o que um relógio cumpre sempre e um monitor atualizado uma vez por segundo não cumpre. Os 20 relatórios hospedados que o GitHub ainda serve passam; a leitura do monitor refeita sobre cada um é recusada; as três sabotagens retidas seguem rejeitadas. O instrumento não muda. Nenhum checkpoint, peso ou denominador se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/5f30b4f4593c2da1cce38940acc3a0480b204151/docs/evidence/cpu-time-instrument/README.md#a-regra-do-termo-de-processo-corrigida-2026-10-13"
+    },
+    {
       "id": "gf-01-inventory-noise-ac77791",
       "at": "2026-10-13T20:00:00.000Z",
       "taskIds": [
