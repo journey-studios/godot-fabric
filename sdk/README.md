@@ -107,7 +107,16 @@ library. Direct app imports require project declarations; a library's imports
 use its own dependency/optionalDependency/peerDependency declarations and
 resolution directory. The build never requires every transitive package to be
 hoisted into the project root. Yarn PnP, workspaces, alternate installation layouts and complete
-Metro/package-conditions behavior are not certified.
+Metro/package-conditions behavior are not certified. What is executed against
+Metro 0.87.1 is bounded: the key order of `exports`/`imports` conditions,
+`import` and `require`, exact subpaths and `./features/*` patterns, and the
+competing `.godot`/`.native` files of a package without `exports`, in installed
+packages and in the project's own sources. Six differences from Metro are fixed
+by test and name instead of hidden: a missing exact `exports` target, an
+external `#imports` target, an `exports` array, the JavaScript-before-TypeScript
+order inside `node_modules`, platform-suffixed JSON and a `main` that names a
+missing file. Which side is right in each, and the host's condition names, stay
+open decisions ([D20 slice B](../docs/evidence/d20-jsx-subpaths/README.md)).
 
 Local `compilerOptions.paths` aliases work through the effective project
 TSConfig, including `extends` and its inherited path base. For example, add
@@ -129,7 +138,12 @@ dependency-manifest changes during a build reject publication with
 [executed module-resolution cases](../docs/evidence/project-resolution/README.md).
 
 React and all its subpaths resolve to the SDK identity, including imports from
-project libraries. React Native resolves to the SDK's bounded facade/original
+project libraries, and `react/jsx-runtime` is one module for the app and a
+precompiled library even beside a nested fake. The one exception is
+`react/jsx-dev-runtime`: this build is production-only, where its `jsxDEV` is
+undefined, so any project importer is refused with
+`E_PROJECT_JSX_DEV_RUNTIME` (use `"jsx": "react-jsx"`; a library compiled in
+development mode needs a production build). React Native resolves to the SDK's bounded facade/original
 modules. Explicit React/RN declarations must match the SDK versions. This
 protects hook/reconciler identity; it does not certify arbitrary RN libraries
 or implement their native backends.
