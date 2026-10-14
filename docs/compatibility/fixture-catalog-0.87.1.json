@@ -1,0 +1,1776 @@
+{
+  "schemaVersion": 1,
+  "reactNative": "0.87.1",
+  "negativeContracts": [
+    {
+      "id": "upstream-unavailability",
+      "select": {
+        "godot": "not-applicable",
+        "godotReason": {
+          "pattern": "\\(unavailability, GF-24\\)|reproduces what upstream does on a host without it"
+        }
+      },
+      "why": "The map says RN's own outcome on this platform (a warning, a resolved value, a thrown error or an UnimplementedView) is the contract, and GF-24 reproduces it: the row needs a negative fixture."
+    },
+    {
+      "id": "headless-tasks-typed-error",
+      "select": {
+        "id": [
+          "api-member:AppRegistry.cancelHeadlessTask", "api-member:AppRegistry.registerCancellableHeadlessTask",
+          "api-member:AppRegistry.registerHeadlessTask", "api-member:AppRegistry.startHeadlessTask"
+        ]
+      },
+      "why": "User decision: AppRegistry's headless-task members are an Android service feature, and on Godot they throw a typed error; that refusal is the contract and needs a negative fixture."
+    },
+    {
+      "id": "rn-invalid-input",
+      "select": {
+        "id": [
+          "api-member:Linking.openURL", "api-member:Linking.canOpenURL",
+          "native-command:SwitchNativeComponent.setValue", "global-value:global.setTimeout"
+        ]
+      },
+      "why": "RN's own JavaScript or its generated command refuses invalid input (an empty or non-string URL, a setValue argument that is not a boolean, a timer without a function), so the row needs a negative fixture."
+    }
+  ],
+  "decided": [
+    {
+      "id": "decided:TextDecoder",
+      "owner": "GF-05",
+      "name": "TextDecoder",
+      "requires": ["negative"],
+      "why": "GF-05 asks for the required encoding globals, and the user decided on Hermes parity: TextDecoder is not installed on Hermes, so its absence is the contract and needs a negative fixture (RN declares no row for it)."
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "parity-native-layout",
+      "fixture": {
+        "case": "native-layout"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot", "rn-ios", "rn-android"],
+      "layout": true,
+      "tolerance": {
+        "unit": "dp",
+        "absolute": 0
+      },
+      "note": "The onLayout rectangle of a 120x40 box inside a padded parent is compared with === on x, y, width and height.",
+      "select": {
+        "id": ["event:ViewProps.onLayout", "style:ViewStyle.width", "style:ViewStyle.height", "style:ViewStyle.padding"]
+      }
+    },
+    {
+      "id": "parity-native-measure",
+      "fixture": {
+        "case": "native-measure"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot", "rn-ios", "rn-android"],
+      "layout": true,
+      "tolerance": {
+        "unit": "dp",
+        "absolute": 0
+      },
+      "note": "measure() reports the same 120x40 box; width and height are compared with ===.",
+      "select": {
+        "id": ["ref-member:ViewInstance.measure"]
+      }
+    },
+    {
+      "id": "parity-timers",
+      "fixture": {
+        "case": "timer-arguments-cancellation"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot", "rn-ios", "rn-android"],
+      "note": "Callback arguments and identity, delay coercion and cancellation across clearTimeout and clearInterval.",
+      "select": {
+        "id": ["global-value:global.setTimeout", "global-value:global.clearTimeout", "global-value:global.clearInterval"]
+      }
+    },
+    {
+      "id": "parity-timers-invalid-callbacks",
+      "fixture": {
+        "case": "timer-arguments-cancellation"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot", "rn-ios", "rn-android"],
+      "note": "setTimeout() without a callback throws and setTimeout('not executable', 0) returns the handle 0.",
+      "select": {
+        "id": ["global-value:global.setTimeout"]
+      }
+    },
+    {
+      "id": "parity-intervals",
+      "fixture": {
+        "case": "interval-arguments-cancellation"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot", "rn-ios", "rn-android"],
+      "note": "Recurring callback arguments, and clearTimeout cancelling an interval from inside its callback.",
+      "select": {
+        "id": ["global-value:global.setInterval", "global-value:global.clearTimeout"]
+      }
+    },
+    {
+      "id": "parity-microtask-immediate-order",
+      "fixture": {
+        "case": "microtask-immediate-order"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot", "rn-ios", "rn-android"],
+      "note": "Promise, queueMicrotask and a cancellable immediate run before a zero-delay timer, in RN's order.",
+      "select": {
+        "id": ["global-value:global.setImmediate", "global-value:global.clearImmediate"]
+      }
+    },
+    {
+      "id": "parity-animation-frame-clock",
+      "fixture": {
+        "case": "animation-frame-clock"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot", "rn-ios", "rn-android"],
+      "note": "Cancellable frames with finite, monotonic timestamps; the host installs both names under bridgeless mode.",
+      "select": {
+        "id": ["global-value:global.requestAnimationFrame", "global-value:global.cancelAnimationFrame"]
+      }
+    },
+    {
+      "id": "switch",
+      "fixture": {
+        "file": "tests/switch-native.test.mjs",
+        "test": "RN's original Switch runs over the native Switch descriptor with actual Godot mouse and touch input"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Real mouse and touch toggle the native switch; onChange precedes onValueChange; a controlled value that does not follow is restored by setValue; colors and size reach the host.",
+      "select": [
+        {
+          "subject": "SwitchProps",
+          "kind": ["event", "prop"],
+          "name": ["value", "disabled", "trackColor", "thumbColor", "style", "onChange", "onValueChange"]
+        },
+        {
+          "subject": "SwitchNativeComponent",
+          "kind": "native-command",
+          "name": ["setValue"]
+        },
+        {
+          "subject": "Switch",
+          "kind": "value",
+          "name": ["Switch"]
+        }
+      ]
+    },
+    {
+      "id": "switch-malformed-command",
+      "fixture": {
+        "file": "tests/switch-probe.gd",
+        "check": "Each malformed command reports exactly one setValue diagnostic"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "A setValue command whose argument is not a boolean is refused with one 'setValue requires [boolean]' diagnostic and changes nothing.",
+      "select": {
+        "subject": "SwitchNativeComponent",
+        "kind": "native-command",
+        "name": ["setValue"]
+      }
+    },
+    {
+      "id": "activity-indicator",
+      "fixture": {
+        "file": "tests/activity-indicator-native.test.mjs",
+        "test": "RN's original ActivityIndicator animates a native Godot spinner across actual SceneTree frames"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Sizes, color, animating and hidesWhenStopped drive a spinner that advances once per frame, stops, stays visible when asked and restarts.",
+      "select": [
+        {
+          "subject": "ActivityIndicatorProps",
+          "kind": "prop",
+          "name": ["animating", "color", "size", "hidesWhenStopped"]
+        },
+        {
+          "subject": "ActivityIndicator",
+          "kind": "value",
+          "name": ["ActivityIndicator"]
+        }
+      ]
+    },
+    {
+      "id": "touchable-highlight",
+      "fixture": {
+        "file": "tests/touchables-native.test.mjs",
+        "test": "public touchables run RN's original modules on real Godot input"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Press in, out, press and long press over real input, with the underlay shown and hidden, delayPressOut, delayLongPress and disabled.",
+      "select": [
+        {
+          "subject": "TouchableHighlightProps",
+          "kind": ["event", "prop"],
+          "name": [
+            "onPress", "onPressIn", "onPressOut", "onLongPress", "onShowUnderlay", "onHideUnderlay", "underlayColor",
+            "activeOpacity", "delayLongPress", "delayPressOut", "disabled"
+          ]
+        },
+        {
+          "subject": "TouchableHighlight",
+          "kind": "value",
+          "name": ["TouchableHighlight"]
+        }
+      ]
+    },
+    {
+      "id": "touchable-without-feedback",
+      "fixture": {
+        "file": "tests/touchables-native.test.mjs",
+        "test": "public touchables run RN's original modules on real Godot input"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Press in, out and press, hitSlop, pressRetentionOffset, and a disabled child inside an enabled parent.",
+      "select": [
+        {
+          "subject": "TouchableWithoutFeedbackProps",
+          "kind": ["event", "prop"],
+          "name": ["onPress", "onPressIn", "onPressOut", "hitSlop", "pressRetentionOffset", "disabled"]
+        },
+        {
+          "subject": "TouchableWithoutFeedback",
+          "kind": "value",
+          "name": ["TouchableWithoutFeedback"]
+        }
+      ]
+    },
+    {
+      "id": "pressable-press",
+      "fixture": {
+        "file": "tests/touchables-native.test.mjs",
+        "test": "public touchables run RN's original modules on real Godot input"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "A Pressable sentinel reports press in, out and press once per real click.",
+      "select": [
+        {
+          "subject": "PressableProps",
+          "kind": "event",
+          "name": ["onPress", "onPressIn", "onPressOut"]
+        },
+        {
+          "subject": "Pressable",
+          "kind": "value",
+          "name": ["Pressable"]
+        }
+      ]
+    },
+    {
+      "id": "touchable-opacity-dim",
+      "fixture": {
+        "file": "tests/touchables-probe.gd",
+        "check": "A real press dims the host to activeOpacity through the native driver"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "A real press dims the Animated.View to activeOpacity through RN's native driver.",
+      "select": [
+        {
+          "subject": "TouchableOpacityProps",
+          "kind": "prop",
+          "name": ["activeOpacity"]
+        },
+        {
+          "subject": "TouchableOpacity",
+          "kind": "value",
+          "name": ["TouchableOpacity"]
+        }
+      ]
+    },
+    {
+      "id": "touchable-opacity-press",
+      "fixture": {
+        "file": "tests/touchables-probe.gd",
+        "check": "Release restores the opacity, onPress fires once and the backend idles after two runs"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Release restores the opacity and reports press in, out and press once.",
+      "select": {
+        "subject": "TouchableOpacityProps",
+        "kind": "event",
+        "name": ["onPress", "onPressIn", "onPressOut"]
+      }
+    },
+    {
+      "id": "text-press",
+      "fixture": {
+        "file": "tests/text-original-native.test.mjs",
+        "test": "the public Text runs RN's original Text.js and presses on the paragraph over real Godot input"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Press in, out, press and long press on the paragraph, pressRetentionOffset, disabled, numberOfLines and the tail and clip ellipsizeMode.",
+      "select": [
+        {
+          "subject": "TextProps",
+          "kind": ["event", "prop"],
+          "name": [
+            "onPress", "onPressIn", "onPressOut", "onLongPress", "pressRetentionOffset", "disabled", "numberOfLines",
+            "ellipsizeMode"
+          ]
+        },
+        {
+          "subject": "Text",
+          "kind": "value",
+          "name": ["Text"]
+        }
+      ]
+    },
+    {
+      "id": "text-refusals",
+      "fixture": {
+        "file": "tests/text-original-probe.gd",
+        "check": "The wrapper rejects it before any native layout"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "The facade refuses, with a named error and before any native layout, what the host does not implement: selectable, adjustsFontSizeToFit, head and middle ellipsizeMode, selectionColor, dataDetectorType, textBreakStrategy, lineBreakStrategyIOS, android_hyphenationFrequency, a bad numberOfLines or onTextLayout, press and responder props on a nested Text, an oblique fontStyle and a dotted textDecorationStyle.",
+      "select": [
+        {
+          "subject": "TextProps",
+          "kind": ["event", "prop"],
+          "name": [
+            "selectable", "adjustsFontSizeToFit", "ellipsizeMode", "selectionColor", "dataDetectorType",
+            "textBreakStrategy", "lineBreakStrategyIOS", "android_hyphenationFrequency", "numberOfLines",
+            "onTextLayout", "onPress", "onPressIn", "onPressOut", "onLongPress", "onResponderGrant",
+            "onStartShouldSetResponder", "onMoveShouldSetResponder"
+          ]
+        },
+        {
+          "subject": "TextStyle",
+          "kind": "style",
+          "name": ["fontStyle", "textDecorationStyle"]
+        }
+      ]
+    },
+    {
+      "id": "text-layout",
+      "fixture": {
+        "file": "tests/text-layout-native.test.mjs",
+        "test": "onTextLayout and the Yoga baseline come from the lines of the one paragraph the host measures and paints"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "layout": true,
+      "tolerance": {
+        "unit": "dp",
+        "absolute": 0.001
+      },
+      "note": "The lines onTextLayout reports equal the lines the host paints, to 1e-3; the font-table comparison has its own slack in the oracle.",
+      "select": {
+        "subject": "TextProps",
+        "kind": ["event", "prop"],
+        "name": ["onTextLayout", "numberOfLines"]
+      }
+    },
+    {
+      "id": "text-style",
+      "fixture": {
+        "file": "tests/text-style-native.test.mjs",
+        "test": "the public Text slants fontStyle italic and draws solid textDecorationLine over the host paragraph"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "An italic slant and solid underline and line-through decorations, with their color, drawn over the host paragraph.",
+      "select": {
+        "subject": "TextStyle",
+        "kind": "style",
+        "name": ["fontStyle", "textDecorationLine", "textDecorationStyle", "textDecorationColor"]
+      }
+    },
+    {
+      "id": "app-state",
+      "fixture": {
+        "file": "tests/app-state-native.test.mjs",
+        "test": "Godot lifecycle notifications drive RN's original AppState shared by every root"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Godot focus and pause notifications move currentState and reach every root's listener once.",
+      "select": [
+        {
+          "subject": "AppState",
+          "kind": "api-member",
+          "name": ["currentState", "isAvailable", "addEventListener"]
+        },
+        {
+          "subject": "AppState",
+          "kind": "value",
+          "name": ["AppState"]
+        }
+      ]
+    },
+    {
+      "id": "appearance",
+      "fixture": {
+        "file": "tests/appearance-native.test.mjs",
+        "test": "Godot's system theme and setColorScheme drive RN's original Appearance and useColorScheme"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The system theme, an override with setColorScheme and the change listener reach Appearance and useColorScheme.",
+      "select": [
+        {
+          "subject": "Appearance",
+          "kind": "api-member",
+          "name": ["getColorScheme", "setColorScheme", "addChangeListener"]
+        },
+        {
+          "subject": "Appearance",
+          "kind": "value",
+          "name": ["Appearance"]
+        },
+        {
+          "subject": "useColorScheme",
+          "kind": "value",
+          "name": ["useColorScheme"]
+        }
+      ]
+    },
+    {
+      "id": "accessibility-info",
+      "fixture": {
+        "file": "tests/accessibility-info-native.test.mjs",
+        "test": "RN's own AccessibilityInfo runs over the host's accessibility settings and events in two applications"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The settings queries, the change events, announcements, focus and the accessibility event, in two applications.",
+      "select": [
+        {
+          "subject": "AccessibilityInfo",
+          "kind": "api-member",
+          "name": [
+            "addEventListener", "announceForAccessibility", "announceForAccessibilityWithOptions", "isBoldTextEnabled",
+            "isDarkerSystemColorsEnabled", "isGrayscaleEnabled", "isInvertColorsEnabled", "isReduceMotionEnabled",
+            "isReduceTransparencyEnabled", "isScreenReaderEnabled", "prefersCrossFadeTransitions",
+            "sendAccessibilityEvent", "setAccessibilityFocus"
+          ]
+        },
+        {
+          "subject": "AccessibilityInfo",
+          "kind": "value",
+          "name": ["AccessibilityInfo"]
+        }
+      ]
+    },
+    {
+      "id": "accessibility-props",
+      "fixture": {
+        "file": "tests/accessibility-native.test.mjs",
+        "test": "RN's original View, Pressable and TouchableOpacity carry their accessibility props to the host's accessible View, and the OS's press reaches RN"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Metadata reaches the host's accessible Control (80 headless checks) and the macOS accessibility tree (22 graphical checks, local only).",
+      "select": [
+        {
+          "subject": "AccessibilityProps",
+          "kind": "prop",
+          "name": [
+            "accessible", "accessibilityLabel", "accessibilityHint", "accessibilityRole", "role", "accessibilityState",
+            "accessibilityLiveRegion", "aria-busy", "aria-checked", "aria-disabled", "aria-expanded", "aria-hidden",
+            "aria-label", "aria-live", "aria-selected"
+          ]
+        },
+        {
+          "subject": ["ViewProps", "PressableProps", "TouchableOpacityProps"],
+          "kind": ["prop", "event"],
+          "name": [
+            "accessible", "accessibilityLabel", "accessibilityHint", "accessibilityRole", "role", "accessibilityState",
+            "accessibilityLiveRegion", "aria-busy", "aria-checked", "aria-disabled", "aria-expanded", "aria-hidden",
+            "aria-label", "aria-live", "aria-selected", "onAccessibilityTap"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "device-services",
+      "fixture": {
+        "file": "tests/device-services-native.test.mjs",
+        "test": "RN's own Linking, Clipboard and Vibration run over the host's device services in two applications"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Open a URL, ask whether it opens, the launch URL and deep-link events, the clipboard text (Unicode included) and vibration, over two applications.",
+      "select": [
+        {
+          "subject": "Linking",
+          "kind": "api-member",
+          "name": ["openURL", "canOpenURL", "getInitialURL", "addEventListener"]
+        },
+        {
+          "subject": "Clipboard",
+          "kind": "api-member",
+          "name": ["getString", "setString"]
+        },
+        {
+          "subject": "Vibration",
+          "kind": "api-member",
+          "name": ["vibrate", "cancel"]
+        },
+        {
+          "subject": ["Linking", "Clipboard", "Vibration"],
+          "kind": "value"
+        }
+      ]
+    },
+    {
+      "id": "device-services-invalid-url",
+      "fixture": {
+        "file": "tests/device-services-probe.gd",
+        "check": "openURL('') and a non-string fail RN's own invariant without calling the native module"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "An empty or non-string URL fails RN's own invariant before any native call.",
+      "select": {
+        "subject": "Linking",
+        "kind": "api-member",
+        "name": ["openURL", "canOpenURL"]
+      }
+    },
+    {
+      "id": "device-services-open-settings",
+      "fixture": {
+        "file": "tests/device-services-probe.gd",
+        "check": "openSettings rejects with an explicit error and never resolves in silence"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "The host has no app settings to open: Linking.openSettings rejects with an explicit error instead of resolving.",
+      "select": {
+        "subject": "Linking",
+        "kind": "api-member",
+        "name": ["openSettings"]
+      }
+    },
+    {
+      "id": "device-services-send-intent",
+      "fixture": {
+        "file": "tests/device-services-probe.gd",
+        "check": "sendIntent rejects in RN's JavaScript outside Android"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "Linking.sendIntent rejects in RN's JavaScript where Platform.OS is not android.",
+      "select": {
+        "subject": "Linking",
+        "kind": "api-member",
+        "name": ["sendIntent"]
+      }
+    },
+    {
+      "id": "os-unavailability",
+      "fixture": {
+        "file": "tests/os-contracts-native.test.mjs",
+        "test": "RN's iOS- and Android-specific APIs keep their upstream unavailability on Godot, in two Hermes applications"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "Each module takes the branch RN's own sources take where Platform.OS is neither ios nor android: a one-time warning, a resolved value, a thrown error or an UnimplementedView, checked against an independent oracle that reads the pinned sources.",
+      "select": [
+        {
+          "subject": [
+            "ToastAndroid", "PermissionsAndroid", "DynamicColorIOS", "ActionSheetIOS", "ProgressBarAndroid",
+            "DrawerLayoutAndroid", "InputAccessoryView", "PushNotificationIOS"
+          ],
+          "kind": "value"
+        },
+        {
+          "subject": "ToastAndroid",
+          "kind": "api-member"
+        },
+        {
+          "subject": "PermissionsAndroid",
+          "kind": "api-member"
+        },
+        {
+          "subject": "ActionSheetIOS",
+          "kind": "api-member"
+        },
+        {
+          "subject": "PushNotificationIOS",
+          "kind": "api-member"
+        },
+        {
+          "subject": "DrawerLayoutAndroidInstance",
+          "kind": "ref-member"
+        }
+      ]
+    },
+    {
+      "id": "os-touchable-native-feedback",
+      "fixture": {
+        "file": "tests/os-contracts-native.test.mjs",
+        "test": "RN's iOS- and Android-specific APIs keep their upstream unavailability on Godot, in two Hermes applications"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "TouchableNativeFeedback is Pressability without the Android drawable: a real click reports press in, out and press, and no native background reaches the child.",
+      "select": [
+        {
+          "subject": "TouchableNativeFeedback",
+          "kind": "api-member",
+          "name": ["Ripple", "SelectableBackground", "SelectableBackgroundBorderless", "canUseNativeForeground"]
+        },
+        {
+          "subject": "TouchableNativeFeedback",
+          "kind": "value",
+          "name": ["TouchableNativeFeedback"]
+        },
+        {
+          "subject": "TouchableNativeFeedbackProps",
+          "kind": "event",
+          "name": ["onPress", "onPressIn", "onPressOut"]
+        }
+      ]
+    },
+    {
+      "id": "networking-globals",
+      "fixture": {
+        "file": "tests/networking-native.test.mjs",
+        "test": "RN's own fetch, XMLHttpRequest, FormData, Blob and AbortController run over native networking against a local server"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The web globals RN's setUpXHR installs run over the host's transport against a deterministic local server (HTTP and HTTPS, redirects, timeouts, abort, blobs).",
+      "select": {
+        "subject": [
+          "fetch", "XMLHttpRequest", "Headers", "Request", "Response", "FormData", "Blob", "File", "FileReader",
+          "AbortController", "URL", "URLSearchParams"
+        ],
+        "kind": ["global-value", "runtime-global"]
+      }
+    },
+    {
+      "id": "networking-formdata-refused",
+      "fixture": {
+        "file": "tests/networking-probe.gd",
+        "check": "A FormData file part fails explicitly"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "A FormData part that names a file the host cannot read is a network error, not a silent empty part.",
+      "select": {
+        "subject": ["fetch"],
+        "kind": ["global-value", "runtime-global"]
+      }
+    },
+    {
+      "id": "websocket",
+      "fixture": {
+        "file": "tests/websocket-native.test.mjs",
+        "test": "RN's own WebSocket runs over native sockets against a local server"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Text and binary frames, ping, close codes and reasons, and the open, message, error and close events against a local server.",
+      "select": [
+        {
+          "subject": ["WebSocket"],
+          "kind": ["global-value", "runtime-global"]
+        },
+        {
+          "subject": "WebSocket",
+          "kind": "global-member",
+          "name": ["send", "close", "readyState", "onopen", "onmessage", "onerror", "onclose", "ping"]
+        },
+        {
+          "subject": "WebSocketMessageEvent",
+          "kind": "global-member",
+          "name": ["data"]
+        },
+        {
+          "subject": "WebSocketCloseEvent",
+          "kind": "global-member",
+          "name": ["code", "reason"]
+        }
+      ]
+    },
+    {
+      "id": "frame-clock",
+      "fixture": {
+        "file": "tests/frame-clock-native.test.mjs",
+        "test": "The frame clock gives requestAnimationFrame and RN's Native Animated a display link's cadence on every Godot pacing"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "requestAnimationFrame runs once per display tick on every Godot pacing, in order and nested, and a cancelled request never runs.",
+      "select": {
+        "subject": ["requestAnimationFrame", "cancelAnimationFrame"],
+        "kind": ["global-value", "runtime-global"]
+      }
+    },
+    {
+      "id": "mobile-density",
+      "fixture": {
+        "file": "tests/mobile-density-native.test.mjs",
+        "test": "density_policy screen follows the screen's scale and RN's SafeAreaView follows the unsafe bands, on the headless host"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Dimensions, PixelRatio and useWindowDimensions follow the screen's scale, and RN's SafeAreaView pads by the unsafe bands.",
+      "select": [
+        {
+          "subject": "Dimensions",
+          "kind": "api-member",
+          "name": ["get"]
+        },
+        {
+          "subject": "PixelRatio",
+          "kind": "api-member",
+          "name": ["get"]
+        },
+        {
+          "subject": ["Dimensions", "useWindowDimensions", "SafeAreaView"],
+          "kind": "value"
+        }
+      ]
+    },
+    {
+      "id": "native-animated",
+      "fixture": {
+        "file": "tests/native-animated-native.test.mjs",
+        "test": "RN's original Animated, Easing and TouchableOpacity run both drivers on the Godot frame tick"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Timing, spring and decay on the JS and native drivers sampled against the oracle's own curves, to a few ulps (opacity 1e-6, translation 1e-4, rotation 1e-5).",
+      "select": [
+        {
+          "subject": "Animated",
+          "kind": "api-member",
+          "name": [
+            "timing", "spring", "decay", "sequence", "parallel", "stagger", "loop", "Value", "View",
+            "createAnimatedComponent"
+          ]
+        },
+        {
+          "subject": "Easing",
+          "kind": "api-member",
+          "name": ["linear", "ease", "quad", "cubic", "in", "out", "inOut"]
+        },
+        {
+          "subject": ["Animated", "Easing", "useAnimatedValue", "useAnimatedValueXY"],
+          "kind": "value"
+        }
+      ]
+    },
+    {
+      "id": "layout-animation",
+      "fixture": {
+        "file": "tests/layout-animation-native.test.mjs",
+        "test": "RN's own LayoutAnimation runs on RN's LayoutAnimationDriver, on the Godot frame tick, for updates, creates and deletes"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "layout": true,
+      "tolerance": {
+        "unit": "dp",
+        "absolute": 0.0005
+      },
+      "note": "Updates, creates and deletes follow RN's curves to 5e-4 in position and size.",
+      "select": [
+        {
+          "subject": "LayoutAnimation",
+          "kind": "api-member",
+          "name": ["configureNext", "create", "Presets", "Properties", "Types"]
+        },
+        {
+          "subject": "LayoutAnimation",
+          "kind": "value",
+          "name": ["LayoutAnimation"]
+        }
+      ]
+    },
+    {
+      "id": "scroll-view",
+      "fixture": {
+        "file": "tests/scroll-view-native.test.mjs",
+        "test": "original RN ScrollView commands and pan use one mounted Fabric offset"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "scrollTo and scrollToEnd, as ref methods and as native commands, and a pan drag move the one mounted offset; horizontal and contentOffset set it.",
+      "select": [
+        {
+          "subject": "ScrollViewInstance",
+          "kind": "ref-member",
+          "name": ["scrollTo", "scrollToEnd"]
+        },
+        {
+          "subject": "ScrollViewImperativeMethods",
+          "kind": "ref-member",
+          "name": ["scrollTo", "scrollToEnd"]
+        },
+        {
+          "subject": "ScrollViewCommands",
+          "kind": "native-command",
+          "name": ["scrollTo", "scrollToEnd"]
+        },
+        {
+          "subject": "ScrollViewProps",
+          "kind": "prop",
+          "name": ["horizontal", "contentOffset"]
+        },
+        {
+          "subject": "ScrollView",
+          "kind": "value",
+          "name": ["ScrollView"]
+        }
+      ]
+    },
+    {
+      "id": "modal",
+      "fixture": {
+        "file": "tests/modal-host-native.test.mjs",
+        "test": "RN's original ModalHostView mounts in a host-sized embedded Window"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "visible mounts and unmounts the host window, onShow fires, and onRequestClose reaches RN.",
+      "select": [
+        {
+          "subject": "ModalProps",
+          "kind": ["event", "prop"],
+          "name": ["visible", "onShow", "onRequestClose"]
+        },
+        {
+          "subject": "ModalBaseProps",
+          "kind": ["event", "prop"],
+          "name": ["visible", "onShow", "onRequestClose"]
+        },
+        {
+          "subject": "Modal",
+          "kind": "value",
+          "name": ["Modal"]
+        }
+      ]
+    },
+    {
+      "id": "lists",
+      "fixture": {
+        "file": "tests/virtualized-list-native.test.mjs",
+        "test": "RN's original lists window, report and scroll on the SDK ScrollView under real Godot input"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "FlatList, SectionList and VirtualizedList window around the offset, report viewable items, page at the end, honor getItemLayout and invert, and scroll by index and location, over real wheel and drag input.",
+      "select": [
+        {
+          "subject": "FlatListProps",
+          "kind": ["event", "prop"],
+          "name": [
+            "data", "renderItem", "initialNumToRender", "windowSize", "getItemLayout", "onEndReached",
+            "onEndReachedThreshold", "onViewableItemsChanged", "viewabilityConfig", "ListEmptyComponent",
+            "ListHeaderComponent", "ListFooterComponent", "inverted"
+          ]
+        },
+        {
+          "subject": "SectionListProps",
+          "kind": ["event", "prop"],
+          "name": [
+            "sections", "renderItem", "renderSectionHeader", "initialNumToRender", "windowSize",
+            "onViewableItemsChanged", "viewabilityConfig", "onScrollToIndexFailed"
+          ]
+        },
+        {
+          "subject": "VirtualizedListProps",
+          "kind": ["event", "prop"],
+          "name": [
+            "data", "getItemCount", "getItem", "renderItem", "horizontal", "initialNumToRender", "windowSize",
+            "onScrollToIndexFailed"
+          ]
+        },
+        {
+          "subject": "FlatListInstance",
+          "kind": "ref-member",
+          "name": ["scrollToIndex", "scrollToEnd"]
+        },
+        {
+          "subject": "SectionListInstance",
+          "kind": "ref-member",
+          "name": ["scrollToLocation"]
+        },
+        {
+          "subject": "VirtualizedListInstance",
+          "kind": "ref-member",
+          "name": ["scrollToIndex", "scrollToEnd"]
+        },
+        {
+          "subject": ["FlatList", "SectionList", "VirtualizedList"],
+          "kind": "value"
+        }
+      ]
+    },
+    {
+      "id": "pan-responder",
+      "fixture": {
+        "file": "tests/pan-responder-native.test.mjs",
+        "test": "the original PanResponder negotiates and tracks gestures from actual Godot input"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The original PanResponder negotiates the responder and tracks dx, dy and velocity from real mouse and touch input.",
+      "select": [
+        {
+          "subject": "PanResponder",
+          "kind": "api-member",
+          "name": ["create"]
+        },
+        {
+          "subject": "PanResponder",
+          "kind": "value",
+          "name": ["PanResponder"]
+        }
+      ]
+    },
+    {
+      "id": "images",
+      "fixture": {
+        "file": "tests/images-native.test.mjs",
+        "test": "RN's own Image over native worker-thread image loading renders bundled, file and data pictures and releases every request"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "Bundled, file and data sources decode on a worker thread, onLoad and onError fire, resizeMode applies, getSize and queryCache answer, and every request is released.",
+      "select": [
+        {
+          "subject": "ImageProps",
+          "kind": ["event", "prop"],
+          "name": ["source", "resizeMode", "onLoad", "onError"]
+        },
+        {
+          "subject": "ImageStyle",
+          "kind": "style",
+          "name": ["resizeMode", "objectFit"]
+        },
+        {
+          "subject": "Image",
+          "kind": "api-member",
+          "name": ["getSize", "queryCache"]
+        },
+        {
+          "subject": "Image",
+          "kind": "value",
+          "name": ["Image"]
+        }
+      ]
+    },
+    {
+      "id": "pointer-click",
+      "fixture": {
+        "file": "tests/pointer-click-native.test.mjs",
+        "test": "a primary release clicks the deepest view both hit paths share, and a scroll takeover cancels its contact"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "A primary release dispatches click, capture first, on the deepest view both hit paths share; a scroll takeover cancels the contact.",
+      "select": {
+        "subject": "ViewProps",
+        "kind": "event",
+        "name": ["onClick", "onClickCapture"]
+      }
+    },
+    {
+      "id": "text-input-focus",
+      "fixture": {
+        "file": "tests/focus_commands.gd",
+        "check": "Actual Viewport owner and LineEdit.has_focus agree"
+      },
+      "polarity": "positive",
+      "runsOn": ["godot"],
+      "note": "The focus and blur commands, and TextInput.State, move the one focus that the Godot viewport and the public State agree on, across two applications.",
+      "select": [
+        {
+          "subject": "RCTSingelineTextInputNativeComponent",
+          "kind": "native-command",
+          "name": ["focus", "blur"]
+        },
+        {
+          "subject": "TextInput",
+          "kind": "api-member",
+          "name": ["State"]
+        }
+      ]
+    },
+    {
+      "id": "text-input-focus-malformed",
+      "fixture": {
+        "file": "tests/focus_commands.gd",
+        "check": "reports exactly the native empty-array guard"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "A focus or blur command whose argument is null, an object, a string or a non-empty array reports the native empty-array guard once and changes no focus.",
+      "select": {
+        "subject": "RCTSingelineTextInputNativeComponent",
+        "kind": "native-command",
+        "name": ["focus", "blur"]
+      }
+    },
+    {
+      "id": "scope-0.5-view-refused-and-ignored",
+      "fixture": {
+        "file": "tests/scope-0.5-native.test.mjs",
+        "test": "the prop policy holds through the real host: refused props fail on mount and update, ignored ones change nothing"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "0.5 subset: every View prop that the table refuses fails with its error on mount and on update, and every ignored one changes nothing; the owning GF replaces a refusal by the behavior and its positive fixture.",
+      "select": {
+        "subject": "ViewProps",
+        "kind": ["event", "prop"],
+        "name": [
+          "accessibilityIgnoresInvertColors", "accessibilityShowsLargeContentViewer", "accessibilityLargeContentTitle",
+          "accessibilityRespondsToUserInteraction", "onAccessibilityAction", "accessibilityValue",
+          "accessibilityViewIsModal", "accessibilityLanguage", "focusable", "aria-valuemax", "aria-valuemin",
+          "aria-valuenow", "aria-valuetext", "tabIndex", "onFocus", "onBlur", "onFocusCapture", "onBlurCapture",
+          "experimental_accessibilityOrder", "onAccessibilityEscape", "onMagicTap", "removeClippedSubviews",
+          "shouldRasterizeIOS", "accessibilityLabelledBy", "screenReaderFocusable", "nativeBackgroundAndroid",
+          "nativeForegroundAndroid", "renderToHardwareTextureAndroid", "nextFocusDown", "nextFocusForward",
+          "nextFocusLeft", "nextFocusRight", "nextFocusUp", "aria-labelledby", "needsOffscreenAlphaCompositing",
+          "hasTVPreferredFocus", "aria-modal", "onKeyDown", "onKeyDownCapture", "onKeyUp", "onKeyUpCapture",
+          "onMouseEnter", "onMouseLeave"
+        ]
+      }
+    },
+    {
+      "id": "scope-0.5-text-refused-and-ignored",
+      "fixture": {
+        "file": "tests/scope-0.5-native.test.mjs",
+        "test": "the prop policy holds through the real host: refused props fail on mount and update, ignored ones change nothing"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "0.5 subset: every Text prop that the table refuses fails with its error on mount and on update, and every ignored one changes nothing; the owning GF replaces a refusal by the behavior and its positive fixture.",
+      "select": {
+        "subject": "TextProps",
+        "kind": ["event", "prop"],
+        "name": [
+          "accessibilityIgnoresInvertColors", "accessibilityShowsLargeContentViewer", "accessibilityLargeContentTitle",
+          "accessibilityRespondsToUserInteraction", "onAccessibilityAction", "accessibilityValue",
+          "accessibilityViewIsModal", "accessibilityLanguage", "selectable", "adjustsFontSizeToFit", "selectionColor",
+          "dataDetectorType", "textBreakStrategy", "lineBreakStrategyIOS", "android_hyphenationFrequency",
+          "ellipsizeMode", "allowFontScaling", "maxFontSizeMultiplier", "dynamicTypeRamp", "suppressHighlighting",
+          "minimumFontScale", "accessibilityLabelledBy", "screenReaderFocusable", "aria-live", "aria-labelledby",
+          "aria-modal", "aria-valuemax", "aria-valuemin", "aria-valuenow", "aria-valuetext"
+        ]
+      }
+    },
+    {
+      "id": "scope-0.5-pressable-refused-and-ignored",
+      "fixture": {
+        "file": "tests/scope-0.5-native.test.mjs",
+        "test": "the prop policy holds through the real host: refused props fail on mount and update, ignored ones change nothing"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "0.5 subset: every Pressable prop that the table refuses fails with its error on mount and on update, and every ignored one changes nothing; the owning GF replaces a refusal by the behavior and its positive fixture.",
+      "select": {
+        "subject": "PressableProps",
+        "kind": ["event", "prop"],
+        "name": [
+          "accessibilityIgnoresInvertColors", "accessibilityShowsLargeContentViewer", "accessibilityLargeContentTitle",
+          "accessibilityRespondsToUserInteraction", "onAccessibilityAction", "accessibilityValue",
+          "accessibilityViewIsModal", "accessibilityLanguage", "focusable", "aria-valuemax", "aria-valuemin",
+          "aria-valuenow", "aria-valuetext", "tabIndex", "onFocus", "onBlur", "onFocusCapture", "onBlurCapture",
+          "experimental_accessibilityOrder", "onAccessibilityEscape", "onMagicTap", "removeClippedSubviews",
+          "shouldRasterizeIOS", "accessibilityLabelledBy", "screenReaderFocusable", "nativeBackgroundAndroid",
+          "nativeForegroundAndroid", "renderToHardwareTextureAndroid", "nextFocusDown", "nextFocusForward",
+          "nextFocusLeft", "nextFocusRight", "nextFocusUp", "aria-labelledby", "needsOffscreenAlphaCompositing",
+          "hasTVPreferredFocus", "aria-modal", "onKeyDown", "onKeyDownCapture", "onKeyUp", "onKeyUpCapture",
+          "onHoverIn", "onHoverOut", "testOnly_pressed", "android_disableSound", "android_ripple", "delayHoverIn",
+          "delayHoverOut"
+        ]
+      }
+    },
+    {
+      "id": "scope-0.5-image-refused-and-ignored",
+      "fixture": {
+        "file": "tests/scope-0.5-native.test.mjs",
+        "test": "the prop policy holds through the real host: refused props fail on mount and update, ignored ones change nothing"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "0.5 subset: every Image prop that the table refuses fails with its error on mount and on update, and every ignored one changes nothing; the owning GF replaces a refusal by the behavior and its positive fixture.",
+      "select": {
+        "subject": "ImageProps",
+        "kind": ["event", "prop"],
+        "name": [
+          "children", "accessibilityIgnoresInvertColors", "accessibilityShowsLargeContentViewer",
+          "accessibilityLargeContentTitle", "accessibilityRespondsToUserInteraction", "onAccessibilityAction",
+          "accessibilityValue", "accessibilityViewIsModal", "accessibilityLanguage", "focusable", "onFocus", "onBlur",
+          "onFocusCapture", "onBlurCapture", "experimental_accessibilityOrder", "onAccessibilityEscape", "onMagicTap",
+          "removeClippedSubviews", "shouldRasterizeIOS", "defaultSource", "loadingIndicatorSource", "fadeDuration",
+          "progressiveRenderingEnabled", "resizeMethod", "resizeMultiplier", "internal_analyticTag", "id", "tabIndex",
+          "aria-live", "aria-labelledby", "aria-modal", "aria-valuemax", "aria-valuemin", "aria-valuenow",
+          "aria-valuetext", "accessibilityLabelledBy", "screenReaderFocusable", "nativeBackgroundAndroid",
+          "nativeForegroundAndroid", "renderToHardwareTextureAndroid", "nextFocusDown", "nextFocusForward",
+          "nextFocusLeft", "nextFocusRight", "nextFocusUp", "needsOffscreenAlphaCompositing", "hasTVPreferredFocus",
+          "onKeyDown", "onKeyDownCapture", "onKeyUp", "onKeyUpCapture", "onMouseEnter", "onMouseLeave"
+        ]
+      }
+    },
+    {
+      "id": "scope-0.5-modal-refused-and-ignored",
+      "fixture": {
+        "file": "tests/scope-0.5-native.test.mjs",
+        "test": "the prop policy holds through the real host: refused props fail on mount and update, ignored ones change nothing"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "0.5 subset: every Modal prop that the table refuses fails with its error on mount and on update, and every ignored one changes nothing; the owning GF replaces a refusal by the behavior and its positive fixture.",
+      "select": {
+        "subject": "ModalProps",
+        "kind": ["event", "prop"],
+        "name": [
+          "animationType", "presentationStyle", "statusBarTranslucent", "navigationBarTranslucent",
+          "hardwareAccelerated", "allowSwipeDismissal", "onDismiss", "onOrientationChange", "supportedOrientations",
+          "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren", "accessible",
+          "accessibilityLabel", "accessibilityHint", "accessibilityRole", "role", "accessibilityState",
+          "accessibilityLiveRegion", "accessibilityElementsHidden", "importantForAccessibility",
+          "accessibilityActions", "onAccessibilityTap", "onPointerDown", "onPointerDownCapture", "onPointerMove",
+          "onPointerMoveCapture", "onPointerUp", "onPointerUpCapture", "onPointerCancel", "onPointerCancelCapture",
+          "onPointerOver", "onPointerOverCapture", "onPointerOut", "onPointerOutCapture", "onPointerEnter",
+          "onPointerEnterCapture", "onPointerLeave", "onPointerLeaveCapture", "onGotPointerCapture",
+          "onGotPointerCaptureCapture", "onLostPointerCapture", "onLostPointerCaptureCapture", "onClick",
+          "onClickCapture", "onTouchStart", "onTouchStartCapture", "onTouchMove", "onTouchMoveCapture", "onTouchEnd",
+          "onTouchEndCapture", "onTouchCancel", "onTouchCancelCapture", "onStartShouldSetResponder",
+          "onStartShouldSetResponderCapture", "onMoveShouldSetResponder", "onMoveShouldSetResponderCapture",
+          "onResponderGrant", "onResponderReject", "onResponderStart", "onResponderEnd", "onResponderMove",
+          "onResponderRelease", "onResponderTerminate", "onResponderTerminationRequest", "id", "aria-label",
+          "aria-live", "aria-hidden", "aria-busy", "aria-checked", "aria-disabled", "aria-expanded", "aria-selected",
+          "accessibilityIgnoresInvertColors", "accessibilityShowsLargeContentViewer", "accessibilityLargeContentTitle",
+          "accessibilityRespondsToUserInteraction", "onAccessibilityAction", "accessibilityValue",
+          "accessibilityViewIsModal", "accessibilityLanguage", "focusable", "aria-valuemax", "aria-valuemin",
+          "aria-valuenow", "aria-valuetext", "tabIndex", "onFocus", "onBlur", "onFocusCapture", "onBlurCapture",
+          "experimental_accessibilityOrder", "onAccessibilityEscape", "onMagicTap", "removeClippedSubviews",
+          "shouldRasterizeIOS", "accessibilityLabelledBy", "screenReaderFocusable", "nativeBackgroundAndroid",
+          "nativeForegroundAndroid", "renderToHardwareTextureAndroid", "nextFocusDown", "nextFocusForward",
+          "nextFocusLeft", "nextFocusRight", "nextFocusUp", "aria-labelledby", "needsOffscreenAlphaCompositing",
+          "hasTVPreferredFocus", "aria-modal", "onKeyDown", "onKeyDownCapture", "onKeyUp", "onKeyUpCapture",
+          "onMouseEnter", "onMouseLeave"
+        ]
+      }
+    },
+    {
+      "id": "scope-0.5-activityindicator-refused-and-ignored",
+      "fixture": {
+        "file": "tests/scope-0.5-native.test.mjs",
+        "test": "the prop policy holds through the real host: refused props fail on mount and update, ignored ones change nothing"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "0.5 subset: every ActivityIndicator prop that the table refuses fails with its error on mount and on update, and every ignored one changes nothing; the owning GF replaces a refusal by the behavior and its positive fixture.",
+      "select": {
+        "subject": "ActivityIndicatorProps",
+        "kind": ["event", "prop"],
+        "name": [
+          "accessibilityIgnoresInvertColors", "accessibilityShowsLargeContentViewer", "accessibilityLargeContentTitle",
+          "accessibilityRespondsToUserInteraction", "onAccessibilityAction", "accessibilityValue",
+          "accessibilityViewIsModal", "accessibilityLanguage", "focusable", "onFocus", "onBlur", "onFocusCapture",
+          "onBlurCapture", "experimental_accessibilityOrder", "onAccessibilityEscape", "onMagicTap",
+          "removeClippedSubviews", "shouldRasterizeIOS", "id", "tabIndex", "aria-valuemax", "aria-valuemin",
+          "aria-valuenow", "aria-valuetext", "aria-label", "aria-live", "aria-hidden", "aria-labelledby", "aria-modal",
+          "aria-busy", "aria-checked", "aria-disabled", "aria-expanded", "aria-selected", "accessibilityLabelledBy",
+          "screenReaderFocusable", "nativeBackgroundAndroid", "nativeForegroundAndroid",
+          "renderToHardwareTextureAndroid", "nextFocusDown", "nextFocusForward", "nextFocusLeft", "nextFocusRight",
+          "nextFocusUp", "needsOffscreenAlphaCompositing", "hasTVPreferredFocus", "onKeyDown", "onKeyDownCapture",
+          "onKeyUp", "onKeyUpCapture", "onMouseEnter", "onMouseLeave"
+        ]
+      }
+    },
+    {
+      "id": "scope-0.5-scrollview-refused-and-ignored",
+      "fixture": {
+        "file": "tests/scope-0.5-native.test.mjs",
+        "test": "the prop policy holds through the real host: refused props fail on mount and update, ignored ones change nothing"
+      },
+      "polarity": "negative",
+      "runsOn": ["godot"],
+      "note": "0.5 subset: every ScrollView prop that the table refuses fails with its error on mount and on update, and every ignored one changes nothing; the owning GF replaces a refusal by the behavior and its positive fixture.",
+      "select": {
+        "subject": "ScrollViewProps",
+        "kind": ["event", "prop"],
+        "name": [
+          "accessibilityIgnoresInvertColors", "accessibilityShowsLargeContentViewer", "accessibilityLargeContentTitle",
+          "accessibilityRespondsToUserInteraction", "onAccessibilityAction", "accessibilityValue",
+          "accessibilityViewIsModal", "accessibilityLanguage", "focusable", "onFocus", "onBlur", "onFocusCapture",
+          "onBlurCapture", "onAccessibilityEscape", "onMagicTap", "removeClippedSubviews", "shouldRasterizeIOS", "id",
+          "tabIndex", "aria-valuemax", "aria-valuemin", "aria-valuenow", "aria-valuetext", "aria-label", "aria-live",
+          "aria-hidden", "aria-labelledby", "aria-modal", "aria-busy", "aria-checked", "aria-disabled",
+          "aria-expanded", "aria-selected", "accessibilityLabelledBy", "screenReaderFocusable",
+          "nativeBackgroundAndroid", "nativeForegroundAndroid", "renderToHardwareTextureAndroid", "nextFocusDown",
+          "nextFocusForward", "nextFocusLeft", "nextFocusRight", "nextFocusUp", "needsOffscreenAlphaCompositing",
+          "hasTVPreferredFocus", "onKeyDown", "onKeyDownCapture", "onKeyUp", "onKeyUpCapture", "onMouseEnter",
+          "onMouseLeave", "StickyHeaderComponent", "invertStickyHeaders", "stickyHeaderHiddenOnScroll",
+          "alwaysBounceHorizontal", "alwaysBounceVertical", "automaticallyAdjustContentInsets",
+          "automaticallyAdjustKeyboardInsets", "automaticallyAdjustsScrollIndicatorInsets", "bounces", "bouncesZoom",
+          "centerContent", "disableIntervalMomentum", "disableScrollViewPanResponder", "nestedScrollEnabled",
+          "pagingEnabled", "pinchGestureEnabled", "scrollToOverflowEnabled", "scrollsToTop", "canCancelContentTouches",
+          "persistentScrollbar", "keyboardDismissMode", "overScrollMode", "snapToOffsets", "stickyHeaderIndices",
+          "contentInset", "contentInsetAdjustmentBehavior", "decelerationRate", "directionalLockEnabled",
+          "endFillColor", "experimental_endDraggingSensitivityMultiplier", "fadingEdgeLength", "indicatorStyle",
+          "keyboardShouldPersistTaps", "maintainVisibleContentPosition", "maximumZoomScale", "minimumZoomScale",
+          "onScrollToTop", "onKeyboardDidShow", "onKeyboardDidHide", "onKeyboardWillShow", "onKeyboardWillHide",
+          "refreshControl", "scrollIndicatorInsets", "scrollPerfTag", "scrollsChildToFocus", "snapToAlignment",
+          "snapToInterval", "snapToStart", "snapToEnd", "zoomScale"
+        ]
+      }
+    }
+  ],
+  "pending": {
+    "GF-03": [
+      { "polarity": "positive", "select": { "subject": "NodeRequire" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ReactNativeVersion" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "__BUNDLE_START_TIME__" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "require" }, "count": 1 }
+    ],
+    "GF-05": [
+      { "polarity": "negative", "select": { "subject": "TextDecoder" }, "count": 1, "note": "Waits for GF-05 slice E (encoding)." },
+      { "polarity": "positive", "select": { "subject": "AbortController" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "AbortEvent" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "AbortSignal" }, "count": 13 },
+      { "polarity": "positive", "select": { "subject": "Console" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "ErrorUtils" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "EventCounts" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "HermesInternal" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "Performance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PerformanceEntry" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PerformanceEventTiming" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PerformanceLongTaskTiming" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PerformanceMark" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PerformanceMeasure" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PerformanceObserver" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PerformanceObserverEntryList" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PerformanceResourceTiming" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Promise" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$enableMicrotasksInReact" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$handleException" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$hasHandledFatalException" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$inExceptionHandler" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$isRuntimeReady" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$notifyOfFatalException" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$registerExceptionListener" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$useAlwaysAvailableJSErrorHandling" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TaskAttributionTiming" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "URL" }, "count": 15 },
+      { "polarity": "positive", "select": { "subject": "URLSearchParams" }, "count": 15 },
+      { "polarity": "positive", "select": { "subject": "__fbDisableExceptionsManager" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "cancelIdleCallback" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "clearImmediate" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "clearInterval" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "clearTimeout" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "console" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeLoggingHook" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativePerformanceNow" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "navigator" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "performance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "process" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "process.env" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "queueMicrotask" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "regeneratorRuntime" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "requestIdleCallback" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "self" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "setImmediate" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "setInterval" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "setTimeout" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "window" }, "count": 1 }
+    ],
+    "GF-06": [
+      { "polarity": "positive", "select": { "subject": "nativeFabricUIManager" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "unstable_batchedUpdates" }, "count": 1 }
+    ],
+    "GF-07": [
+      { "polarity": "negative", "select": { "subject": "AppRegistry" }, "count": 4, "note": "Waits for the AppRegistry delivery (#160), where the headless-task members throw the typed error." },
+      { "polarity": "positive", "select": { "subject": "AppConfig" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "AppRegistry" }, "count": 16 },
+      { "polarity": "positive", "select": { "subject": "ComponentProvider" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ComponentProviderInstrumentationHook" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$AppRegistry" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Registry" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "RootTag" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "RootTagContext" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RootViewStyleProvider" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Runnable" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Runnables" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TaskProvider" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "WrapperComponentProvider" }, "count": 1 }
+    ],
+    "GF-08": [
+      { "polarity": "negative", "select": { "subject": "ProgressBarAndroidInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "ActivityIndicatorInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "CharacterData" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "DOMRect" }, "count": 12 },
+      { "polarity": "positive", "select": { "subject": "DOMRectInit" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "DOMRectList" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "DOMRectReadOnly" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "Document" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Element" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "HTMLCollection" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "HTMLElement" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "HostInstance" }, "count": 49 },
+      { "polarity": "positive", "select": { "subject": "ImageInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "MeasureInWindowOnSuccessCallback" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "MeasureLayoutOnSuccessCallback" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "MeasureOnSuccessCallback" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ModalInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "Node" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "NodeList" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PressableInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "PublicRootInstance" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "PublicTextInstance" }, "count": 23 },
+      { "polarity": "positive", "select": { "subject": "RN$LegacyInterop_UIManager_getConstants" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$LegacyInterop_UIManager_getConstantsForViewManager" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$LegacyInterop_UIManager_getDefaultEventTypes" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "SafeAreaViewInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "SwitchInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "Text" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TextInputInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "TextInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "TouchableHighlightInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "TouchableOpacityInstance" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "UIManager" }, "count": 25 },
+      { "polarity": "positive", "select": { "subject": "ViewInstance" }, "count": 47 },
+      { "polarity": "positive", "select": { "subject": "ViewNativeComponent" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "findNodeHandle" }, "count": 1 }
+    ],
+    "GF-09": [
+      { "polarity": "negative", "select": { "subject": "DisplayMetricsAndroid" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "DeviceInfo" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "DeviceInfoConstants" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "Dimensions" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "DimensionsPayload" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "DisplayMetrics" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "PixelRatio" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "Platform" }, "count": 8 },
+      { "polarity": "positive", "select": { "subject": "PlatformOSType" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PlatformSelectSpec" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ScaledSize" }, "count": 5 }
+    ],
+    "GF-10": [
+      { "polarity": "negative", "select": { "subject": "TVViewPropsIOS" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "BoxShadowValue" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "ColorValue" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "CursorValue" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "DimensionValue" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "DropShadowValue" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "EdgeInsetsProp" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "EdgeInsetsValue" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "FilterFunction" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "I18nManager" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "LayoutChangeEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "LayoutRectangle" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "NativeColorValue" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "OpaqueColorValue" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "PlatformColor" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PointValue" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "ProcessedColorValue" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "StyleProp" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "StyleSheet" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "TransformsStyle" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "View" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ViewInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ViewProps" }, "count": 10 },
+      { "polarity": "positive", "select": { "subject": "ViewPropsAndroid" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "ViewPropsIOS" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ViewStyle" }, "count": 122 },
+      { "polarity": "positive", "select": { "subject": "processColor" }, "count": 1 }
+    ],
+    "GF-11": [
+      { "polarity": "positive", "select": { "subject": "FontVariant" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TextInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TextLayoutEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "TextProps" }, "count": 22 },
+      { "polarity": "positive", "select": { "subject": "TextStyle" }, "count": 142 },
+      { "polarity": "positive", "select": { "subject": "UTFSequence" }, "count": 16 }
+    ],
+    "GF-12": [
+      { "polarity": "negative", "select": { "subject": "AndroidKeyboardEvent" }, "count": 4 },
+      { "polarity": "negative", "select": { "subject": "IOSKeyboardEvent" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "AutoCapitalize" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "EnterKeyHintTypeOptions" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "InputModeOptions" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Keyboard" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "KeyboardAvoidingView" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "KeyboardAvoidingViewInstance" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "KeyboardAvoidingViewProps" }, "count": 15 },
+      { "polarity": "positive", "select": { "subject": "KeyboardEvent" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "KeyboardEventEasing" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "KeyboardEventName" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "KeyboardMetrics" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "KeyboardTypeOptions" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RCTMultilineTextInputNativeComponent" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "RCTSingelineTextInputNativeComponent" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ReturnKeyTypeOptions" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "SubmitBehavior" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TextContentType" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TextInput" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TextInputAndroidProps" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "TextInputBlurEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "TextInputChangeEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "TextInputContentSizeChangeEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "TextInputEndEditingEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "TextInputFocusEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "TextInputIOSProps" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "TextInputInstance" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "TextInputKeyPressEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "TextInputProps" }, "count": 58 },
+      { "polarity": "positive", "select": { "subject": "TextInputSelectionChangeEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "TextInputSubmitEditingEvent" }, "count": 17 }
+    ],
+    "GF-13": [
+      { "polarity": "negative", "select": { "subject": "DrawerLayoutAndroidProps" }, "count": 62 },
+      { "polarity": "negative", "select": { "subject": "ProgressBarAndroidProps" }, "count": 62 },
+      { "polarity": "positive", "select": { "subject": "ActivityIndicatorProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "BlurEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "CustomEvent" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Event" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "EventTarget" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "FlatListProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "FocusEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "GestureResponderEvent" }, "count": 18 },
+      { "polarity": "positive", "select": { "subject": "GestureResponderHandlers" }, "count": 13 },
+      { "polarity": "positive", "select": { "subject": "ImageBackgroundProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "ImageProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "Insets" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "KeyDownEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "KeyEvent" }, "count": 9 },
+      { "polarity": "positive", "select": { "subject": "KeyUpEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "KeyboardAvoidingViewProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "ModalProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "MouseEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "NativeMouseEvent" }, "count": 19 },
+      { "polarity": "positive", "select": { "subject": "NativePointerEvent" }, "count": 29 },
+      { "polarity": "positive", "select": { "subject": "NativeSyntheticEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "NativeTouchEvent" }, "count": 10 },
+      { "polarity": "positive", "select": { "subject": "NativeUIEvent" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "PanResponderCallbacks" }, "count": 14 },
+      { "polarity": "positive", "select": { "subject": "PanResponderGestureState" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "PanResponderInstance" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "PointerEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "PressabilityConfig" }, "count": 21 },
+      { "polarity": "positive", "select": { "subject": "PressabilityEventHandlers" }, "count": 14 },
+      { "polarity": "positive", "select": { "subject": "PressableAndroidRippleConfig" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "PressableInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "PressableProps" }, "count": 78 },
+      { "polarity": "positive", "select": { "subject": "PressableStateCallbackType" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "RN$isNativeEventTargetEventDispatchingEnabled" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RefreshControlProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "ResponderSyntheticEvent" }, "count": 18 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "SectionListProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "SwitchProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "TargetedEvent" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "TextInputProps" }, "count": 54 },
+      { "polarity": "positive", "select": { "subject": "TouchableHighlightInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TouchableHighlightProps" }, "count": 23 },
+      { "polarity": "positive", "select": { "subject": "TouchableOpacityInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TouchableOpacityProps" }, "count": 21 },
+      { "polarity": "positive", "select": { "subject": "TouchableWithoutFeedbackProps" }, "count": 16 },
+      { "polarity": "positive", "select": { "subject": "ViewProps" }, "count": 54 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedListProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedSectionListProps" }, "count": 56 },
+      { "polarity": "positive", "select": { "subject": "usePressability" }, "count": 1 }
+    ],
+    "GF-14": [
+      { "polarity": "positive", "select": { "subject": "AndroidSwipeRefreshLayoutNativeComponent" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "NativeScrollEvent" }, "count": 8 },
+      { "polarity": "positive", "select": { "subject": "RefreshControl" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RefreshControlInstance" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "RefreshControlProps" }, "count": 15 },
+      { "polarity": "positive", "select": { "subject": "RefreshControlPropsAndroid" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "RefreshControlPropsIOS" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ScrollEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "ScrollResponderType" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "ScrollView" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewCommands" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewImperativeMethods" }, "count": 9 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewInstance" }, "count": 9 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewProps" }, "count": 48 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewPropsAndroid" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewPropsIOS" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewScrollToOptions" }, "count": 4 }
+    ],
+    "GF-15": [
+      { "polarity": "positive", "select": { "subject": "FlatListInstance" }, "count": 10 },
+      { "polarity": "positive", "select": { "subject": "FlatListProps" }, "count": 75 },
+      { "polarity": "positive", "select": { "subject": "ListRenderItem" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ListRenderItemInfo" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "ListViewToken" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "ScrollToLocationParamsType" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "SectionBase" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "SectionListData" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "SectionListInstance" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "SectionListProps" }, "count": 80 },
+      { "polarity": "positive", "select": { "subject": "SectionListRenderItem" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "SectionListRenderItemInfo" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "Separators" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedListInstance" }, "count": 16 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedListProps" }, "count": 78 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedSectionList" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedSectionListInstance" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedSectionListProps" }, "count": 90 }
+    ],
+    "GF-16": [
+      { "polarity": "negative", "select": { "subject": "ImageProgressEventIOS" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "AssetDestPathResolver" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "AssetRegistry" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "Image" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ImageBackground" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ImageBackgroundInstance" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "ImageBackgroundProps" }, "count": 35 },
+      { "polarity": "positive", "select": { "subject": "ImageErrorEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "ImageInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ImageLoadEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "ImageProps" }, "count": 29 },
+      { "polarity": "positive", "select": { "subject": "ImagePropsAndroid" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ImagePropsBase" }, "count": 116 },
+      { "polarity": "positive", "select": { "subject": "ImagePropsIOS" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "ImageRequireSource" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ImageResizeMode" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ImageResolvedAssetSource" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "ImageSize" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "ImageSource" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ImageSourcePropType" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ImageStyle" }, "count": 127 },
+      { "polarity": "positive", "select": { "subject": "ImageURISource" }, "count": 9 },
+      { "polarity": "positive", "select": { "subject": "PackagerAsset" }, "count": 10 }
+    ],
+    "GF-17": [
+      { "polarity": "positive", "select": { "subject": "ActivityIndicatorInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ActivityIndicatorProps" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "Button" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ButtonInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ButtonProps" }, "count": 19 },
+      { "polarity": "positive", "select": { "subject": "SwitchChangeEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "SwitchInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "SwitchProps" }, "count": 13 }
+    ],
+    "GF-18": [
+      { "polarity": "positive", "select": { "subject": "ModalBaseProps" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "ModalInstance" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ModalProps" }, "count": 18 },
+      { "polarity": "positive", "select": { "subject": "ModalPropsAndroid" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ModalPropsIOS" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "SafeAreaViewInstance" }, "count": 1 }
+    ],
+    "GF-19": [
+      { "polarity": "positive", "select": { "subject": "Animated" }, "count": 21 },
+      { "polarity": "positive", "select": { "subject": "Easing" }, "count": 10 },
+      { "polarity": "positive", "select": { "subject": "EasingFunction" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "LayoutAnimation" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "LayoutAnimationAnim" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "LayoutAnimationConfig" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "LayoutAnimationProperties" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "LayoutAnimationProperty" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "LayoutAnimationType" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "LayoutAnimationTypes" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "useAnimatedColor" }, "count": 1 }
+    ],
+    "GF-20": [
+      { "polarity": "negative", "select": { "subject": "DrawerLayoutAndroidProps" }, "count": 37 },
+      { "polarity": "negative", "select": { "subject": "ProgressBarAndroidProps" }, "count": 37 },
+      { "polarity": "positive", "select": { "subject": "AccessibilityActionEvent" }, "count": 17 },
+      { "polarity": "positive", "select": { "subject": "AccessibilityActionInfo" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "AccessibilityProps" }, "count": 14 },
+      { "polarity": "positive", "select": { "subject": "AccessibilityRole" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "AccessibilityState" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "AccessibilityValue" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "ActivityIndicatorProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "ButtonProps" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "FlatListProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "ImageBackgroundProps" }, "count": 28 },
+      { "polarity": "positive", "select": { "subject": "ImageProps" }, "count": 28 },
+      { "polarity": "positive", "select": { "subject": "KeyboardAvoidingViewProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "ModalProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "PressableProps" }, "count": 16 },
+      { "polarity": "positive", "select": { "subject": "RefreshControlProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "Role" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ScrollViewProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "SectionListProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "SwitchProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "TextInputProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "TextProps" }, "count": 29 },
+      { "polarity": "positive", "select": { "subject": "TouchableHighlightProps" }, "count": 28 },
+      { "polarity": "positive", "select": { "subject": "TouchableNativeFeedbackProps" }, "count": 28 },
+      { "polarity": "positive", "select": { "subject": "TouchableOpacityProps" }, "count": 13 },
+      { "polarity": "positive", "select": { "subject": "TouchableWithoutFeedbackProps" }, "count": 28 },
+      { "polarity": "positive", "select": { "subject": "ViewProps" }, "count": 16 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedListProps" }, "count": 32 },
+      { "polarity": "positive", "select": { "subject": "VirtualizedSectionListProps" }, "count": 32 }
+    ],
+    "GF-21": [
+      { "polarity": "positive", "select": { "subject": "AppStateEvent" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "AppStateStatus" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "ColorSchemeName" }, "count": 1 }
+    ],
+    "GF-22": [
+      { "polarity": "positive", "select": { "subject": "Blob" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "BlobOptions" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "BlobPart" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "BlobPropertyBag" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "Body" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "BodyInit_" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "BufferSource" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "EndingType" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "File" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "FilePropertyBag" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "FileReader" }, "count": 19 },
+      { "polarity": "positive", "select": { "subject": "FileReaderEventMap" }, "count": 7 },
+      { "polarity": "positive", "select": { "subject": "FormData" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "FormDataPart" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "FormDataValue" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "GlobalFetch" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "Headers" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "HeadersInit_" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "Image" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "Networking" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "ProgressEvent" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "Request" }, "count": 15 },
+      { "polarity": "positive", "select": { "subject": "RequestCredentials_" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RequestInfo" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RequestInit" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "RequestMode_" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Response" }, "count": 15 },
+      { "polarity": "positive", "select": { "subject": "ResponseInit" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "ResponseType_" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "WebSocket" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "WebSocketCloseEvent" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "WebSocketErrorEvent" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "WebSocketMessageEvent" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "WebsocketCloseEventListener" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "WebsocketErrorEventListener" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "WebsocketEventListener" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "WebsocketMessageEventListener" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "WebsocketOpenEventListener" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "WindowOrWorkerGlobalScope" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "XMLHttpRequest" }, "count": 34 },
+      { "polarity": "positive", "select": { "subject": "XMLHttpRequestEventMap" }, "count": 9 },
+      { "polarity": "positive", "select": { "subject": "XMLHttpRequestEventTarget" }, "count": 10 },
+      { "polarity": "positive", "select": { "subject": "XMLHttpRequestEventTargetEventMap" }, "count": 8 },
+      { "polarity": "positive", "select": { "subject": "XMLHttpRequestResponseType" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "XMLHttpRequestUpload" }, "count": 11 },
+      { "polarity": "positive", "select": { "subject": "_SourceUri" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "__blobCollectorProvider" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "originalXMLHttpRequest" }, "count": 1 }
+    ],
+    "GF-23": [
+      { "polarity": "positive", "select": { "subject": "Alert" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "AlertButton" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "AlertButtonStyle" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "AlertOptions" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "AlertType" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "BackHandler" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "BackPressEventName" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Linking" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "Settings" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "Share" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "ShareAction" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "ShareContent" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "ShareOptions" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "alert" }, "count": 1 }
+    ],
+    "GF-24": [
+      { "polarity": "negative", "select": { "subject": "ActionSheetIOSOptions" }, "count": 12 },
+      { "polarity": "negative", "select": { "subject": "AndroidDrawerLayoutNativeComponent" }, "count": 2 },
+      { "polarity": "negative", "select": { "subject": "DrawerLayoutAndroidInstance" }, "count": 1 },
+      { "polarity": "negative", "select": { "subject": "DrawerLayoutAndroidProps" }, "count": 27 },
+      { "polarity": "negative", "select": { "subject": "DrawerSlideEvent" }, "count": 17 },
+      { "polarity": "negative", "select": { "subject": "DynamicColorIOSTuple" }, "count": 5 },
+      { "polarity": "negative", "select": { "subject": "InputAccessoryViewProps" }, "count": 5 },
+      { "polarity": "negative", "select": { "subject": "Permission" }, "count": 1 },
+      { "polarity": "negative", "select": { "subject": "PermissionStatus" }, "count": 1 },
+      { "polarity": "negative", "select": { "subject": "ProgressBarAndroidInstance" }, "count": 1 },
+      { "polarity": "negative", "select": { "subject": "ProgressBarAndroidProps" }, "count": 20 },
+      { "polarity": "negative", "select": { "subject": "PushNotificationEventName" }, "count": 1 },
+      { "polarity": "negative", "select": { "subject": "PushNotificationPermissions" }, "count": 4 },
+      { "polarity": "negative", "select": { "subject": "Rationale" }, "count": 6 },
+      { "polarity": "negative", "select": { "subject": "ShareActionSheetError" }, "count": 5 },
+      { "polarity": "negative", "select": { "subject": "ShareActionSheetIOSOptions" }, "count": 10 },
+      { "polarity": "negative", "select": { "subject": "StatusBar" }, "count": 7 },
+      { "polarity": "negative", "select": { "subject": "StatusBarAnimation" }, "count": 1 },
+      { "polarity": "negative", "select": { "subject": "StatusBarInstance" }, "count": 5 },
+      { "polarity": "negative", "select": { "subject": "StatusBarProps" }, "count": 5 },
+      { "polarity": "negative", "select": { "subject": "StatusBarStyle" }, "count": 1 },
+      { "polarity": "negative", "select": { "subject": "ViewNativeComponent" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "TouchableNativeFeedbackInstance" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "TouchableNativeFeedbackProps" }, "count": 22 }
+    ],
+    "GF-25": [
+      { "polarity": "positive", "select": { "subject": "DeviceEventEmitter" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "EmitterSubscription" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "EventEmitter" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "EventSubscription" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "IEventEmitter" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "NativeAppEventEmitter" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "NativeEventEmitter" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "NativeEventSubscription" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "NativeModules" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$Bridgeless" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "RN$registerCallableModule" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "TurboModule" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "TurboModuleRegistry" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "__turboModuleProxy" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeModuleProxy" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "registerCallableModule" }, "count": 1 }
+    ],
+    "GF-26": [
+      { "polarity": "positive", "select": { "subject": "CodegenTypes" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "HostComponent" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "NativeComponentRegistry" }, "count": 5 },
+      { "polarity": "positive", "select": { "subject": "__nativeComponentRegistry__hasComponent" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "codegenNativeCommands" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "codegenNativeComponent" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "requireNativeComponent" }, "count": 1 }
+    ],
+    "GF-29": [
+      { "polarity": "positive", "select": { "subject": "DebuggingOverlayNativeComponent" }, "count": 3 },
+      { "polarity": "positive", "select": { "subject": "DevMenu" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "DevSettings" }, "count": 4 },
+      { "polarity": "positive", "select": { "subject": "ExtendedExceptionData" }, "count": 10 },
+      { "polarity": "positive", "select": { "subject": "IgnorePattern" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "LogBox" }, "count": 10 },
+      { "polarity": "positive", "select": { "subject": "LogData" }, "count": 6 },
+      { "polarity": "positive", "select": { "subject": "RN$DiagnosticFlags" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "Systrace" }, "count": 9 },
+      { "polarity": "positive", "select": { "subject": "__BUNDLE_LOADER_REPORTER__" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "__DEV__" }, "count": 2 },
+      { "polarity": "positive", "select": { "subject": "__FUSEBOX_HAS_FULL_CONSOLE_SUPPORT__" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "__FUSEBOX_REACT_DEVTOOLS_DISPATCHER__" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "__METRO_GLOBAL_PREFIX__" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "__NETWORK_REPORTER__" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "__RCTProfileIsProfiling" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "__ReactRefresh" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "__loadBundleAsync" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "__notifyFastRefreshComplete" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "globalEvalWithSourceUrl" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeTraceBeginAsyncFlow" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeTraceBeginAsyncSection" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeTraceBeginSection" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeTraceCounter" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeTraceEndAsyncSection" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeTraceEndSection" }, "count": 1 },
+      { "polarity": "positive", "select": { "subject": "nativeTraceIsTracing" }, "count": 1 }
+    ]
+  }
+}

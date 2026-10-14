@@ -57,8 +57,9 @@ setup chain with the conditions on each module, the globals RN installs outside 
 chain, and the reads left out of `host-global` with their reasons.
 
 The inventory itself decides nothing about who owns a row, whether it is a target, or where it applies. The
-[contract map](#contract-map-owner-scope-and-applicability) below does, and the GF-01 `contract` checkpoint stays open until the
-last part, the positive/negative fixture catalog, exists and a gate enforces it.
+[contract map](#contract-map-owner-scope-and-applicability) below does, and the
+[fixture catalog](#fixture-catalog-polarity-tolerance-and-the-pending-ledger) after it says which executable check backs which row
+and lists, by GF, the rows that have none yet.
 
 ## Contract map: owner, scope and applicability
 
@@ -142,4 +143,91 @@ matches is won by a stronger rule (`E_DEAD_RULE`); a reason, a `why` or a `scope
 native command link is unclassified, unused or unknown (`E_UNKNOWN_GATE`, `E_STALE_GATE`, `E_STALE_PROFILE`, `E_UNLINKED_COMMAND`);
 or the file is malformed (`E_SHAPE`).
 
-The map does not assign fixtures, polarity or tolerances: those are the last part of the `contract` checkpoint.
+The map does not assign fixtures, polarity or tolerances: the fixture catalog does.
+
+## Fixture catalog: polarity, tolerance and the pending ledger
+
+[fixture-catalog-0.87.1.json](fixture-catalog-0.87.1.json) points rows of the map at the executable checks that already exist, says
+what each check shows (its polarity), where it runs and, for layout, with what tolerance. It does not claim that every row has a
+fixture, because it cannot yet: a hand-written positive and negative fixture for each of the 6,312 `1_0` rows is the work of the whole
+1.0, spread over the GFs that own the rows. What the catalog and its gate give GF-01 is the mechanism and an honest ledger: every
+target row without a fixture is listed under the GF that owns it, with a count, and the gate fails if the ledger and the fixtures
+disagree. `npm run parity:coverage` prints, per GF, how many positive and negative fixtures are required, covered and pending, and
+`node scripts/parity-coverage.mjs --check`, part of `npm run test:parity`, is the gate. Running the fixtures against the original RN
+iOS and Android apps and Godot, and diffing their reports, is the separate `parity` checkpoint.
+
+| Key | What it holds |
+| --- | --- |
+| `fixtures` | the entries below: a selector over rows, the fixture it points at, its polarity, `runsOn`, and for layout a `tolerance` |
+| `negativeContracts` | selectors of the rows that have a refusal, an invalid-input or an upstream-unavailability contract, each with the reason (`why`) |
+| `decided` | contracts that RN does not declare, so the inventory has no row for them, but that a recorded decision makes part of the 1.0; each becomes a row `decided:<name>` owned by a GF |
+| `pending` | for each GF, the target rows that have no fixture yet, grouped by selector and counted |
+
+**An entry** has an `id`, a `select`, a `fixture`, a `polarity`, `runsOn`, optional `note`, and, for a layout fixture, `layout: true` with
+a `tolerance`. A selector is an object of matchers, ANDed, or a list of them, ORed, over the *resolved* row: `owner` (the GF of the map),
+`kind`, `subject` (the API a row is about, as in the map), `name`, `scope`, `godot`, `ios` and `android` (the applicability statuses),
+`godotReason`, and `id`. A matcher is a string, a list of strings or `{"pattern": "<regular expression>"}`, as in the map. A selector
+may cover a family (`{"subject": "SwitchProps", "kind": "prop", "name": [...]}`) only when the fixture exercises it; where it does not,
+the entry lists the rows. Only rows of scope `1_0` count; every name or id a selector lists has to pick a row.
+
+**The fixture** is one of three references to something that already runs. The gate checks that it exists, statically; it does not run it.
+
+| Reference | Points at | Checked as |
+| --- | --- | --- |
+| `{"case": "native-layout"}` | a case of [`tests/parity/cases.json`](../../tests/parity/cases.json), the shared protocol that Godot and the original RN iOS and Android apps all run | the case id exists; the rows must be ones the case names in `contracts`, and every contract a case names must be claimed by an entry that points at it, so the two files cannot drift apart |
+| `{"file": "tests/x-probe.gd", "check": "..."}` | a named check of a native suite's probe or oracle (`check(condition, "case/sentence")`); a name that the probe builds from a prefix is referenced by the part that is written out | the text is inside a string literal of the file |
+| `{"file": "tests/x-native.test.mjs", "test": "..."}` | a test of a native suite runner or a Node contract test | the name is the first argument of a `test()` or `it()` call |
+
+The catalog carries polarity, `runsOn` and tolerance for all three kinds, so `tests/parity/cases.json` stays as it is: it is read by
+the three runtimes and its hash is pinned in their reports.
+
+**Polarity** says what the fixture shows, and what rows it may cover.
+
+| Polarity | The fixture shows | May cover |
+| --- | --- | --- |
+| `positive` | the behavior works as upstream does (a prop that blocks interaction, such as `disabled`, is positive: blocking is its behavior) | rows where Godot is `applies` or `host-provides`, and, for each platform in `runsOn`, rows that apply there |
+| `negative` | the outcome RN defines where the behavior is not the target or the input is invalid: a refusal, a diagnostic for invalid input, a documented no-op, or the upstream unavailability that a `not-applicable` reason names | any row |
+| `host-provides` | the host installs the name (presence only) | rows where Godot is `host-provides` |
+
+**What each row requires** is what makes a fixture missing. A `1_0` row whose Godot applicability is `applies` or `host-provides`
+requires a positive fixture (a `host-provides` fixture counts for a `host-provides` row). A row requires a negative fixture when it is
+picked by `negativeContracts`: the map's reasons that say the upstream unavailability is the contract (the iOS-only and Android-only
+components and APIs of GF-24 and `StatusBar`), and the rows with a refusal or an invalid-input contract (`AppRegistry`'s headless-task
+members, which throw a typed error on Godot by decision, and the arguments that RN's own JavaScript or its generated commands refuse).
+A `decided` contract requires what it lists (`TextDecoder`, which stays absent for Hermes parity, requires a negative fixture). Other
+`not-applicable` rows, `post_1_0` rows and `out` rows require nothing.
+
+**Tolerance.** A layout fixture, one that compares measured geometry, says how far Godot and the reference may differ:
+`"tolerance": {"unit": "dp" | "px", "absolute": <number, 0 or more>}`, with `layout: true`. The value is the one the fixture's own
+check uses today (exact for the shared `native-layout` and `native-measure` cases, 1e-3 for the text lines, 5e-4 for layout
+animation). Comparing a Godot report with the references' under that tolerance is the work of `parity`.
+
+**The ledger.** `pending` is keyed by the GF that owns the rows; each item is `{"polarity", "select", "count"}` and may carry a `note`.
+The `select` is checked among that GF's target rows only, and `count` has to be exactly the number of those rows that still miss that
+polarity. `--print-pending` prints the ledger that the current fixtures imply, in the format of the file and without the notes.
+
+**How a delivery adds coverage and shrinks the ledger.**
+
+1. Add the entries for the fixtures the delivery lands, pointing at checks that exist (a suite's native test, a probe check, a case).
+   A suite that is on another branch or an open pull request is not referenced from here: its rows stay pending, and the delivery
+   that lands the suite adds its entries in the same change (for example the `AppRegistry` headless-task negative fixture, or the
+   `TextDecoder` one, which wait for their GF's slice).
+2. Run `node scripts/parity-coverage.mjs --check`. For every pending item the new entries touch it names the new count
+   (`E_PENDING_COUNT`) or tells you to remove the item (`E_STALE_PENDING`). Edit the counts, or take the ledger from `--print-pending`.
+3. A ledger only shrinks within a delivery. A gap is not added to make the gate pass; a row that enters the map (an RN upgrade, a
+   new rule) enters the ledger of its owner in the change that adds it, and a reviewer sees it in the diff.
+
+**The gate** (`--check`) fails with `E_MAP` when the map itself has problems; `E_SHAPE` when the catalog, an entry, a selector, a
+`decided` item or a ledger item is malformed (an id used twice, an unknown polarity or platform, a `count` that is not a positive
+integer); `E_UNKNOWN_OWNER` when a `decided` item or a ledger key is not a dashboard task; `E_FIXTURE` when a fixture reference does
+not resolve (the case, the file, the check name, the test name); `E_DEAD_ENTRY` when an entry, a requirement or a ledger item picks no
+row, and `E_DEAD_TERM` when a name or id it lists picks none; `E_POLARITY` and `E_RUNS_ON` when an entry covers rows its polarity or
+its platforms do not mean; `E_CASE_CLAIM` when a case and the catalog disagree; `E_TOLERANCE` when a layout fixture has no tolerance,
+a tolerance has no layout fixture, or the tolerance is malformed; `E_UNLEDGERED` when a target row misses a fixture and is not in the
+ledger (reported per GF and polarity); `E_STALE_PENDING` when a ledger item has no uncovered row left; `E_PENDING_COUNT` when its count
+is not the number of uncovered rows; and `E_PENDING_OVERLAP` when two items list the same row.
+
+The seeds are what already runs, referenced conservatively: the shared differential cases, the per-GF native suites (Switch,
+ActivityIndicator, touchables, Text, AppState, Appearance, accessibility, device services, OS contracts, networking, WebSocket, Animated,
+LayoutAnimation, ScrollView, lists, Modal, PanResponder, Image, click, focus) and the 0.5 prop policy. A suite counts only for the rows it
+exercises and asserts. Most rows are still pending, and each belongs to a GF whose delivery has to cover it.
