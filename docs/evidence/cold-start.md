@@ -107,7 +107,10 @@ Run `node --test tests/godot-binary.test.mjs` and
 and recovery regressions. `npm run test:cold` remains the native acceptance
 command. The remaining direct-editor boundary is now an executable control, set
 out in the next section. GF-02 stays **In progress** until its other
-checkpoints (comparison cases and applicable targets) are accepted.
+checkpoints (comparison cases and applicable targets) are accepted; the lanes that
+provide that evidence are [Repeated first installs](#repeated-first-installs),
+[Failed start with an incompatible minimum](#failed-start-with-an-incompatible-minimum),
+[Parity from a cold project](#parity-from-a-cold-project) and [Targets](#targets).
 
 Deleting `.godot` and invoking Godot directly with `--editor --import` bypasses
 this preparation and can still reproduce the engine boundary. Run setup or
@@ -224,7 +227,7 @@ rebuilt one. It judges the import-only editor with the Fabric extension alone; i
 does not prove that every editor loading path is safe, and the root cause is the
 upstream explanation above, not a symbolicated trace. The `contract` checkpoint
 of GF-02 closes on this control once a hosted run shows the verdict
-`boundary-holds`; `parity` and `targets` stay open.
+`boundary-holds`; `parity` and `targets` rest on the lanes that follow.
 
 ## Repeated first installs
 
@@ -282,9 +285,19 @@ seconds including the bundle. Report: `build/cold-start.json`
 (`schemaVersion` 2; per install the steps with `attempts`, `status` and
 `signal`), logs `build/cold-<n>-<step>.log`.
 
-**Hosted result.** Pending: the dispatched Contracts run that carries these lanes
-has not been taken yet. The `parity` and `targets` checkpoints of GF-02 close on
-it, not on the local result.
+**Hosted result.** The Contracts run [38560887388](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388), dispatched on the branch of
+this change at head `974b46e8`, passed every job at attempt 1. Its `native-cold-start` job
+([job 115841370148](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388/job/115841370148)), on the hosted macOS 15 arm64 runner, ran `npm run test:cold`
+right after the build: `COLD_START_PASSED: 3 fresh installs, runtime checks and warm
+imports, one attempt each`, about 52 seconds with the bundle. The artifact
+`native-cold-start` (id 11892261686, digest `sha256:71d0b919…89b5`) holds
+`cold-start.json`: status `passed`, `startup` `prepared`, 3 installs against a minimum of 3,
+12 steps, every one with `attempts` 1, status 0 and no signal, and the 12 logs. The
+boundary control ran in the same job and reported, as it did in run 38403991586,
+`COLD_START_BOUNDARY_HOLDS` on `4.7.2.stable.official.ed1daf0bf`: 5 of 5 unprepared
+imports crashed and 5 of 5 prepared imports were clean (artifact
+`native-cold-start-boundary`, id 11892176807, digest `sha256:78244e75…0729`). No crash was
+retried away: the job has one attempt and every step one launch.
 
 ## Failed start with an incompatible minimum
 
@@ -366,6 +379,15 @@ every log); logs `build/cold-start-negative-<step>.log`. A failed run writes the
 same report with `status: "failed"` and its problems; a report of an earlier run is
 removed first.
 
+**Hosted result.** The same run and job ([38560887388](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388), [job 115841370148](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388/job/115841370148), head
+`974b46e8`) ran `npm run test:cold:negative` after the boundary control:
+`COLD_START_NEGATIVE_PASSED: refused (3 messages, exit 0), no residue, the next start clean`,
+about 31 seconds with the bundle. The artifact `native-cold-start-negative` (id 11892881270,
+digest `sha256:6c0c00b9…ba0f`) holds `cold-start-negative.json`: status `passed`, `problems`
+empty, and the `causalControl` entry shows that the log of the start with unchanged
+metadata fails the refusal assertions, with the five logs. Hosted, the engine refused the
+extension in its own words and recovered on the next start exactly as it did locally.
+
 **Causal control.** The refusal assertions are applied to the real log of the
 positive control, whose metadata was not changed: they must fail
 (`no line says that the extension is only compatible with Godot 4.99.0 or later`
@@ -428,8 +450,22 @@ and `parity-android` references of the same commit. `tests/parity-protocol.test.
 
 **Local result (2026-10-14).** 13 cases passed from a cold project of 242 files, in
 about 10 seconds. The references are not run locally (they need an iOS simulator
-and an Android emulator); the comparison with both runs in the dispatched
-Contracts run.
+and an Android emulator); the comparison with both ran in the dispatched
+Contracts run below.
+
+**Hosted result.** In the Contracts run [38560887388](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388) (head `974b46e8`, attempt 1),
+`npm run parity:godot` in `native-cold-start` ([job 115841370148](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388/job/115841370148)) printed
+`PARITY_GODOT_PASSED: 13 native subset cases from a cold project` (about 19 seconds with
+the bundle). The artifact `parity-godot` (id 11892736469, digest `sha256:7af68657…f0ca`)
+holds the report: 13 cases, and `coldProject` disposable, with fresh user data, a cache of
+`["extension_list.cfg"]` before the import and 242 files. The jobs `reference-ios`
+([job 115841369771](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388/job/115841369771)) and `reference-android`
+([job 115841370285](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388/job/115841370285)) produced the `parity-ios` (id 11893300678) and
+`parity-android` (id 11892064969) references from the unmodified RN apps, and
+`parity-comparison` ([job 115845393706](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388/job/115845393706)) compared the three: its
+artifact `parity-comparison` (id 11893371096, digest `sha256:8967bb3e…6963`) has
+`completeMobileReferences` true, the references `android` and `ios`, 13 cases and the
+`godotColdProject` of the Godot report.
 
 ## Targets
 
@@ -457,6 +493,14 @@ an engine below it is refused with a clear message instead of loading an
 unqualified extension. Qualifying another engine means a new pin, a new checksum
 and these lanes run on it; until then the minimum follows the pin
 (`tests/godot-binary.test.mjs` asserts they are equal).
+
+**Hosted result.** The macOS arm64 row rests on the Contracts run
+[38560887388](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388) (head `974b46e8`, attempt 1): the `native-cold-start` job
+([job 115841370148](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388/job/115841370148)), on the hosted macOS 15 arm64 runner, installed the pinned official
+Godot archive (checksum verified against `dependencies.json`), built the native host from
+scratch against the pinned godot-cpp and ran every lane above on `4.7.2.stable.official.ed1daf0bf`
+with `compatibility_minimum = "4.7.2"`. The other four rows are not run anywhere: no lane,
+local or hosted, starts Godot on Linux, Windows, Android or an iOS runtime.
 
 **What this does not say.** Nothing here qualifies a distribution, an export or a
 device. GF-36 owns native hosted CI for the other ports and GF-37 their
