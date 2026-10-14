@@ -1,0 +1,1563 @@
+{
+  "schemaVersion": 1,
+  "scenario": "web-globals",
+  "status": "verified-local-headless-no-native-change-four-sabotages",
+  "at": "2026-10-14T05:38:30.578Z",
+  "executionBaseCommit": "05e9707305fc9122cf1ec8f6f26742547b30a9b9",
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "05e9707305fc9122cf1ec8f6f26742547b30a9b9",
+  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless",
+    "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+    "hermesSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+    "hermesVersion": "250829098.0.17",
+    "hermesArchiveSha256": "2967ee51b41bd433b3027dda875e96194354e2b4d715f9f186fd0c04ccef309d",
+    "whatwgFetch": "3.6.20"
+  },
+  "commands": [
+    "npm run test:web-globals",
+    "node scripts/web-globals-sabotage.mjs",
+    "node scripts/web-globals-evidence.mjs"
+  ],
+  "previousHostControl": {
+    "applicable": false,
+    "reason": "This slice changes no native code: the host in addons/ is the one the earlier GF-05 slices certified, rebuilt from the sources at executionBaseCommit, and nothing in it is new to this suite. A control on a previous host would run the same bundle on the same behaviour. The causal controls are the four retained sabotages."
+  },
+  "currentLane": {
+    "checks": 59,
+    "failedChecks": [],
+    "oracleVerdict": null,
+    "bundleSha256": "dd2ba197bc43f830ecccd08a84388a1e961fb7f9b5a75784900be5e20c58181b",
+    "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+    "logSha256": "1e2837bdb14976432f795ae1999eccd5473ada1a2c49ff32d85502942ce34110",
+    "result": "WEB_GLOBALS_PASSED: 59",
+    "checkVerdicts": [
+      {
+        "name": "report/The expectation file the cases are judged against is there",
+        "passed": true
+      },
+      {
+        "name": "mount/A root mounts through the original AppRegistry in the Hermes application the bundle ran in",
+        "passed": true
+      },
+      {
+        "name": "host/The host defines none of URL, URLSearchParams, AbortController, AbortSignal and TextDecoder, and the engine defines TextEncoder, atob and btoa, before the first line of the bundle",
+        "passed": true
+      },
+      {
+        "name": "first/When the first module of the bundle runs, RN's polyfills have defined none of them, and the engine's encoders are still the engine's own functions",
+        "passed": true
+      },
+      {
+        "name": "globals/URL, URLSearchParams and AbortSignal are lazy accessors that nothing had read, AbortController is the data property the accessor becomes once the renderer read it, and all four are data properties after",
+        "passed": true
+      },
+      {
+        "name": "globals/URL, URLSearchParams, AbortController and AbortSignal are the exports of the modules RN's setUpXHR names",
+        "passed": true
+      },
+      {
+        "name": "globals/AbortSignal is RN's public wrapper over the class whose prototype every signal has, and URL's searchParams is a URLSearchParams",
+        "passed": true
+      },
+      {
+        "name": "globals/TextEncoder, atob and btoa are the engine's own functions, still non-enumerable data properties of the global object, and nothing in the bundle replaced them",
+        "passed": true
+      },
+      {
+        "name": "globals/TextDecoder is not a property of the global object before or after the bundle",
+        "passed": true
+      },
+      {
+        "name": "url/An absolute http or https URL answers every member as RN's regular expressions do",
+        "passed": true
+      },
+      {
+        "name": "url/A bare host gets the slash RN's constructor writes, unless a query follows",
+        "passed": true
+      },
+      {
+        "name": "url/Other schemes and bare paths keep their text and answer only what RN's patterns match",
+        "passed": true
+      },
+      {
+        "name": "url/A base is joined to the URL the way RN's constructor writes it",
+        "passed": true
+      },
+      {
+        "name": "url/The constructor throws RN's TypeError for an invalid base, and the engine's where RN does not guard",
+        "passed": true
+      },
+      {
+        "name": "url/search is the one setter, and every other member is read-only",
+        "passed": true
+      },
+      {
+        "name": "url/searchParams is a live instance that toString folds back into the URL",
+        "passed": true
+      },
+      {
+        "name": "url/The class has the members RN's source writes, and no canParse or parse",
+        "passed": true
+      },
+      {
+        "name": "url/createObjectURL builds its URL from the blob module's constants",
+        "passed": true
+      },
+      {
+        "name": "searchParams/A string is split, decoded and appended as RN's constructor does",
+        "passed": true
+      },
+      {
+        "name": "searchParams/null, nothing and a number make an empty list",
+        "passed": true
+      },
+      {
+        "name": "searchParams/An object and an array of pairs are appended in order",
+        "passed": true
+      },
+      {
+        "name": "searchParams/RN does not iterate a Map or an iterator, and reads another instance as an object",
+        "passed": true
+      },
+      {
+        "name": "searchParams/append, get, getAll, has, set and delete behave as RN's class does",
+        "passed": true
+      },
+      {
+        "name": "searchParams/keys, values, entries, forEach and the iterator walk the entries in order",
+        "passed": true
+      },
+      {
+        "name": "searchParams/sort orders the keys with localeCompare and keeps the order of equal keys",
+        "passed": true
+      },
+      {
+        "name": "searchParams/toString encodes spaces as plus signs and the rest with encodeURIComponent",
+        "passed": true
+      },
+      {
+        "name": "searchParams/The class has the members RN's source writes, a size and no toJSON",
+        "passed": true
+      },
+      {
+        "name": "abort/A new controller has an open signal of RN's classes",
+        "passed": true
+      },
+      {
+        "name": "abort/abort() without a reason aborts with an AbortError once, and a second abort does nothing",
+        "passed": true
+      },
+      {
+        "name": "abort/abort(reason) keeps any reason the caller gives, the falsy ones included",
+        "passed": true
+      },
+      {
+        "name": "abort/Listeners and onabort run in the order they were added, and a replaced onabort keeps its place",
+        "passed": true
+      },
+      {
+        "name": "abort/Listener options, removal and a listener added during the dispatch behave as RN's EventTarget does",
+        "passed": true
+      },
+      {
+        "name": "abort/throwIfAborted throws the reason itself",
+        "passed": true
+      },
+      {
+        "name": "abort/AbortSignal.abort and AbortSignal.any make signals that are already or soon aborted",
+        "passed": true
+      },
+      {
+        "name": "abort/AbortSignal.timeout rejects a bad time with RN's TypeError",
+        "passed": true
+      },
+      {
+        "name": "abort/AbortSignal cannot be constructed, and the members refuse another object",
+        "passed": true
+      },
+      {
+        "name": "abort/AbortSignal.timeout aborts with a TimeoutError, alone and inside any",
+        "passed": true
+      },
+      {
+        "name": "encoding/TextEncoder encodes ASCII, BMP, astral characters, lone surrogates and the boundaries to the UTF-8 bytes Node's encoders give",
+        "passed": true
+      },
+      {
+        "name": "encoding/TextEncoder has the shape of the engine's class, and its result is a Uint8Array",
+        "passed": true
+      },
+      {
+        "name": "encoding/encode turns its argument into a string first, so an absent one is the text undefined (Node's gives no bytes)",
+        "passed": true
+      },
+      {
+        "name": "encoding/encodeInto fills the destination and reports what it read and wrote as Node's does",
+        "passed": true
+      },
+      {
+        "name": "encoding/encodeInto refuses what is not a Uint8Array with a TypeError",
+        "passed": true
+      },
+      {
+        "name": "encoding/btoa writes the base64 of a Latin-1 string as Node's does",
+        "passed": true
+      },
+      {
+        "name": "encoding/atob reads base64, skips ASCII whitespace and discards trailing bits as Node's does",
+        "passed": true
+      },
+      {
+        "name": "encoding/btoa and atob round-trip every byte, a long string and UTF-8 text",
+        "passed": true
+      },
+      {
+        "name": "encoding/Invalid base64 input throws an Error where Node's throws an InvalidCharacterError",
+        "passed": true
+      },
+      {
+        "name": "encoding/btoa and atob without an argument coerce undefined to text, where Node's throw a TypeError",
+        "passed": true
+      },
+      {
+        "name": "decoder/typeof TextDecoder is undefined, it is not a property of the global object, and the negative fixture sees no descriptor",
+        "passed": true
+      },
+      {
+        "name": "decoder/Reading or constructing TextDecoder throws the engine's ReferenceError",
+        "passed": true
+      },
+      {
+        "name": "decoder/TextEncoder, atob and btoa are functions beside the absent decoder",
+        "passed": true
+      },
+      {
+        "name": "network/fetch rejects with the AbortError whose message is Aborted when its signal aborts while the server holds the request, and the connection is closed",
+        "passed": true
+      },
+      {
+        "name": "network/fetch ignores the reason a caller gives abort(): it rejects with the same AbortError, and the signal keeps the caller's reason",
+        "passed": true
+      },
+      {
+        "name": "network/A signal that is already aborted rejects fetch with the same AbortError, and no request reaches the server",
+        "passed": true
+      },
+      {
+        "name": "network/A fetch that completed is not changed by aborting its signal afterwards",
+        "passed": true
+      },
+      {
+        "name": "network/An XMLHttpRequest aborted by its signal dispatches readystatechange, abort and loadend and never load or error, and the connection is closed",
+        "passed": true
+      },
+      {
+        "name": "network/After the server lets go, an aborted request delivers nothing more: each fetch settled once and the events of the XMLHttpRequest did not grow",
+        "passed": true
+      },
+      {
+        "name": "lifecycle/Stop releases the root without a diagnostic",
+        "passed": true
+      },
+      {
+        "name": "lifecycle/All native Controls of the root are balanced",
+        "passed": true
+      },
+      {
+        "name": "report/The web globals report is saved with any normative failure visible",
+        "passed": true
+      }
+    ],
+    "cases": {
+      "total": 177,
+      "url": 38,
+      "searchParams": 34,
+      "abort": 17,
+      "abortTimers": 3,
+      "encoding": 78,
+      "decoder": 7,
+      "groups": 41,
+      "expectedSha256": "63f972b3dbf35f41980443e7ac3f26ca2e485ccc1c61c0cb8c808ba99f5615b2"
+    },
+    "bundleInputs": {
+      "count": 430,
+      "injectedFirst": "tests/web-globals-host.js",
+      "positions": {
+        "src/initialize.js": 180,
+        "node_modules/react-native/Libraries/Core/setUpXHR.js": 178,
+        "node_modules/react-native/Libraries/Blob/URL.js": 175,
+        "node_modules/react-native/Libraries/Blob/URLSearchParams.js": 174,
+        "node_modules/react-native/src/private/webapis/dom/abort-api/AbortController.js": 177,
+        "node_modules/react-native/src/private/webapis/dom/abort-api/AbortSignal.js": 176,
+        "node_modules/react-native/Libraries/Network/fetch.js": 162
+      }
+    },
+    "originalReactNativeSources": {
+      "Libraries/Core/setUpXHR.js": "290697c07f2afc79a8b6a7fdac6cf77bc3d660a68efb4777dee252b533162a9c",
+      "Libraries/Blob/URL.js": "8d5ee781805c74a16a5a04b0eb069d3bb69a7705e4a0c9ad1e2c8a96d20929db",
+      "Libraries/Blob/URLSearchParams.js": "5b028dd493c538b0d88e168bbbf7c767018b1ff299fc97b04738d2f70cfeed39",
+      "Libraries/Blob/NativeBlobModule.js": "71ed77bf0eae95820839faa04c498822fa7e3f44f1214b908f0929d8672dbe72",
+      "Libraries/Network/fetch.js": "b626a9897d7476825c89924b692dd33b5ae36634e1b90f40e59b16f3749be873",
+      "Libraries/Network/XMLHttpRequest.js": "588f2f39bde35c1cc0aef12f1e2d64ef5b37039542a28f469c504e34182eaca3",
+      "src/private/webapis/dom/abort-api/AbortController.js": "03082ec42dfbb3de1fc5270b3c6fe7addf7be85ba595f877a0d5f3768c84963a",
+      "src/private/webapis/dom/abort-api/AbortSignal.js": "c0791a70fa3dd97652736b74b789b2bc162709822815405624155c0bb48b8d3e",
+      "src/private/webapis/errors/DOMException.js": "9c67efdd33c882ae33bbb679c0b3592d6674441ff3a92b35948e6847aef779a8",
+      "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+      "src/private/webapis/dom/events/EventHandlerAttributes.js": "d71fe1eeeb186c25b6bf1bd60263f2d7fa64c06cf4f9fb30b8f64a164cb16e88",
+      "Libraries/Utilities/PolyfillFunctions.js": "c00e1ba8f8f668a7a710688e2c0e5d36b63df18a52fdf4bb8691cd436c9720ca",
+      "Libraries/Utilities/defineLazyObjectProperty.js": "14518a34db201d7545b9b2fd72a668d8d42e766d1bbd5a7889910069700e7fa8",
+      "src/private/setup/setUpDefaultReactNativeEnvironment.js": "ada7fdd487db30821082e115756be85e92cc1f095155355d06067422e2df0603",
+      "Libraries/Core/InitializeCore.js": "8f2dd190065a412e8a30ee49c3db050b8797cfb780ecbc1a8f5e2c75a2fc9701",
+      "Libraries/Blob/Blob.js": "050bc512a24749ec3d91a45832549e9b78dd3717de716bda17782ff36917dc0a",
+      "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+      "../whatwg-fetch/dist/fetch.umd.js": "8c006dece7b95b63787c3ae297593c6bad9386cb8054697d18104177a5f52c87",
+      "../whatwg-fetch/package.json": "773f705e4e3f83dc4758188878c4db45478df953a10bceeb14e4aafbbe7847bc"
+    },
+    "hostBeforeTheBundle": {
+      "AbortController": "undefined",
+      "AbortSignal": "undefined",
+      "DOMException": "undefined",
+      "TextDecoder": "undefined",
+      "TextEncoder": "function",
+      "URL": "undefined",
+      "URLSearchParams": "undefined",
+      "XMLHttpRequest": "undefined",
+      "atob": "function",
+      "btoa": "function",
+      "descriptors": {
+        "TextEncoder": {
+          "accessor": false,
+          "configurable": true,
+          "enumerable": false,
+          "writable": true
+        },
+        "atob": {
+          "accessor": false,
+          "configurable": true,
+          "enumerable": false,
+          "writable": true
+        },
+        "btoa": {
+          "accessor": false,
+          "configurable": true,
+          "enumerable": false,
+          "writable": true
+        }
+      },
+      "fetch": "undefined"
+    },
+    "atTheFirstModule": {
+      "AbortController": "undefined",
+      "AbortSignal": "undefined",
+      "TextDecoder": "undefined",
+      "TextEncoder": "function",
+      "URL": "undefined",
+      "URLSearchParams": "undefined",
+      "atob": "function",
+      "btoa": "function",
+      "sameAtob": true,
+      "sameBtoa": true,
+      "sameEncoder": true
+    },
+    "globals": {
+      "lazyBeforeFirstRead": {
+        "AbortController": {
+          "configurable": true,
+          "enumerable": true,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        },
+        "AbortSignal": {
+          "configurable": true,
+          "enumerable": true,
+          "kind": "accessor",
+          "setter": "function",
+          "writable": null
+        },
+        "URL": {
+          "configurable": true,
+          "enumerable": true,
+          "kind": "accessor",
+          "setter": "function",
+          "writable": null
+        },
+        "URLSearchParams": {
+          "configurable": true,
+          "enumerable": true,
+          "kind": "accessor",
+          "setter": "function",
+          "writable": null
+        }
+      },
+      "afterFirstRead": {
+        "AbortController": {
+          "configurable": true,
+          "enumerable": true,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        },
+        "AbortSignal": {
+          "configurable": true,
+          "enumerable": true,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        },
+        "URL": {
+          "configurable": true,
+          "enumerable": true,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        },
+        "URLSearchParams": {
+          "configurable": true,
+          "enumerable": true,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        }
+      },
+      "identity": {
+        "abortControllerIsModuleController": true,
+        "abortSignalIsModulePublicSignal": true,
+        "controllerSignalIsClassInstance": true,
+        "controllerSignalIsPublicInstance": true,
+        "engineAtob": true,
+        "engineBtoa": true,
+        "engineEncoder": true,
+        "publicPrototypeIsClassPrototype": true,
+        "publicSignalDiffersFromClass": true,
+        "searchParamsIsModuleSearchParams": true,
+        "searchParamsModulesAgree": true,
+        "urlIsModuleUrl": true,
+        "urlSearchParamsIsUrlsOwn": true
+      },
+      "engineBefore": {
+        "TextDecoder": null,
+        "TextEncoder": {
+          "configurable": true,
+          "enumerable": false,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        },
+        "atob": {
+          "configurable": true,
+          "enumerable": false,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        },
+        "btoa": {
+          "configurable": true,
+          "enumerable": false,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        }
+      },
+      "engineAfter": {
+        "TextDecoder": null,
+        "TextEncoder": {
+          "configurable": true,
+          "enumerable": false,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        },
+        "atob": {
+          "configurable": true,
+          "enumerable": false,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        },
+        "btoa": {
+          "configurable": true,
+          "enumerable": false,
+          "kind": "data",
+          "setter": "undefined",
+          "writable": true
+        }
+      },
+      "blobConstants": {
+        "BLOB_URI_HOST": null,
+        "BLOB_URI_SCHEME": "blob"
+      },
+      "objectUrlOfARealBlob": {
+        "blobId": "8af9f276-7d4e-4ef3-b4b4-6b6f9fe50d51",
+        "offset": 0,
+        "size": 3,
+        "url": "blob:8af9f276-7d4e-4ef3-b4b4-6b6f9fe50d51?offset=0&size=3"
+      }
+    },
+    "network": {
+      "fetchAbort": {
+        "closed": true,
+        "held": true,
+        "settled": true
+      },
+      "reasonAbort": {
+        "closed": true,
+        "held": true,
+        "settled": true
+      },
+      "abortedBefore": {
+        "settled": true
+      },
+      "completed": {
+        "settled": true
+      },
+      "xhrAbort": {
+        "closed": true,
+        "held": true,
+        "settled": true
+      },
+      "outcomes": {
+        "wg-before": {
+          "error": {
+            "isError": true,
+            "message": "Aborted",
+            "name": "AbortError"
+          },
+          "resolved": false
+        },
+        "wg-done": {
+          "resolved": true,
+          "status": 200
+        },
+        "wg-fetch": {
+          "error": {
+            "isError": true,
+            "message": "Aborted",
+            "name": "AbortError"
+          },
+          "resolved": false
+        },
+        "wg-reason": {
+          "error": {
+            "isError": true,
+            "message": "Aborted",
+            "name": "AbortError"
+          },
+          "resolved": false
+        }
+      },
+      "signals": {
+        "wg-before": {
+          "aborted": true,
+          "abortedAtEvent": true,
+          "reasonAtEvent": "AbortError",
+          "signalEvents": 1
+        },
+        "wg-done": {
+          "aborted": true,
+          "abortedAtEvent": true,
+          "reasonAtEvent": "AbortError",
+          "signalEvents": 1
+        },
+        "wg-fetch": {
+          "aborted": true,
+          "abortedAtEvent": true,
+          "reasonAtEvent": "AbortError",
+          "signalEvents": 1
+        },
+        "wg-reason": {
+          "aborted": true,
+          "abortedAtEvent": true,
+          "reasonAtEvent": "Error",
+          "reasonIsTheCallers": true,
+          "signalEvents": 1
+        },
+        "wg-xhr": {
+          "aborted": true,
+          "abortedAtEvent": true,
+          "reasonAtEvent": "AbortError",
+          "signalEvents": 1
+        }
+      },
+      "xhrEvents": {
+        "wg-xhr": {
+          "ended": true,
+          "events": [
+            {
+              "readyState": 1,
+              "status": 0,
+              "type": "readystatechange"
+            },
+            {
+              "readyState": 4,
+              "status": 0,
+              "type": "readystatechange"
+            },
+            {
+              "readyState": 4,
+              "status": 0,
+              "type": "abort"
+            },
+            {
+              "readyState": 4,
+              "status": 0,
+              "type": "loadend"
+            }
+          ],
+          "readyState": 0,
+          "status": 0
+        }
+      },
+      "serverHolds": {
+        "wg-fetch": "closed-by-client",
+        "wg-reason": "closed-by-client",
+        "wg-xhr": "closed-by-client"
+      },
+      "serverRequests": [
+        "/hang/wg-fetch",
+        "/hang/wg-reason",
+        "/json?case=wg-completed",
+        "/hang/wg-xhr"
+      ]
+    },
+    "timers": {
+      "cases": {
+        "abort-timer/any-of-a-timeout": {
+          "code": 23,
+          "error": true,
+          "keys": [],
+          "kind": "object",
+          "message": "signal timed out",
+          "name": "TimeoutError",
+          "tag": "[object Error]"
+        },
+        "abort-timer/timeout": {
+          "code": 23,
+          "error": true,
+          "keys": [],
+          "kind": "object",
+          "message": "signal timed out",
+          "name": "TimeoutError",
+          "tag": "[object Error]"
+        },
+        "abort-timer/timeout-zero": {
+          "code": 23,
+          "error": true,
+          "keys": [],
+          "kind": "object",
+          "message": "signal timed out",
+          "name": "TimeoutError",
+          "tag": "[object Error]"
+        }
+      }
+    },
+    "hermesMessages": [
+      {
+        "name": "Error",
+        "message": "Not a valid base64 encoded string length"
+      },
+      {
+        "name": "Error",
+        "message": "Found invalid character when decoding base64 string"
+      },
+      {
+        "name": "TypeError",
+        "message": "Cannot convert Symbol to string"
+      },
+      {
+        "name": "Error",
+        "message": "Found invalid character when converting to base64"
+      },
+      {
+        "name": "TypeError",
+        "message": "TextEncoder must be called as a constructor"
+      },
+      {
+        "name": "TypeError",
+        "message": "TextEncoder.prototype.encode() called on non-TextEncoder object"
+      },
+      {
+        "name": "TypeError",
+        "message": "TextEncoder.prototype.encoding called on non-TextEncoder object"
+      },
+      {
+        "name": "TypeError",
+        "message": "The second argument should be a Uint8Array"
+      },
+      {
+        "name": "TypeError",
+        "message": "TextEncoder.prototype.encodeInto() called on non-TextEncoder object"
+      }
+    ],
+    "decoder": {
+      "results": {
+        "decoder/construct-throws": {
+          "$": "error",
+          "message": "Property 'TextDecoder' doesn't exist",
+          "name": "ReferenceError"
+        },
+        "decoder/descriptor": true,
+        "decoder/in-global": false,
+        "decoder/own-property": false,
+        "decoder/read-throws": {
+          "$": "error",
+          "message": "Property 'TextDecoder' doesn't exist",
+          "name": "ReferenceError"
+        },
+        "decoder/typeof": "undefined",
+        "decoder/typeof-the-others": {
+          "TextEncoder": "function",
+          "atob": "function",
+          "btoa": "function"
+        }
+      }
+    }
+  },
+  "members": {
+    "note": "Read out of RN's source with the TypeScript parser and set against what RN's code did in V8 and what Hermes did: the three agree for every member. 'Implemented' is the prototype members of the declaration; RN 0.87.1's URL has no member that throws 'not implemented', so there are none to certify as throwing.",
+    "URL": {
+      "file": "Libraries/Blob/URL.js",
+      "prototype": [
+        "constructor",
+        "hash",
+        "host",
+        "hostname",
+        "href",
+        "origin",
+        "password",
+        "pathname",
+        "port",
+        "protocol",
+        "search",
+        "searchParams",
+        "toJSON",
+        "toString",
+        "username"
+      ],
+      "statics": [
+        "createObjectURL",
+        "revokeObjectURL"
+      ],
+      "setters": [
+        "search"
+      ],
+      "notImplementedThrows": false,
+      "absentFromTheStandard": [
+        "canParse",
+        "parse",
+        "a setter for hash, host, hostname, href, pathname, port, protocol, username and password",
+        "searchParams as a setter"
+      ]
+    },
+    "URLSearchParams": {
+      "file": "Libraries/Blob/URL.js",
+      "prototype": [
+        "append",
+        "constructor",
+        "delete",
+        "entries",
+        "forEach",
+        "get",
+        "getAll",
+        "has",
+        "keys",
+        "set",
+        "size",
+        "sort",
+        "toString",
+        "values"
+      ],
+      "symbols": [
+        "Symbol(Symbol.iterator)"
+      ],
+      "statics": [],
+      "absentFromTheStandard": [
+        "toJSON",
+        "construction from a Map, an iterator or another URLSearchParams (read as an object)",
+        "the value argument of delete and has"
+      ]
+    },
+    "AbortController": {
+      "file": "src/private/webapis/dom/abort-api/AbortController.js",
+      "prototype": [
+        "abort",
+        "constructor",
+        "signal"
+      ]
+    },
+    "AbortSignal": {
+      "file": "src/private/webapis/dom/abort-api/AbortSignal.js",
+      "export": "AbortSignal_public",
+      "prototype": [
+        "aborted",
+        "constructor",
+        "onabort",
+        "reason",
+        "throwIfAborted"
+      ],
+      "statics": [
+        "abort",
+        "any",
+        "timeout"
+      ],
+      "note": "The global is AbortSignal_public, a wrapper that throws 'Illegal constructor' and copies the statics and the prototype of the class."
+    }
+  },
+  "encoding": {
+    "decision": "Parity with Hermes (2026-10-13): TextEncoder, atob and btoa present and tested; TextDecoder absent, with a negative fixture, as on RN iOS and Android.",
+    "bytes": {
+      "encode/empty": [],
+      "encode/ascii": [
+        72,
+        101,
+        108,
+        108,
+        111,
+        44,
+        32,
+        119,
+        111,
+        114,
+        108,
+        100
+      ],
+      "encode/bmp": [
+        79,
+        108,
+        195,
+        161,
+        44,
+        32,
+        109,
+        117,
+        110,
+        100,
+        111,
+        32,
+        226,
+        128,
+        148,
+        32,
+        97,
+        195,
+        167,
+        195,
+        163,
+        111,
+        32,
+        230,
+        151,
+        165,
+        230,
+        156,
+        172,
+        232,
+        170,
+        158
+      ],
+      "encode/astral": [
+        240,
+        159,
+        152,
+        128,
+        32,
+        240,
+        157,
+        146,
+        179,
+        32,
+        97
+      ],
+      "encode/loneHigh": [
+        97,
+        239,
+        191,
+        189,
+        98
+      ],
+      "encode/loneLow": [
+        97,
+        239,
+        191,
+        189,
+        98
+      ],
+      "encode/trailingHigh": [
+        120,
+        239,
+        191,
+        189
+      ],
+      "encode/swappedPair": [
+        239,
+        191,
+        189,
+        239,
+        191,
+        189
+      ],
+      "encode/nul": [
+        97,
+        0,
+        98
+      ],
+      "encode/maxBmp": [
+        239,
+        191,
+        191
+      ],
+      "encode/replacement": [
+        239,
+        191,
+        189
+      ],
+      "encode/byteOrderMark": [
+        239,
+        187,
+        191,
+        120
+      ],
+      "encode/boundaries": [
+        127,
+        194,
+        128,
+        223,
+        191,
+        224,
+        160,
+        128,
+        237,
+        159,
+        191,
+        238,
+        128,
+        128
+      ],
+      "encode/undefined": [
+        117,
+        110,
+        100,
+        101,
+        102,
+        105,
+        110,
+        101,
+        100
+      ],
+      "encode/null": [
+        110,
+        117,
+        108,
+        108
+      ],
+      "encode/number": [
+        52,
+        50
+      ],
+      "encode/object": [
+        111,
+        98,
+        106
+      ]
+    },
+    "deviations": {
+      "encode/no-argument": {
+        "category": "missing argument",
+        "why": "encode() has no default for its argument: a missing one is converted to the text \"undefined\", where the encoding standard's default is the empty string.",
+        "hermes": {
+          "threw": false,
+          "value": [
+            117,
+            110,
+            100,
+            101,
+            102,
+            105,
+            110,
+            101,
+            100
+          ]
+        },
+        "node": {
+          "threw": false,
+          "value": []
+        }
+      },
+      "encode/undefined": {
+        "category": "missing argument",
+        "why": "encode(undefined) is converted to the text \"undefined\" for the same reason.",
+        "hermes": {
+          "threw": false,
+          "value": [
+            117,
+            110,
+            100,
+            101,
+            102,
+            105,
+            110,
+            101,
+            100
+          ]
+        },
+        "node": {
+          "threw": false,
+          "value": []
+        }
+      },
+      "btoa/no-argument": {
+        "category": "missing argument",
+        "why": "btoa() converts a missing argument to the text \"undefined\" and encodes it, where Node throws a TypeError (ERR_MISSING_ARGS).",
+        "hermes": {
+          "threw": false,
+          "value": "dW5kZWZpbmVk"
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "TypeError",
+            "message": "The \"input\" argument must be specified",
+            "code": "ERR_MISSING_ARGS"
+          }
+        }
+      },
+      "atob/no-argument": {
+        "category": "missing argument",
+        "why": "atob() converts a missing argument to the text \"undefined\", whose nine characters are not a valid base64 length: an Error, where Node throws a TypeError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Not a valid base64 encoded string length",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "TypeError",
+            "message": "The \"input\" argument must be specified",
+            "code": "ERR_MISSING_ARGS"
+          }
+        }
+      },
+      "btoa/out-of-range-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Found invalid character when converting to base64",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "Invalid character",
+            "code": 5
+          }
+        }
+      },
+      "btoa/astral-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Found invalid character when converting to base64",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "Invalid character",
+            "code": 5
+          }
+        }
+      },
+      "atob/invalid-character-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Found invalid character when decoding base64 string",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "Invalid character",
+            "code": 5
+          }
+        }
+      },
+      "atob/url-alphabet-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Found invalid character when decoding base64 string",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "Invalid character",
+            "code": 5
+          }
+        }
+      },
+      "atob/unicode-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Found invalid character when decoding base64 string",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "Invalid character",
+            "code": 5
+          }
+        }
+      },
+      "atob/one-character-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Not a valid base64 encoded string length",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "The string to be decoded is not correctly encoded.",
+            "code": 5
+          }
+        }
+      },
+      "atob/five-characters-throw": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Not a valid base64 encoded string length",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "The string to be decoded is not correctly encoded.",
+            "code": 5
+          }
+        }
+      },
+      "atob/padding-of-a-short-string-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Found invalid character when decoding base64 string",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "Invalid character",
+            "code": 5
+          }
+        }
+      },
+      "atob/too-much-padding-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Not a valid base64 encoded string length",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "Invalid character",
+            "code": 5
+          }
+        }
+      },
+      "atob/padding-in-the-middle-throws": {
+        "category": "error class",
+        "why": "Invalid base64 input throws a plain Error (\"Found invalid character when converting to base64\", \"Found invalid character when decoding base64 string\" or \"Not a valid base64 encoded string length\"), where the standard and Node throw a DOMException named InvalidCharacterError.",
+        "hermes": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "message": "Found invalid character when decoding base64 string",
+            "name": "Error"
+          }
+        },
+        "node": {
+          "threw": true,
+          "thrown": {
+            "$": "error",
+            "name": "InvalidCharacterError",
+            "message": "Invalid character",
+            "code": 5
+          }
+        }
+      }
+    },
+    "identicalToNode": 64,
+    "deviatingFromNode": 14,
+    "binary": {
+      "host": "addons/frameworks/hermesvm.framework/hermesvm",
+      "version": "250829098.0.17",
+      "archiveSha256": "2967ee51b41bd433b3027dda875e96194354e2b4d715f9f186fd0c04ccef309d",
+      "pinnedMacosEqualsTheHost": true,
+      "slices": [
+        {
+          "file": "addons/frameworks/hermesvm.framework/hermesvm",
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "bytes": 12004952,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        },
+        {
+          "file": ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/ios-arm64/hermesvm.framework/hermesvm",
+          "sha256": "bebc621e2ffe13346307726780a2fd2dea603aa7815b42e4b7c455f66759daf1",
+          "bytes": 5066176,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        },
+        {
+          "file": ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/ios-arm64_x86_64-maccatalyst/hermesvm.framework/Versions/1/hermesvm",
+          "sha256": "2feffda9a7d6a467c95ca1ed69dc7db1d5bfbd20d76a9ad77f551fa406100007",
+          "bytes": 12039016,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        },
+        {
+          "file": ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/ios-arm64_x86_64-simulator/hermesvm.framework/hermesvm",
+          "sha256": "956af81e233d1ec4310a65d87c298d842093d18a053ffc6061ab1d32aa25a1a5",
+          "bytes": 10173208,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        },
+        {
+          "file": ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/macos-arm64_x86_64/hermesvm.framework/Versions/1/hermesvm",
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "bytes": 12004952,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        },
+        {
+          "file": ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/tvos-arm64/hermesvm.framework/hermesvm",
+          "sha256": "ed18d4115cadab506f00ca343766773caf482204dfe0644ce7da09b79136da4e",
+          "bytes": 5065872,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        },
+        {
+          "file": ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/tvos-arm64_x86_64-simulator/hermesvm.framework/hermesvm",
+          "sha256": "ba57697532a24e7ee046e88d8d479d6e7f61b08c8ddbd534ccbb4577b7c8da9e",
+          "bytes": 10172872,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        },
+        {
+          "file": ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/xros-arm64/hermesvm.framework/hermesvm",
+          "sha256": "096437afb0c76a49ce6cdb63597ffcba622af5853fea91836550ad7474c3ebd9",
+          "bytes": 6001104,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        },
+        {
+          "file": ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/xros-arm64_x86_64-simulator/hermesvm.framework/hermesvm",
+          "sha256": "e4445456e4b80ad02edb81bf4564965b1254a847526d5bad5a290313f72024b7",
+          "bytes": 12096664,
+          "TextEncoder": true,
+          "encodeInto": true,
+          "atob": true,
+          "btoa": true,
+          "TextDecoder": false
+        }
+      ],
+      "citation": "The pinned hermes-ios archive ships binaries and headers, no Hermes source: the authority is the binary (its builtins textEncoderConstructor, textEncoderPrototypeEncode, textEncoderPrototypeEncodeInto, textEncoderPrototypeEncoding, atob and btoa, and the messages of every error the cases recorded), checked by the oracle, and the host's own execution of each call."
+    },
+    "textDecoder": {
+      "rnFilesMentioning": [],
+      "binariesHoldingIt": [],
+      "binariesScanned": 9
+    },
+    "shadowScan": []
+  },
+  "retainedSabotage": {
+    "script": "scripts/web-globals-sabotage.mjs",
+    "table": "tests/web-globals-sabotages.mjs",
+    "mechanism": "in-memory esbuild overrides of one file each (scripts/web-globals-bundle.mjs); no file is edited and no native code is touched",
+    "variants": [
+      {
+        "name": "url-reimplemented",
+        "file": "node_modules/react-native/Libraries/Core/setUpXHR.js",
+        "find": "polyfillGlobal('URL', () => require('../Blob/URL').URL);",
+        "replace": "polyfillGlobal('URL', () => class URL {\n  constructor(url, base) {\n    this.href = base ? String(base).replace(/\\/$/, '') + '/' + String(url).replace(/^\\//, '') : String(url);\n  }\n  toString() {\n    return this.href;\n  }\n  toJSON() {\n    return this.href;\n  }\n});",
+        "checks": 59,
+        "failedChecks": [
+          "globals/URL, URLSearchParams, AbortController and AbortSignal are the exports of the modules RN's setUpXHR names",
+          "globals/AbortSignal is RN's public wrapper over the class whose prototype every signal has, and URL's searchParams is a URLSearchParams",
+          "url/An absolute http or https URL answers every member as RN's regular expressions do",
+          "url/A bare host gets the slash RN's constructor writes, unless a query follows",
+          "url/Other schemes and bare paths keep their text and answer only what RN's patterns match",
+          "url/A base is joined to the URL the way RN's constructor writes it",
+          "url/The constructor throws RN's TypeError for an invalid base, and the engine's where RN does not guard",
+          "url/search is the one setter, and every other member is read-only",
+          "url/searchParams is a live instance that toString folds back into the URL",
+          "url/The class has the members RN's source writes, and no canParse or parse",
+          "url/createObjectURL builds its URL from the blob module's constants"
+        ],
+        "oracleVerdict": "The oracle fails 11 check(s), the first of them globals/URL, URLSearchParams, AbortController and AbortSignal are the exports of the modules RN's setUpXHR names",
+        "bundleSha256": "6cf4205faff18b1b2c70618279cb081697eb019a71ac5e05bc6c48bea3080915",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "b3f79c000cd0339e84fc67903af45f82ec9d04b4964c6d5e04af1c8e8a652434"
+      },
+      {
+        "name": "text-decoder-polyfilled",
+        "file": "src/initialize.js",
+        "find": "import \"react-native/Libraries/Core/setUpNavigator\";\n",
+        "replace": "import \"react-native/Libraries/Core/setUpNavigator\";\nglobalThis.TextDecoder = class TextDecoder {\n  decode(bytes) {\n    return String.fromCharCode(...bytes);\n  }\n};\n",
+        "checks": 59,
+        "failedChecks": [
+          "globals/TextDecoder is not a property of the global object before or after the bundle",
+          "decoder/typeof TextDecoder is undefined, it is not a property of the global object, and the negative fixture sees no descriptor",
+          "decoder/Reading or constructing TextDecoder throws the engine's ReferenceError"
+        ],
+        "oracleVerdict": "The oracle fails 3 check(s), the first of them globals/TextDecoder is not a property of the global object before or after the bundle",
+        "bundleSha256": "822a80d54cdab07fae8df6cc6682ac9666ef7b0bfc2f662f9b3a5cd57a85457e",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "a625561dd51d477b17ca35b12e8f71770751136c94143f8d552b840db429422e"
+      },
+      {
+        "name": "abort-controller-silent",
+        "file": "node_modules/react-native/Libraries/Core/setUpXHR.js",
+        "find": "      .AbortController, // flowlint-line untyped-import:off\n",
+        "replace": "      .AbortController && (class AbortController {\n        constructor() {\n          this.signal = {aborted: false, reason: undefined, addEventListener() {}, removeEventListener() {}};\n        }\n        abort(reason) {\n          this.signal.aborted = true;\n          this.signal.reason = reason;\n        }\n      }),\n",
+        "checks": 59,
+        "failedChecks": [
+          "globals/URL, URLSearchParams, AbortController and AbortSignal are the exports of the modules RN's setUpXHR names",
+          "globals/AbortSignal is RN's public wrapper over the class whose prototype every signal has, and URL's searchParams is a URLSearchParams",
+          "abort/A new controller has an open signal of RN's classes",
+          "abort/abort() without a reason aborts with an AbortError once, and a second abort does nothing",
+          "abort/abort(reason) keeps any reason the caller gives, the falsy ones included",
+          "abort/Listeners and onabort run in the order they were added, and a replaced onabort keeps its place",
+          "abort/Listener options, removal and a listener added during the dispatch behave as RN's EventTarget does",
+          "abort/throwIfAborted throws the reason itself",
+          "abort/AbortSignal.abort and AbortSignal.any make signals that are already or soon aborted",
+          "abort/AbortSignal cannot be constructed, and the members refuse another object",
+          "abort/AbortSignal.timeout aborts with a TimeoutError, alone and inside any",
+          "network/fetch rejects with the AbortError whose message is Aborted when its signal aborts while the server holds the request, and the connection is closed",
+          "network/fetch ignores the reason a caller gives abort(): it rejects with the same AbortError, and the signal keeps the caller's reason",
+          "network/A signal that is already aborted rejects fetch with the same AbortError, and no request reaches the server",
+          "network/A fetch that completed is not changed by aborting its signal afterwards",
+          "network/An XMLHttpRequest aborted by its signal dispatches readystatechange, abort and loadend and never load or error, and the connection is closed",
+          "network/After the server lets go, an aborted request delivers nothing more: each fetch settled once and the events of the XMLHttpRequest did not grow"
+        ],
+        "oracleVerdict": "The oracle fails 17 check(s), the first of them globals/URL, URLSearchParams, AbortController and AbortSignal are the exports of the modules RN's setUpXHR names",
+        "bundleSha256": "ca469a430c8e072684c96ecab68dc39392de31c112a4e3f900c1ac8f43aa60b0",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "bdc3f2d6ec6af4ad9c23dc37b22bce693a083aa2cf438bcd0a095b9e6660e9bf"
+      },
+      {
+        "name": "search-params-delete-ignored",
+        "file": "node_modules/react-native/Libraries/Blob/URLSearchParams.js",
+        "find": "    this._searchParams.delete(name);\n",
+        "replace": "    void name;\n",
+        "checks": 59,
+        "failedChecks": [
+          "url/searchParams is a live instance that toString folds back into the URL",
+          "searchParams/append, get, getAll, has, set and delete behave as RN's class does"
+        ],
+        "oracleVerdict": "The oracle fails 2 check(s), the first of them url/searchParams is a live instance that toString folds back into the URL",
+        "bundleSha256": "d804dc6a89f38bf8afd14aedc4afef67a9688a9d3e65d97252a65fe8a5d8c66a",
+        "nativeHostSha256": "bfdcb9b5ba2f15d1aca5a5513f1de07c6767e729acf1474fa35d44bc549ddc10",
+        "logSha256": "8882064a752ac4f4732dbd53adb43b0e6e100e60837b4a933e2c7c4f4437952f"
+      }
+    ]
+  },
+  "oracle": {
+    "file": "tests/web-globals-oracle.mjs",
+    "independence": "Written from RN, Node and the pinned Hermes, not from the probe: RN's Libraries/Blob/URL.js, Libraries/Blob/URLSearchParams.js and the two files of src/private/webapis/dom/abort-api are bundled with nothing of the SDK's (no platform plugin, so none of its overlays) and run in a V8 context with the same cases the fixture runs in Hermes; the members of the four classes are read from RN's source with the TypeScript parser; Node's own TextEncoder, atob and btoa answer the encoding cases, Buffer checks the UTF-8 bytes, and a table of fourteen documented deviations says where Hermes answers otherwise and is required to differ from Node; the hermesvm binaries are scanned; every verdict of the probe is derived again from the report's raw observations.",
+    "expectationFile": {
+      "file": "tests/web-globals-expected.json",
+      "sha256": "63f972b3dbf35f41980443e7ac3f26ca2e485ccc1c61c0cb8c808ba99f5615b2",
+      "cases": 177,
+      "groups": 41,
+      "note": "The file the probe judges against. The runner requires it to equal what the oracle derives, so a change in RN, Node or the Hermes pin that moves an answer fails there."
+    },
+    "referenceBundleSha256": "8982d32e034265fe18d6b80083f0aa0c02c348f77f7d0b30617920fc2f1419f2",
+    "fromRn": {
+      "setUpXHR": {
+        "URL": {
+          "file": "Libraries/Blob/URL.js",
+          "export": "URL"
+        },
+        "URLSearchParams": {
+          "file": "Libraries/Blob/URL.js",
+          "export": "URLSearchParams"
+        },
+        "AbortController": {
+          "file": "src/private/webapis/dom/abort-api/AbortController.js",
+          "export": "AbortController"
+        },
+        "AbortSignal": {
+          "file": "src/private/webapis/dom/abort-api/AbortSignal.js",
+          "export": "AbortSignal_public"
+        }
+      },
+      "fetch": {
+        "abortName": "AbortError",
+        "abortMessage": "Aborted",
+        "usesWhatwg": true,
+        "listensToTheSignal": true,
+        "abortsItsXhr": true,
+        "polyfillsDomException": true,
+        "version": "3.6.20"
+      },
+      "xhr": {
+        "dispatchOrder": [
+          "readystatechange",
+          "abort",
+          "loadend"
+        ],
+        "readyStateDispatchesAbort": true,
+        "abortCompletes": true
+      },
+      "rendererReadsAbortController": true
+    }
+  },
+  "sourcePins": {
+    "tests/web-globals-fixture.jsx": "033d33fe0d31b56789ddaa824cf165535885a2be4409cb78a93d366751153657",
+    "tests/web-globals-cases.mjs": "9bff83ee695bb19398f350c97df8c5b1f3f7252d0dff4f0f66c10e6a066cc55b",
+    "tests/web-globals-early.js": "ba8b891c914edb8558ec6078fd415e14f90c81e0ae00362c35d1473baccbd80b",
+    "tests/web-globals-host.js": "b5c3372c61c92870beea68289785f56e0c81b6a117cacd94c8730d4741dcb9da",
+    "tests/web-globals-probe.gd": "4527d9f3c518a7bfdbf09e3dea4c755c383f70a2a793e966e4681fca065f2257",
+    "tests/web-globals-native.test.mjs": "f558dc6fe9acaf00cc11e0a288a6b2ccde48a0507bce356627a9b4fce3e902f8",
+    "tests/web-globals-oracle.mjs": "dd05dc0c31068cbdb951fe17a1e7956f13118dc61648a368d4b89d6c374f02b9",
+    "tests/web-globals-sabotages.mjs": "63384a64e33f8cb7532b17833950547540ded02a4db27d6d777a968f931f6f9f",
+    "tests/networking-server.mjs": "b384897baa66253733786d43f381f1f919bc6daabc73ef378a1c7491345e64ca",
+    "tests/networking-certificates.mjs": "ac310e2d2fcbddf3104c9ee7b2e551fabc1bafbe3f21cbc24350f5e8789937c6",
+    "scripts/web-globals-bundle.mjs": "549be30bf42bdd81862635c15fc65bcc91bf0b4daa05d1ecb5ecb4b08684ebef",
+    "scripts/web-globals-sabotage.mjs": "de8f3dec616a0fe25026f9ca2bbf864d984f25eb01da3578bb80bcf5070d3c4b",
+    "scripts/native-probe-bundle.mjs": "a90c034ccc09dd70b0b2b625bb0ea3b2a4876ad2cc3500d7d48183935453d863",
+    "src/initialize.js": "b4b6ca7e238e40317535f8ede0920b5cefa6dff074c80a3546bc4a0576335620",
+    "src/runtime.js": "b8fc9d76bba60022a4e281f24e2f770b663055441d96fa160de663ae9ce50840",
+    "sdk/toolchain/platform-plugin.mjs": "37bb179a2aa2e757979cce8ec6ce3938022b427017f5555f3503d763d3c60a40",
+    "sdk/toolchain/metro-polyfills.mjs": "e1b371456bf1b6f33c817e552e21e5ca550016f3be2292455fd019454f643d29"
+  },
+  "scope": {
+    "actualHermesRuntime": true,
+    "actualFabricApplication": true,
+    "headless": true,
+    "realNetworking": "loopback, the networking suite's server",
+    "rnModules": [
+      "setUpXHR",
+      "URL",
+      "URLSearchParams",
+      "AbortController",
+      "AbortSignal",
+      "fetch",
+      "XMLHttpRequest"
+    ],
+    "engineBuiltins": [
+      "TextEncoder",
+      "atob",
+      "btoa"
+    ],
+    "textDecoderAbsent": true
+  },
+  "limits": [
+    "The fetch and XMLHttpRequest integration is the signal's: that an abort reaches the request and ends it as RN's code says. The transport, redirects, TLS and bodies are the networking suite's.",
+    "RN's XMLHttpRequest takes no signal option; the XMLHttpRequest case wires the signal's abort event to xhr.abort(), the way an application does. fetch is the one RN API that reads a signal (whatwg-fetch, version in environment.whatwgFetch).",
+    "URLSearchParams.sort orders keys with localeCompare, which is the engine's: the cases use ASCII keys, and the order is the one ICU gives V8 and the Apple Hermes gives, in the default locale. Another locale could order them otherwise.",
+    "Android's libhermes is not part of this repository's pins; the claim that its Hermes has no TextDecoder rests on the decision and on the iOS, tvOS and visionOS slices of the same release, which the oracle scans.",
+    "The headless desktop host only; no mobile export has run this bundle.",
+    "Hosted CI is pending: the record is of the local run."
+  ]
+}
