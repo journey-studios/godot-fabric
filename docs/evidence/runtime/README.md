@@ -484,7 +484,10 @@ Hermes `JSError` by the name of its dynamic type (the two classes are the same s
 Hermes build equals the one RN pins, byte for byte) and reports the JS error it carries. RN's `RuntimeScheduler` cannot be
 changed (it is compiled unchanged), and its `catch (jsi::JSError&)` misses too, so what a task throws reaches its handler
 wrapped, as RN says for what it does not recognise: `Non-js exception: <what>`. The probe and the oracle read that
-text from `RuntimeScheduler_Modern.cpp`. The same mismatch makes RN's own `catch (jsi::JSError&)` inside
+text from `RuntimeScheduler_Modern.cpp`. RN spells this wrap in two ways: `Non-js exception: ` in the scheduler (RN's compiled
+code, which the host cannot change) and `Non-JS exception: ` in `ReactInstance`'s runtime executor
+(`ReactInstance.cpp:104-108`), which the host's own catches mirror in `JsErrorPath::handle_fatal(const std::exception&)`. Each site
+keeps its spelling; the oracle reads both from the pinned sources and checks the host's against `ReactInstance.cpp`. The same mismatch makes RN's own `catch (jsi::JSError&)` inside
 `JsErrorHandler` miss: an error raised while the handler reports (a listener that throws) reaches the safety net of
 `handle_fatal`, which records it, instead of the next listener. Both are limits below.
 
@@ -539,7 +542,8 @@ the same cases must equal V8's. What the C++ pipeline does before the runtime is
 
 ### Controls
 
-**The previous host** (the tip of `feat/gf-05-js-globals`, built before this slice; `node tests/js-errors-native.test.mjs
+**The previous host** (built from `feat/gf-05-js-globals` at `2791296d`, before this slice; the record names that commit as
+`previousHost.sourceCommit` and takes it as an input, not from `HEAD`; `node tests/js-errors-native.test.mjs
 --allow-original-negative` while it is `addons/fabric_godot.dylib`, then the current host is put back) runs the same bundle and fails
 exactly 14 of the 23 checks, the ones that need the new host, and the oracle rejects it. The 9 that hold on both hosts are the ones that
 need only the JavaScript RN runs. **Seven sabotages** (`scripts/js-errors-sabotage.mjs`, the table in
@@ -567,7 +571,10 @@ what each case reported and logged, the host counters of each lane, the RN sourc
 host's 14 failing checks and its SHA-256, each sabotage's failing checks and the oracle's verdict, and the catch sites.
 `scripts/js-errors-evidence.mjs` writes it from the reports the lanes leave in `build/`, after re-judging each with the oracle and
 checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; with `--commit <sha>` it also checks
-each pin against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
+each pin against `git show <sha>:<path>` and records the commit. It requires `--previous-host-commit <sha>` (a commit in the history of `HEAD`;
+a missing or unknown one is an error, never a guess), and it takes `executionBaseCommit` and `sourceDirtyDuringExecution` from what each
+lane recorded of the tree when it ran (the commit and every path that differed from it), not from the `HEAD` of the moment it writes:
+`--commit` ties the executed sources to a commit and does not say they were committed when they ran. Hosted CI is pending.
 
 **Limits.**
 

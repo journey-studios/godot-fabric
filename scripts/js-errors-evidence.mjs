@@ -17,8 +17,17 @@ import {derivedChecks, oracleRejection, rnExpectations, verifyJsErrorsReport} fr
 // The lanes run before it: `node tests/js-errors-native.test.mjs --allow-original-negative` with the previous host in addons/ (the
 // current host put back after), `node scripts/js-errors-sabotage.mjs` (the sabotages, then the current lane). With --commit <sha> it
 // also checks every pin of a repository file against `git show <sha>:<path>` and records the commit, which is how the pins are tied
-// to the implementation commit once it exists. Run with:
-//   node scripts/js-errors-evidence.mjs [--commit <sha>]
+// to the implementation commit once it exists.
+//
+// Two commits are recorded and neither is derived from the HEAD of the moment the record is written:
+//   - executionBaseCommit and sourceDirtyDuringExecution are what each lane saw when it ran (tests/js-errors-native.test.mjs records the commit
+//     it stood on and every path that differed from it in the report's provenance). The lanes must agree on the commit; the record is dirty
+//     when the current lane ran with any uncommitted path, whether or not --commit is given: --commit ties the executed sources to a commit,
+//     it does not say they were committed when they ran.
+//   - previousHost.sourceCommit is the commit the previous host's binary was built from, which only the person who built it knows. It is
+//     required: --previous-host-commit <sha>, a commit in the history of HEAD. A missing or unknown one is an error, never a guess.
+// Run with:
+//   node scripts/js-errors-evidence.mjs --previous-host-commit <sha> [--commit <sha>]
 const root = fileURLToPath(new URL("..", import.meta.url));
 const digest = bytes => createHash("sha256").update(bytes).digest("hex");
 const readJson = file => JSON.parse(readFileSync(path.join(root, file), "utf8"));
@@ -26,6 +35,19 @@ const sha = file => digest(readFileSync(path.join(root, file)));
 const git = (...args) => execFileSync("git", args, {cwd: root, encoding: "utf8", maxBuffer: 64 * 1024 * 1024}).trim();
 const commitArgument = process.argv.indexOf("--commit");
 const commit = commitArgument === -1 ? null : process.argv[commitArgument + 1];
+const previousArgument = process.argv.indexOf("--previous-host-commit");
+const previousHostCommit = previousArgument === -1 ? null : process.argv[previousArgument + 1];
+// The commit the previous host was built from cannot be read from the host or from HEAD, so it is an input, and a checked one.
+if (!/^[0-9a-f]{40}$/.test(previousHostCommit ?? "")) {
+  throw new Error("E_PREVIOUS_HOST_COMMIT: pass --previous-host-commit <40-character sha>, the commit build/gf05-errors-previous-host/fabric_godot.dylib was built from; "
+    + "it is not HEAD and the script does not guess it");
+}
+try {
+  git("cat-file", "-e", `${previousHostCommit}^{commit}`);
+  git("merge-base", "--is-ancestor", previousHostCommit, "HEAD");
+} catch {
+  throw new Error(`E_PREVIOUS_HOST_COMMIT: ${previousHostCommit} is not a commit in the history of HEAD`);
+}
 
 const expected = await rnExpectations(root);
 const failures = report => report.checks.filter(row => !row.passed).map(row => row.name);
@@ -82,6 +104,22 @@ for (const {variant, report} of sabotages) {
   }
 }
 
+// What the lanes saw of the tree when they ran. A lane that could not ask git has no state, and a record cannot say the sources were clean then.
+const gitOf = ({report}) => {
+  const state = report.provenance.git;
+  assert.ok(state != null && typeof state.head === "string" && Array.isArray(state.dirtyPaths), `${report.provenance.lane}: the lane recorded no git state; run the lanes again`);
+  return state;
+};
+const executionGit = gitOf(current);
+for (const entry of [original, ...sabotages]) {
+  assert.equal(gitOf(entry).head, executionGit.head, `${entry.report.provenance.lane} ran on another commit than the current lane; run the lanes again`);
+}
+for (const {variant, report} of sabotages) {
+  if (variant.host === true) {
+    assert.ok(gitOf({report}).dirtyPaths.includes(variant.file), `${variant.name} ran with ${variant.file} broken, which git sees`);
+  }
+}
+
 const pins = bundleOf(current.report).sources;
 if (commit !== null) {
   for (const [file, pin] of Object.entries(pins)) {
@@ -107,20 +145,28 @@ const record = {
   scenario: "js-errors",
   status: "verified-local-headless-previous-host-control-seven-sabotages",
   at: new Date().toISOString(),
-  executionBaseCommit: git("rev-parse", "HEAD"),
-  sourceDirtyDuringExecution: commit === null,
+  executionBaseCommit: executionGit.head,
+  sourceDirtyDuringExecution: executionGit.dirtyPaths.length > 0,
+  dirtyPathsDuringExecution: executionGit.dirtyPaths,
   implementationCommit: commit,
   pinning: commit === null
-    ? "The lanes ran on the working tree on top of executionBaseCommit, before the implementation commit existed. sourcePins are the SHA-256 of the files they executed; rerun scripts/js-errors-evidence.mjs --commit <sha> to check each against git show <sha>:<path> and record the commit."
-    : "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+    ? "The lanes ran on the working tree on top of executionBaseCommit, before the implementation commit existed (dirtyPathsDuringExecution lists what differed from it). sourcePins are the SHA-256 of the files they executed; rerun scripts/js-errors-evidence.mjs --commit <sha> to check each against git show <sha>:<path> and record the commit."
+    : `Every sourcePins entry equals git show <implementationCommit>:<path>. ${executionGit.dirtyPaths.length > 0 ? "The lanes ran on top of executionBaseCommit with the uncommitted paths of dirtyPathsDuringExecution, so the pins, not the commit the lanes ran on, tie what they executed to the implementation commit." : "The lanes ran on a clean tree at executionBaseCommit."}`,
   environment: {
     godot: current.report.godot, reactNative: current.report.reactNative, node: current.report.provenance.node, platform: "macOS arm64",
     displayServer: current.report.displayServer,
     nativeHostSha256: hostSha256, previousHostSha256,
-    previousHost: "built from executionBaseCommit (the tip of feat/gf-05-js-globals), with the host's bare failure recording; kept in build/gf05-errors-previous-host/ (local, not in Git)",
+    previousHost: {
+      sourceCommit: previousHostCommit,
+      sourceCommitSubject: git("log", "-1", "--format=%s", previousHostCommit),
+      nativeTreeAtSourceCommit: git("rev-parse", `${previousHostCommit}:native`),
+      sha256: previousHostSha256,
+      copy: "build/gf05-errors-previous-host/fabric_godot.dylib (local, not in Git)",
+      provenance: "The commit is given by whoever built the host (--previous-host-commit); no build receipt was recorded for the copy. It is a host with the bare failure recording and without RN's error path, taken from addons/ at the start of the slice, when the worktree was clean at that commit, and the js-globals suite passed on it then; the native/ tree of that commit is nativeTreeAtSourceCommit.",
+    },
   },
   commands: ["npm run test:js-errors", "node tests/js-errors-native.test.mjs --allow-original-negative (previous host in addons/)",
-    "node scripts/js-errors-sabotage.mjs", "node scripts/js-errors-evidence.mjs"],
+    "node scripts/js-errors-sabotage.mjs", "node scripts/js-errors-evidence.mjs --previous-host-commit <sha> [--commit <sha>]"],
   currentLane: {
     ...summary(current),
     result: `JS_ERRORS_PASSED: ${current.report.checks.length}`,
@@ -149,7 +195,7 @@ const record = {
     expectedOriginalFailures: original.report.expectedOriginalFailures,
     hostGlobals: original.report.stages.host.globals,
     nativeModuleLoaded: original.report.stages.environment.native.loaded,
-    note: "The same bundle runs on the host that recorded an error where it caught it and had no ErrorUtils path: it fails exactly the checks that need the new host, and holds the nine that need only the JS RN runs. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit.",
+    note: "The same bundle runs on the host that recorded an error where it caught it and had no ErrorUtils path: it fails exactly the checks that need the new host, and holds the nine that need only the JS RN runs. Its native producers are pinned for the tree; the old binary was built from environment.previousHost.sourceCommit, not from executionBaseCommit.",
   },
   retainedSabotage: {
     script: "scripts/js-errors-sabotage.mjs",
@@ -164,13 +210,14 @@ const record = {
     fromRn: {errorUtilsMembers: expected.errorUtilsMembers, handlerName: expected.handler.name, handlerArity: expected.handler.arity,
       reporter: expected.reporter, consoleOriginal: expected.original, errorFamily: expected.family, installedArities: expected.installed,
       refusals: expected.refusals, flagDefault: expected.flag, notReadyPrefix: expected.prefix, schedulerWrap: expected.schedulerWrap,
+      runtimeExecutorWrap: expected.executorWrap,
       earlyModel: expected.early},
     referenceRun: Object.fromEntries(Object.entries(expected.reference.cases).map(([name, entry]) => [name, {reports: entry.reports, console: entry.logged,
       softReports: entry.softCount, fatalReports: entry.fatalCount}])),
   },
   catchSites: [
     {site: "RuntimeScheduler task error handler", reactInstance: "ReactInstance.cpp:128-131 (handleError(runtime, error, true))",
-      before: "fail(error.what())", now: "JsErrorPath::handle_fatal -> JsErrorHandler::handleError, fatal. RN's own scheduler wraps what Hermes throws as 'Non-js exception: <what>'.",
+      before: "fail(error.what())", now: "JsErrorPath::handle_fatal -> JsErrorHandler::handleError, fatal. RN's own scheduler wraps what Hermes throws as 'Non-js exception: <what>' (RuntimeScheduler_Modern.cpp:402; ReactInstance's runtime executor spells its wrap 'Non-JS exception: ', ReactInstance.cpp:107, and that is the spelling of the host's own catches).",
       certifiedBy: "fatal/An exception that escapes a task of RN's RuntimeScheduler ..."},
     {site: "pump(): the work queue (the host's runtime executor)", reactInstance: "ReactInstance.cpp:92-109 (the runtime executor's catch)",
       before: "fail(error.what())", now: "JsErrorPath::handle_fatal; a Hermes JSError is recognised by its type name and reported as the JS error it is",

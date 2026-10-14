@@ -203,6 +203,14 @@ export async function rnExpectations(base = root) {
   }
   // RN's RuntimeScheduler hands its error handler a wrapper for what it does not recognise as a JS error.
   const schedulerWrap = found(schedulerSource, /jsi::JSError error\(runtime, std::string\("(Non-js exception: )"\) \+ ex\.what\(\)\);/, "how the scheduler wraps a std::exception");
+  // RN spells the wrap of what it does not recognise as a JS error twice: ReactInstance's runtime executor (ReactInstance.cpp:104-108) and the
+  // RuntimeScheduler (above) differ in case. The host's own catches mirror the runtime executor, and its spelling is read from there.
+  const executorWrap = found(reactInstance, /jsi::JSError error\(\s*jsiRuntime, std::string\("(Non-JS exception: )"\) \+ ex\.what\(\)\);/, "how the runtime executor wraps a std::exception");
+  const hostSource = readFileSync(path.join(base, "native/js_error_path.cpp"), "utf8");
+  assert.equal(found(hostSource, /non_js_exception_prefix = "([^"]*)";/, "the host's prefix for an exception that is not a JS error"), executorWrap,
+    "The host spells the runtime executor's wrap as ReactInstance.cpp does");
+  const hostCode = hostSource.split("\n").filter(line => !/^\s*\/\//.test(line)).join("\n");
+  assert.equal([...hostCode.matchAll(/"Non-/g)].length, 1, "The host spells the wrap once, outside its comments");
   // The parts of Android's format the host keeps.
   for (const part of ['", stack:\\n"', '"@"', "append(-1)"]) {
     assert.ok(kotlin.includes(part), `JSStackTrace.kt no longer says ${part}`);
@@ -212,7 +220,7 @@ export async function rnExpectations(base = root) {
   return {
     errorUtilsMembers, handler, reporter, original, family,
     installed: installedGlobals.map(name => name === FLAG_GLOBAL ? {name, flag: true} : {name, arity: arity(name)}), omitted: omittedGlobals, refusals, flag, prefix,
-    schedulerWrap, early: modelEarly(prefix), reference,
+    schedulerWrap, executorWrap, early: modelEarly(prefix), reference,
   };
 }
 
