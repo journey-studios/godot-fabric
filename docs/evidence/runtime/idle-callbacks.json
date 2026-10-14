@@ -1,0 +1,1430 @@
+{
+  "schemaVersion": 1,
+  "scenario": "idle-callbacks",
+  "status": "verified-local-headless-previous-host-control-eight-sabotages",
+  "at": "2026-10-14T02:33:15.617Z",
+  "executionBaseCommit": "80e24e800210380b80de9296eb0f629a9adb26b4",
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "80e24e800210380b80de9296eb0f629a9adb26b4",
+  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless",
+    "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+    "previousHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
+    "previousHost": "built from executionBaseCommit (the tip of feat/gf-05-microtasks, slice D1), which registers no NativeIdleCallbacksCxx module; kept in build/gf05-idle-previous-host/ (local, not in Git)"
+  },
+  "commands": [
+    "npm run test:idle-callbacks",
+    "node tests/idle-callbacks-native.test.mjs --allow-original-negative (previous host in addons/)",
+    "node scripts/idle-callbacks-sabotage.mjs",
+    "node scripts/idle-callbacks-evidence.mjs"
+  ],
+  "currentLane": {
+    "checks": 25,
+    "failedChecks": [],
+    "oracleVerdict": null,
+    "bundleSha256": "df51dd5cd0948f7f906c950a822b0eeafb77cd6104081ac8bf0d84a3d2e16b6b",
+    "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+    "logSha256": "dbd56bee98aea706733dc06099162349ffa5a0afc78a4d8b60daeea1ebd0385f",
+    "result": "IDLE_CALLBACKS_PASSED: 25",
+    "checkVerdicts": [
+      {
+        "name": "mount/The root mounts through the original AppRegistry without a diagnostic",
+        "passed": true
+      },
+      {
+        "name": "setUpTimers/RN$enableMicrotasksInReact is written true by RN's setUpTimers before the renderer reads it, and the renderer reads true",
+        "passed": true
+      },
+      {
+        "name": "setUpTimers/The host defines none of the globals setUpTimers installs, and the idle callbacks are lazy getters that nothing has read when the bundle has evaluated",
+        "passed": true
+      },
+      {
+        "name": "setUpTimers/setImmediate and clearImmediate are RN's immediateShim",
+        "passed": true
+      },
+      {
+        "name": "setUpTimers/setImmediate reaches RN's NativeMicrotasks through queueMicrotask and runs",
+        "passed": true
+      },
+      {
+        "name": "module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+        "passed": true
+      },
+      {
+        "name": "module/The registry serves RN's NativeIdleCallbacks module and counts the calls that reach it",
+        "passed": true
+      },
+      {
+        "name": "module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
+        "passed": true
+      },
+      {
+        "name": "module/Idle callbacks requested outside any task run, each told a deadline with didTimeout false and a timeRemaining function",
+        "passed": true
+      },
+      {
+        "name": "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
+        "passed": true
+      },
+      {
+        "name": "module/Cancelling a handle that has already run, one already canceled or an object that is no handle does nothing; a value that is no object throws",
+        "passed": true
+      },
+      {
+        "name": "order/Idle callbacks run behind the work queued with them whatever its priority, in the order they were requested, with their own microtasks between, and ahead of the timer",
+        "passed": true
+      },
+      {
+        "name": "deadline/An idle callback with no timeout is told didTimeout false and a timeRemaining function",
+        "passed": true
+      },
+      {
+        "name": "deadline/timeRemaining reads no more than 50 ms and no less than the clock leaves of it, and a later reading is never larger",
+        "passed": true
+      },
+      {
+        "name": "deadline/timeRemaining is exactly zero once the 50 ms are past",
+        "passed": true
+      },
+      {
+        "name": "yield/A task queued inside an idle callback takes the scheduler's yield, so timeRemaining reads zero from then on; an idle callback queued inside does not",
+        "passed": true
+      },
+      {
+        "name": "yield/The task runs before the idle callback requested earlier, and that one before the callback requested inside",
+        "passed": true
+      },
+      {
+        "name": "yield-immediate/An Immediate task queued inside an idle callback takes the yield too",
+        "passed": true
+      },
+      {
+        "name": "timeout/The timeout option does not run a callback early: the idle callbacks wait behind a scheduler that stays busy",
+        "passed": true
+      },
+      {
+        "name": "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
+        "passed": true
+      },
+      {
+        "name": "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
+        "passed": true
+      },
+      {
+        "name": "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+        "passed": true
+      },
+      {
+        "name": "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing",
+        "passed": true
+      },
+      {
+        "name": "lifecycle/Stop releases the root, and all native Controls of the root are balanced",
+        "passed": true
+      },
+      {
+        "name": "report/The idle callbacks report is saved with any normative failure visible",
+        "passed": true
+      }
+    ],
+    "bundleInputs": {
+      "count": 429,
+      "injectedFirst": "tests/react-microtasks-host.js",
+      "positions": {
+        "src/runtime.js": 136,
+        "src/initialize.js": 179,
+        "node_modules/react-native/Libraries/Core/setUpTimers.js": 135,
+        "node_modules/react-native/src/private/webapis/idlecallbacks/specs/NativeIdleCallbacks.js": 129,
+        "node_modules/react-native/src/private/webapis/microtasks/specs/NativeMicrotasks.js": 127,
+        "node_modules/react-native/Libraries/Core/Timers/immediateShim.js": 128
+      },
+      "portableQueueMicrotaskBundled": true,
+      "portableQueueMicrotaskNote": "setUpTimers' non-bridgeless branch requires it, so the bundler holds it; RN$Bridgeless is true and the branch never runs."
+    },
+    "originalReactNativeSources": {
+      "Libraries/Core/setUpTimers.js": "4c748c5fcb8f789488fec1c6717b68c993bc434b7f2bc798e00f6e441d0572ca",
+      "Libraries/Utilities/PolyfillFunctions.js": "c00e1ba8f8f668a7a710688e2c0e5d36b63df18a52fdf4bb8691cd436c9720ca",
+      "Libraries/Utilities/defineLazyObjectProperty.js": "14518a34db201d7545b9b2fd72a668d8d42e766d1bbd5a7889910069700e7fa8",
+      "src/private/webapis/idlecallbacks/specs/NativeIdleCallbacks.js": "e181df1a83968547b3e9c7c0673194306f89c909fc3c956a5ab58dd64c0102c0",
+      "src/private/webapis/microtasks/specs/NativeMicrotasks.js": "1871e92a5e288064066c2a7ed6080561e3e70cda9e9ae8449970b9b6576fa4dc",
+      "Libraries/TurboModule/TurboModuleRegistry.js": "433e760b8dde773c9f5aaa8832d06f58fe758e83966b2377bb4f240d62820195",
+      "Libraries/Core/Timers/immediateShim.js": "9167921c77c4286f2b9e378ba067eead40d741ce8e12a46598a25d62943b9d87",
+      "Libraries/Core/Timers/queueMicrotask.js": "8f16495e31f4b923ad7ea390c0434729db56680b1ef645525e974c8f189d497d",
+      "ReactCommon/react/nativemodule/idlecallbacks/NativeIdleCallbacks.cpp": "ab549069359d4603cabf8f0da6c6ec8281ace3da8af8a6d89727d6c11550a369",
+      "ReactCommon/react/nativemodule/idlecallbacks/NativeIdleCallbacks.h": "29c15e6dff9061f64f70bdcb9b941bf4f01adc7193cc2cc00ad7623ac6fc41df",
+      "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler.cpp": "42ad2d78314c8911f4e4857be48c59de44a1513514574aed5e27ddc2b76f25f3",
+      "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler.h": "c5efcb87e01ce0e2c67a4e9847fc672f3fbf6dcc1310d0391f05624ab591a3ff",
+      "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp": "d758cdc07c674bb49df067c9bb0e29a364f4173e30cd291ef06c047cd6e72fce",
+      "ReactCommon/react/renderer/runtimescheduler/SchedulerPriorityUtils.h": "b040c6c87d09989f3f7554bc45bed9438b79b39c9a15172d4b65d0ec4dc1aa3b",
+      "ReactCommon/react/renderer/runtimescheduler/Task.h": "067047dd019364cd84b2c85de33f7b2519f15320db550323922c9ab018c1c182",
+      "ReactCommon/react/renderer/runtimescheduler/Task.cpp": "f36941f6beb6dca5ef01a3d6629c6d3fdb65648f4bf81c0b183b573780a9bc84",
+      "ReactCommon/react/renderer/core/EventBeat.cpp": "c5d244d50c9567181ccf1525c6921aab9e191808d48afe16b0c26a4dbf7effcf",
+      "src/private/setup/setUpDefaultReactNativeEnvironment.js": "ada7fdd487db30821082e115756be85e92cc1f095155355d06067422e2df0603"
+    },
+    "setUpTimers": {
+      "environment": {
+        "flag": {
+          "type": "boolean",
+          "value": true
+        },
+        "queueMicrotask": {
+          "threw": false,
+          "value": {
+            "length": 1,
+            "name": "",
+            "type": "function"
+          }
+        },
+        "requestIdleCallback": {
+          "threw": false,
+          "value": {
+            "length": 1,
+            "name": "",
+            "type": "function"
+          }
+        },
+        "cancelIdleCallback": {
+          "threw": false,
+          "value": {
+            "length": 1,
+            "name": "",
+            "type": "function"
+          }
+        },
+        "setImmediate": {
+          "isShim": true,
+          "type": "function"
+        },
+        "clearImmediate": {
+          "isShim": true,
+          "type": "function"
+        },
+        "descriptorsAfterRead": {
+          "cancelIdleCallback": {
+            "configurable": true,
+            "enumerable": true,
+            "kind": "value",
+            "writable": true
+          },
+          "clearImmediate": {
+            "configurable": true,
+            "enumerable": true,
+            "kind": "value",
+            "writable": true
+          },
+          "queueMicrotask": {
+            "configurable": true,
+            "enumerable": true,
+            "kind": "value",
+            "writable": true
+          },
+          "requestIdleCallback": {
+            "configurable": true,
+            "enumerable": true,
+            "kind": "value",
+            "writable": true
+          },
+          "setImmediate": {
+            "configurable": true,
+            "enumerable": true,
+            "kind": "value",
+            "writable": true
+          }
+        },
+        "kindsBeforeAnyRead": {
+          "cancelIdleCallback": "getter",
+          "requestIdleCallback": "getter"
+        }
+      },
+      "hostBeforeTheBundle": {
+        "RN$enableMicrotasksInReact": "undefined",
+        "cancelIdleCallback": "undefined",
+        "clearImmediate": "undefined",
+        "queueMicrotask": "undefined",
+        "requestIdleCallback": "undefined",
+        "setImmediate": "undefined"
+      },
+      "accessorLog": [
+        {
+          "final": true,
+          "name": "RN$enableMicrotasksInReact",
+          "op": "write",
+          "type": "boolean",
+          "value": true
+        },
+        {
+          "final": true,
+          "name": "RN$enableMicrotasksInReact",
+          "op": "read",
+          "type": "boolean",
+          "value": true
+        },
+        {
+          "final": true,
+          "name": "RN$enableMicrotasksInReact",
+          "op": "read",
+          "type": "boolean",
+          "value": true
+        },
+        {
+          "final": false,
+          "name": "queueMicrotask",
+          "op": "write",
+          "type": "function",
+          "value": null
+        },
+        {
+          "final": true,
+          "name": "queueMicrotask",
+          "op": "write",
+          "type": "function",
+          "value": null
+        },
+        {
+          "final": true,
+          "name": "queueMicrotask",
+          "op": "read",
+          "type": "function",
+          "value": null
+        }
+      ]
+    },
+    "module": {
+      "native": {
+        "cancelType": "function",
+        "error": null,
+        "hasCancelIdleCallback": true,
+        "hasRequestIdleCallback": true,
+        "loaded": true,
+        "requestType": "function",
+        "stableFunctions": true
+      },
+      "registry": {
+        "callableCalls": 0,
+        "callableModules": 0,
+        "creations": 7,
+        "disposals": 0,
+        "idleCallbacks": {
+          "cancels": 0,
+          "requests": 0
+        },
+        "installed": true,
+        "loaded": 7,
+        "lookups": 13,
+        "microtasks": {
+          "calls": 3
+        },
+        "registered": 20,
+        "retainedUntilVMDestroy": 0,
+        "runtimeId": "26843547094",
+        "staleCalls": 0,
+        "stopped": false
+      },
+      "requestBatch": {
+        "after": {
+          "cancels": 0,
+          "requests": 3
+        },
+        "before": {
+          "cancels": 0,
+          "requests": 0
+        },
+        "count": 3,
+        "result": {
+          "deadlines": [],
+          "distinct": 3,
+          "errors": [],
+          "handleTypes": [
+            "object",
+            "object",
+            "object"
+          ],
+          "ran": 0,
+          "requested": 3
+        }
+      },
+      "runBatch": {
+        "many": {
+          "deadlines": [
+            {
+              "didTimeout": false,
+              "keys": [
+                "didTimeout",
+                "timeRemaining"
+              ],
+              "timeRemainingType": "function"
+            },
+            {
+              "didTimeout": false,
+              "keys": [
+                "didTimeout",
+                "timeRemaining"
+              ],
+              "timeRemainingType": "function"
+            },
+            {
+              "didTimeout": false,
+              "keys": [
+                "didTimeout",
+                "timeRemaining"
+              ],
+              "timeRemainingType": "function"
+            }
+          ],
+          "distinct": 3,
+          "errors": [],
+          "handleTypes": [
+            "object",
+            "object",
+            "object"
+          ],
+          "ran": 3,
+          "requested": 3
+        },
+        "waitedFrames": 1
+      },
+      "cancelBatch": {
+        "after": {
+          "cancels": 3,
+          "requests": 7
+        },
+        "before": {
+          "cancels": 0,
+          "requests": 3
+        },
+        "count": 3,
+        "result": {
+          "canceled": 3,
+          "controlRan": false,
+          "errors": [],
+          "ran": 0,
+          "requested": 3
+        },
+        "state": {
+          "canceled": 3,
+          "controlRan": true,
+          "errors": [],
+          "ran": 0,
+          "requested": 3
+        }
+      },
+      "cancelEdges": {
+        "cancels": {
+          "afterRun": {
+            "threw": false,
+            "value": null
+          },
+          "again": {
+            "threw": false,
+            "value": null
+          },
+          "number": {
+            "error": "Exception in HostFunction: Value is a number, expected an Object\n\nError: Value is a number, expected an Object\n    at cancelIdleCallback (native)\n    at anonymous (res://build/idle-callbacks-probe.js:2:246358)\n    at anonymous (res://build/idle-callbacks-probe.js:8:86029)\n    at attempt (res://build/idle-callbacks-probe.js:8:81937)\n    at edgeCancels (res://build/idle-callbacks-probe.js:8:85995)\n    at global (res://build/idle-callbacks-probe.js:1:47)",
+            "threw": true
+          },
+          "plainObject": {
+            "threw": false,
+            "value": null
+          }
+        },
+        "request": {
+          "threw": false,
+          "value": "object"
+        },
+        "state": {
+          "cancels": null,
+          "ran": true,
+          "request": {
+            "threw": false,
+            "value": "object"
+          }
+        }
+      }
+    },
+    "orders": {
+      "order": [
+        "handler-end",
+        "microtask",
+        "promise",
+        "immediate",
+        "task-immediate",
+        "task-user-blocking",
+        "task-normal",
+        "idle-a",
+        "idle-a-microtask",
+        "idle-a-promise",
+        "idle-a-immediate",
+        "idle-b",
+        "timeout",
+        "end"
+      ],
+      "deadline": [
+        "handler-end",
+        "idle",
+        "end"
+      ],
+      "yield": [
+        "handler-end",
+        "idle-a",
+        "task-normal",
+        "idle-b",
+        "idle-nested",
+        "end"
+      ],
+      "yield-immediate": [
+        "handler-end",
+        "idle",
+        "task-immediate",
+        "end"
+      ],
+      "timeout": [
+        "handler-end",
+        "busy-1",
+        "busy-2",
+        "busy-3",
+        "idle-timeout-1",
+        "idle-timeout-60000",
+        "idle-timeout-0",
+        "idle-timeout-negative",
+        "idle-no-timeout",
+        "end"
+      ],
+      "cancel": [
+        "handler-end",
+        "idle-a",
+        "idle-c",
+        "idle-d",
+        "end"
+      ]
+    },
+    "modelOrders": {
+      "order": [
+        "handler-end",
+        "microtask",
+        "promise",
+        "immediate",
+        "task-immediate",
+        "task-user-blocking",
+        "task-normal",
+        "idle-a",
+        "idle-a-microtask",
+        "idle-a-promise",
+        "idle-a-immediate",
+        "idle-b",
+        "timeout",
+        "end"
+      ],
+      "deadline": [
+        "handler-end",
+        "idle",
+        "end"
+      ],
+      "yield": [
+        "handler-end",
+        "idle-a",
+        "task-normal",
+        "idle-b",
+        "idle-nested",
+        "end"
+      ],
+      "yield-immediate": [
+        "handler-end",
+        "idle",
+        "task-immediate",
+        "end"
+      ],
+      "timeout": [
+        "handler-end",
+        "busy-1",
+        "busy-2",
+        "busy-3",
+        "idle-timeout-1",
+        "idle-timeout-60000",
+        "idle-timeout-0",
+        "idle-timeout-negative",
+        "idle-no-timeout",
+        "end"
+      ],
+      "cancel": [
+        "handler-end",
+        "idle-a",
+        "idle-c",
+        "idle-d",
+        "end"
+      ]
+    },
+    "readings": {
+      "deadline": {
+        "entry": 49.992917,
+        "again": 49.990917,
+        "after-quick": 39.981084,
+        "after-deadline": 0
+      },
+      "yield": {
+        "entry": 49.992875,
+        "after-idle": 49.989541,
+        "after-task": 0,
+        "again": 0
+      },
+      "yield-immediate": {
+        "entry": 49.991583,
+        "after-task": 0
+      },
+      "note": "Milliseconds, as the callback read them in the lane of record. The oracle judges each against the timestamps the report carries, not against these values."
+    },
+    "didTimeout": {
+      "idle-timeout-1": {
+        "timeout": 1,
+        "didTimeout": true
+      },
+      "idle-timeout-60000": {
+        "timeout": 60000,
+        "didTimeout": false
+      },
+      "idle-timeout-0": {
+        "timeout": 0,
+        "didTimeout": false
+      },
+      "idle-timeout-negative": {
+        "timeout": -5,
+        "didTimeout": false
+      },
+      "idle-no-timeout": {
+        "timeout": null,
+        "didTimeout": false
+      }
+    },
+    "gate": {
+      "state": {
+        "controlRan": true,
+        "idleRan": false,
+        "queued": {
+          "threw": false,
+          "value": true
+        }
+      },
+      "afterStop": {
+        "cancels": 9,
+        "requests": 26,
+        "result": {
+          "cancel": {
+            "threw": false,
+            "value": null
+          },
+          "cancelNumber": {
+            "threw": false,
+            "value": null
+          },
+          "request": {
+            "threw": false,
+            "value": 0
+          }
+        },
+        "state": {
+          "afterStopRan": false,
+          "controlRan": true,
+          "idleRan": false,
+          "queued": {
+            "threw": false,
+            "value": true
+          }
+        }
+      },
+      "finalApplication": {
+        "stopped": true,
+        "rootCount": 0
+      }
+    }
+  },
+  "previousHostControl": {
+    "checks": 25,
+    "failedChecks": [
+      "module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+      "module/The registry serves RN's NativeIdleCallbacks module and counts the calls that reach it",
+      "module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
+      "module/Idle callbacks requested outside any task run, each told a deadline with didTimeout false and a timeRemaining function",
+      "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
+      "module/Cancelling a handle that has already run, one already canceled or an object that is no handle does nothing; a value that is no object throws",
+      "order/Idle callbacks run behind the work queued with them whatever its priority, in the order they were requested, with their own microtasks between, and ahead of the timer",
+      "deadline/An idle callback with no timeout is told didTimeout false and a timeRemaining function",
+      "deadline/timeRemaining reads no more than 50 ms and no less than the clock leaves of it, and a later reading is never larger",
+      "deadline/timeRemaining is exactly zero once the 50 ms are past",
+      "yield/A task queued inside an idle callback takes the scheduler's yield, so timeRemaining reads zero from then on; an idle callback queued inside does not",
+      "yield/The task runs before the idle callback requested earlier, and that one before the callback requested inside",
+      "yield-immediate/An Immediate task queued inside an idle callback takes the yield too",
+      "timeout/The timeout option does not run a callback early: the idle callbacks wait behind a scheduler that stays busy",
+      "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
+      "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
+      "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+      "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing"
+    ],
+    "oracleVerdict": "The oracle fails 18 check(s), the first of them module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+    "bundleSha256": "df51dd5cd0948f7f906c950a822b0eeafb77cd6104081ac8bf0d84a3d2e16b6b",
+    "nativeHostSha256": "3f844cecf92cd30ddf9c5ef70face0d09b347ff907cbfc27cf43910833502bdb",
+    "logSha256": "70a299618c5e0e37182927b1c1a527ecbb56bba45187fe415b6cefb23a29692d",
+    "sameBundleAsCurrent": true,
+    "result": "IDLE_CALLBACKS_ORIGINAL_NEGATIVE: 18",
+    "expectedOriginalFailures": [
+      "module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+      "module/The registry serves RN's NativeIdleCallbacks module and counts the calls that reach it",
+      "module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
+      "module/Idle callbacks requested outside any task run, each told a deadline with didTimeout false and a timeRemaining function",
+      "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
+      "module/Cancelling a handle that has already run, one already canceled or an object that is no handle does nothing; a value that is no object throws",
+      "order/Idle callbacks run behind the work queued with them whatever its priority, in the order they were requested, with their own microtasks between, and ahead of the timer",
+      "deadline/An idle callback with no timeout is told didTimeout false and a timeRemaining function",
+      "deadline/timeRemaining reads no more than 50 ms and no less than the clock leaves of it, and a later reading is never larger",
+      "deadline/timeRemaining is exactly zero once the 50 ms are past",
+      "yield/A task queued inside an idle callback takes the scheduler's yield, so timeRemaining reads zero from then on; an idle callback queued inside does not",
+      "yield/The task runs before the idle callback requested earlier, and that one before the callback requested inside",
+      "yield-immediate/An Immediate task queued inside an idle callback takes the yield too",
+      "timeout/The timeout option does not run a callback early: the idle callbacks wait behind a scheduler that stays busy",
+      "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
+      "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
+      "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+      "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing"
+    ],
+    "nativeModuleLoaded": false,
+    "note": "The same bundle runs on the host that registers no NativeIdleCallbacksCxx: the idle callbacks are lazy getters, so the bundle evaluates, the root mounts and queueMicrotask and setImmediate work, and the first read of requestIdleCallback or cancelIdleCallback fails. It fails exactly the checks that need the new module, and holds the five that need only the JS the bundle runs (the flag, the globals before the bundle and the lazy getters, RN's immediateShim, setImmediate over the microtask module) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit."
+  },
+  "retainedSabotage": {
+    "script": "scripts/idle-callbacks-sabotage.mjs",
+    "table": "tests/idle-callbacks-sabotages.mjs",
+    "mechanism": "set-up-timers-not-imported, timeout-ignored, reimplemented, cancel-dropped, gate-removed and window-open are in-memory esbuild overrides (scripts/idle-callbacks-bundle.mjs), no file is edited; no-module and strict-ignored break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
+    "variants": [
+      {
+        "name": "set-up-timers-not-imported",
+        "host": false,
+        "file": "src/initialize.js",
+        "find": "import \"react-native/Libraries/Core/setUpTimers\";\n",
+        "replace": "",
+        "checks": 25,
+        "failedChecks": [
+          "mount/The root mounts through the original AppRegistry without a diagnostic",
+          "setUpTimers/RN$enableMicrotasksInReact is written true by RN's setUpTimers before the renderer reads it, and the renderer reads true",
+          "setUpTimers/The host defines none of the globals setUpTimers installs, and the idle callbacks are lazy getters that nothing has read when the bundle has evaluated",
+          "setUpTimers/setImmediate and clearImmediate are RN's immediateShim",
+          "setUpTimers/setImmediate reaches RN's NativeMicrotasks through queueMicrotask and runs",
+          "module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+          "module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
+          "module/Idle callbacks requested outside any task run, each told a deadline with didTimeout false and a timeRemaining function",
+          "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
+          "module/Cancelling a handle that has already run, one already canceled or an object that is no handle does nothing; a value that is no object throws",
+          "order/Idle callbacks run behind the work queued with them whatever its priority, in the order they were requested, with their own microtasks between, and ahead of the timer",
+          "deadline/An idle callback with no timeout is told didTimeout false and a timeRemaining function",
+          "deadline/timeRemaining reads no more than 50 ms and no less than the clock leaves of it, and a later reading is never larger",
+          "deadline/timeRemaining is exactly zero once the 50 ms are past",
+          "yield/A task queued inside an idle callback takes the scheduler's yield, so timeRemaining reads zero from then on; an idle callback queued inside does not",
+          "yield/The task runs before the idle callback requested earlier, and that one before the callback requested inside",
+          "yield-immediate/An Immediate task queued inside an idle callback takes the yield too",
+          "timeout/The timeout option does not run a callback early: the idle callbacks wait behind a scheduler that stays busy",
+          "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
+          "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
+          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+          "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing",
+          "lifecycle/Stop releases the root, and all native Controls of the root are balanced"
+        ],
+        "oracleVerdict": "The oracle fails 23 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
+        "bundleSha256": "ef8f38998e0e4d26e700e609eca09f2d73d50b0e9a028b1f6453fdc08d0e4493",
+        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+        "logSha256": "284d65c1485845ed0d667b13c52ee7faa3fce65de016aceb6ff05191a7ba8ce2",
+        "orders": {
+          "order": [],
+          "deadline": [],
+          "yield": [],
+          "yield-immediate": [],
+          "timeout": [],
+          "cancel": []
+        }
+      },
+      {
+        "name": "timeout-ignored",
+        "host": false,
+        "file": "src/runtime.js",
+        "find": "request((deadline) => { if (live()) { callback(deadline); } }, ...options)",
+        "replace": "request((deadline) => { if (live()) { callback(deadline); } })",
+        "checks": 25,
+        "failedChecks": [
+          "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
+        "bundleSha256": "9c4cad6a26ac380c8a999e2f070ca4f9b72fc69f549a374c5d70eb2d8e54e13e",
+        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+        "logSha256": "f70f3a912d9142f4cfd3b5f7148623430ae6d6778000d3b8d6c0c89bb18b91f0",
+        "orders": {
+          "order": [
+            "handler-end",
+            "microtask",
+            "promise",
+            "immediate",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "idle-a",
+            "idle-a-microtask",
+            "idle-a-promise",
+            "idle-a-immediate",
+            "idle-b",
+            "timeout",
+            "end"
+          ],
+          "deadline": [
+            "handler-end",
+            "idle",
+            "end"
+          ],
+          "yield": [
+            "handler-end",
+            "idle-a",
+            "task-normal",
+            "idle-b",
+            "idle-nested",
+            "end"
+          ],
+          "yield-immediate": [
+            "handler-end",
+            "idle",
+            "task-immediate",
+            "end"
+          ],
+          "timeout": [
+            "handler-end",
+            "busy-1",
+            "busy-2",
+            "busy-3",
+            "idle-timeout-1",
+            "idle-timeout-60000",
+            "idle-timeout-0",
+            "idle-timeout-negative",
+            "idle-no-timeout",
+            "end"
+          ],
+          "cancel": [
+            "handler-end",
+            "idle-a",
+            "idle-c",
+            "idle-d",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "reimplemented",
+        "host": false,
+        "file": "src/runtime.js",
+        "find": "request((deadline) => { if (live()) { callback(deadline); } }, ...options)",
+        "replace": "setTimeout(() => { if (live()) { callback({didTimeout: false, timeRemaining: () => 50}); } }, 0)",
+        "checks": 25,
+        "failedChecks": [
+          "module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
+          "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
+          "module/Cancelling a handle that has already run, one already canceled or an object that is no handle does nothing; a value that is no object throws",
+          "order/Idle callbacks run behind the work queued with them whatever its priority, in the order they were requested, with their own microtasks between, and ahead of the timer",
+          "deadline/timeRemaining reads no more than 50 ms and no less than the clock leaves of it, and a later reading is never larger",
+          "deadline/timeRemaining is exactly zero once the 50 ms are past",
+          "yield/A task queued inside an idle callback takes the scheduler's yield, so timeRemaining reads zero from then on; an idle callback queued inside does not",
+          "yield/The task runs before the idle callback requested earlier, and that one before the callback requested inside",
+          "yield-immediate/An Immediate task queued inside an idle callback takes the yield too",
+          "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
+          "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback"
+        ],
+        "oracleVerdict": "The oracle fails 11 check(s), the first of them module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
+        "bundleSha256": "06156011c46ec4d1a4a0b12671eb16a571fc7614a3c3dd571be35ea15d3a20b9",
+        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+        "logSha256": "7c7c7528059b92a9d22ffa56dc809d58077b0f6d054e7d5560597c679bb0487d",
+        "orders": {
+          "order": [
+            "handler-end",
+            "microtask",
+            "promise",
+            "immediate",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "idle-a",
+            "idle-a-microtask",
+            "idle-a-promise",
+            "idle-a-immediate",
+            "timeout",
+            "idle-b",
+            "end"
+          ],
+          "deadline": [
+            "handler-end",
+            "idle",
+            "end"
+          ],
+          "yield": [
+            "handler-end",
+            "idle-a",
+            "idle-b",
+            "end",
+            "task-normal"
+          ],
+          "yield-immediate": [
+            "handler-end",
+            "idle",
+            "end",
+            "task-immediate"
+          ],
+          "timeout": [
+            "handler-end",
+            "busy-1",
+            "busy-2",
+            "busy-3",
+            "idle-timeout-1",
+            "idle-timeout-60000",
+            "idle-timeout-0",
+            "idle-timeout-negative",
+            "idle-no-timeout",
+            "end"
+          ],
+          "cancel": [
+            "handler-end",
+            "idle-a",
+            "idle-b",
+            "idle-c",
+            "idle-d",
+            "idle-e",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "cancel-dropped",
+        "host": false,
+        "file": "src/runtime.js",
+        "find": "    cancel(handle);\n",
+        "replace": "    void handle;\n",
+        "checks": 25,
+        "failedChecks": [
+          "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
+          "module/Cancelling a handle that has already run, one already canceled or an object that is no handle does nothing; a value that is no object throws",
+          "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback"
+        ],
+        "oracleVerdict": "The oracle fails 3 check(s), the first of them module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
+        "bundleSha256": "7240ee46ff6776a27ad2c4ffcf4943b1d9bd4b6d1bd2f0e45d355b7e9472b4dc",
+        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+        "logSha256": "e9c769a0ce3cffbe8cae08a7ae433c3f43d7d7d14a4425464c76707abc668e23",
+        "orders": {
+          "order": [
+            "handler-end",
+            "microtask",
+            "promise",
+            "immediate",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "idle-a",
+            "idle-a-microtask",
+            "idle-a-promise",
+            "idle-a-immediate",
+            "idle-b",
+            "timeout",
+            "end"
+          ],
+          "deadline": [
+            "handler-end",
+            "idle",
+            "end"
+          ],
+          "yield": [
+            "handler-end",
+            "idle-a",
+            "task-normal",
+            "idle-b",
+            "idle-nested",
+            "end"
+          ],
+          "yield-immediate": [
+            "handler-end",
+            "idle",
+            "task-immediate",
+            "end"
+          ],
+          "timeout": [
+            "handler-end",
+            "busy-1",
+            "busy-2",
+            "busy-3",
+            "idle-timeout-1",
+            "idle-timeout-60000",
+            "idle-timeout-0",
+            "idle-timeout-negative",
+            "idle-no-timeout",
+            "end"
+          ],
+          "cancel": [
+            "handler-end",
+            "idle-a",
+            "idle-b",
+            "idle-c",
+            "idle-d",
+            "idle-e",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "gate-removed",
+        "host": false,
+        "file": "src/runtime.js",
+        "find": "request((deadline) => { if (live()) { callback(deadline); } }, ...options)",
+        "replace": "request(callback, ...options)",
+        "checks": 25,
+        "failedChecks": [
+          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+        "bundleSha256": "7c53d2c4f74e65315924bd44af8b2e6c890efbca6368ad1997434b2f0cea339c",
+        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+        "logSha256": "842903bc04b9e3448bb6bb6603393fad71fcc98d6729cb06c2dc46b4444fa446",
+        "orders": {
+          "order": [
+            "handler-end",
+            "microtask",
+            "promise",
+            "immediate",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "idle-a",
+            "idle-a-microtask",
+            "idle-a-promise",
+            "idle-a-immediate",
+            "idle-b",
+            "timeout",
+            "end"
+          ],
+          "deadline": [
+            "handler-end",
+            "idle",
+            "end"
+          ],
+          "yield": [
+            "handler-end",
+            "idle-a",
+            "task-normal",
+            "idle-b",
+            "idle-nested",
+            "end"
+          ],
+          "yield-immediate": [
+            "handler-end",
+            "idle",
+            "task-immediate",
+            "end"
+          ],
+          "timeout": [
+            "handler-end",
+            "busy-1",
+            "busy-2",
+            "busy-3",
+            "idle-timeout-1",
+            "idle-timeout-60000",
+            "idle-timeout-0",
+            "idle-timeout-negative",
+            "idle-no-timeout",
+            "end"
+          ],
+          "cancel": [
+            "handler-end",
+            "idle-a",
+            "idle-c",
+            "idle-d",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "window-open",
+        "host": false,
+        "file": "src/runtime.js",
+        "find": "const live = () => active(true);",
+        "replace": "const live = () => active();",
+        "checks": 25,
+        "failedChecks": [
+          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+        "bundleSha256": "29d80093fae14506ae046a073ff80fe969790fb9f30ac4306c7df1a335e451c2",
+        "nativeHostSha256": "384eeb7f2be248139a2bbb007f1f87a73272558a495708bf4d09dc1f36afff63",
+        "logSha256": "54539c685ee3a575c3ef21e88c3961f54606af21f81930746390d4bf1082053c",
+        "orders": {
+          "order": [
+            "handler-end",
+            "microtask",
+            "promise",
+            "immediate",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "idle-a",
+            "idle-a-microtask",
+            "idle-a-promise",
+            "idle-a-immediate",
+            "idle-b",
+            "timeout",
+            "end"
+          ],
+          "deadline": [
+            "handler-end",
+            "idle",
+            "end"
+          ],
+          "yield": [
+            "handler-end",
+            "idle-a",
+            "task-normal",
+            "idle-b",
+            "idle-nested",
+            "end"
+          ],
+          "yield-immediate": [
+            "handler-end",
+            "idle",
+            "task-immediate",
+            "end"
+          ],
+          "timeout": [
+            "handler-end",
+            "busy-1",
+            "busy-2",
+            "busy-3",
+            "idle-timeout-1",
+            "idle-timeout-60000",
+            "idle-timeout-0",
+            "idle-timeout-negative",
+            "idle-no-timeout",
+            "end"
+          ],
+          "cancel": [
+            "handler-end",
+            "idle-a",
+            "idle-c",
+            "idle-d",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "no-module",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "    native_modules->add_idle_callbacks();\n",
+        "replace": "",
+        "checks": 25,
+        "failedChecks": [
+          "module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+          "module/The registry serves RN's NativeIdleCallbacks module and counts the calls that reach it",
+          "module/Each requestIdleCallback call through the global reaches the C++ module once and returns a task handle",
+          "module/Idle callbacks requested outside any task run, each told a deadline with didTimeout false and a timeRemaining function",
+          "module/Each cancelIdleCallback call through the global reaches the C++ module once, and a canceled callback never runs",
+          "module/Cancelling a handle that has already run, one already canceled or an object that is no handle does nothing; a value that is no object throws",
+          "order/Idle callbacks run behind the work queued with them whatever its priority, in the order they were requested, with their own microtasks between, and ahead of the timer",
+          "deadline/An idle callback with no timeout is told didTimeout false and a timeRemaining function",
+          "deadline/timeRemaining reads no more than 50 ms and no less than the clock leaves of it, and a later reading is never larger",
+          "deadline/timeRemaining is exactly zero once the 50 ms are past",
+          "yield/A task queued inside an idle callback takes the scheduler's yield, so timeRemaining reads zero from then on; an idle callback queued inside does not",
+          "yield/The task runs before the idle callback requested earlier, and that one before the callback requested inside",
+          "yield-immediate/An Immediate task queued inside an idle callback takes the yield too",
+          "timeout/The timeout option does not run a callback early: the idle callbacks wait behind a scheduler that stays busy",
+          "timeout/didTimeout is true for a callback that runs after its timeout, false for a longer one, and false for a timeout of zero or less or none",
+          "cancel/A canceled callback does not run, and the ones around it do, including one canceled from inside an idle callback",
+          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+          "gate/Once the application is inactive, requestIdleCallback schedules nothing, returns zero and does not reach the module, and cancelIdleCallback does nothing"
+        ],
+        "oracleVerdict": "The oracle fails 18 check(s), the first of them module/RN's NativeIdleCallbacks spec module loads over the host's NativeIdleCallbacksCxx and exposes requestIdleCallback and cancelIdleCallback",
+        "bundleSha256": "df51dd5cd0948f7f906c950a822b0eeafb77cd6104081ac8bf0d84a3d2e16b6b",
+        "nativeHostSha256": "14f266aa0e0aa9b991c9f2076b584cc7ac4645cf7e27df576e56640fc1adfebe",
+        "logSha256": "e42c49079ef893e99df6ab20a45b4298f15d47b90a6a88b33bbff6f453634e99",
+        "orders": {
+          "order": [
+            "handler-end",
+            "microtask",
+            "promise",
+            "immediate",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "timeout",
+            "end"
+          ],
+          "deadline": [
+            "handler-end",
+            "end"
+          ],
+          "yield": [
+            "handler-end",
+            "end"
+          ],
+          "yield-immediate": [
+            "handler-end",
+            "end"
+          ],
+          "timeout": [
+            "handler-end",
+            "busy-1",
+            "busy-2",
+            "busy-3",
+            "end"
+          ],
+          "cancel": [
+            "handler-end",
+            "end"
+          ]
+        }
+      },
+      {
+        "name": "strict-ignored",
+        "host": true,
+        "file": "native/application_runtime.cpp",
+        "find": "const bool strict = count > 0 && args[0].isBool() && args[0].getBool();",
+        "replace": "const bool strict = false;",
+        "checks": 25,
+        "failedChecks": [
+          "gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it"
+        ],
+        "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/An idle callback queued before the application stops does not run once it is inactive, although the scheduler ran the task queued with it",
+        "bundleSha256": "df51dd5cd0948f7f906c950a822b0eeafb77cd6104081ac8bf0d84a3d2e16b6b",
+        "nativeHostSha256": "398830a8285bfe63c1209ba6029230d07fa55c5dacb711195cba711490e1466c",
+        "logSha256": "815b8d5c6f4c2d51b8ea69400497277dce4f118480c99616be05129dacfd8ca1",
+        "orders": {
+          "order": [
+            "handler-end",
+            "microtask",
+            "promise",
+            "immediate",
+            "task-immediate",
+            "task-user-blocking",
+            "task-normal",
+            "idle-a",
+            "idle-a-microtask",
+            "idle-a-promise",
+            "idle-a-immediate",
+            "idle-b",
+            "timeout",
+            "end"
+          ],
+          "deadline": [
+            "handler-end",
+            "idle",
+            "end"
+          ],
+          "yield": [
+            "handler-end",
+            "idle-a",
+            "task-normal",
+            "idle-b",
+            "idle-nested",
+            "end"
+          ],
+          "yield-immediate": [
+            "handler-end",
+            "idle",
+            "task-immediate",
+            "end"
+          ],
+          "timeout": [
+            "handler-end",
+            "busy-1",
+            "busy-2",
+            "busy-3",
+            "idle-timeout-1",
+            "idle-timeout-60000",
+            "idle-timeout-0",
+            "idle-timeout-negative",
+            "idle-no-timeout",
+            "end"
+          ],
+          "cancel": [
+            "handler-end",
+            "idle-a",
+            "idle-c",
+            "idle-d",
+            "end"
+          ]
+        }
+      }
+    ]
+  },
+  "oracle": {
+    "file": "tests/idle-callbacks-oracle.mjs",
+    "independence": "Written from RN's pinned sources, not from the probe: what setUpTimers' bridgeless branch installs and from where, the spec and C++ of the NativeIdleCallbacks module (the 50 ms deadline, the timeout that only drives didTimeout and never reaches the scheduler, the timeRemaining rules, the handle, the cancel), and the RuntimeScheduler's priority timeouts, the idle task's default timeout, the smallest expiration first, the yield, the cancel and the checkpoint after each task are read from the files; the order of each case and what each idle callback is told are derived by a model of the host's event loop whose scheduler is the C++ one over a virtual clock that only a spin advances and whose microtask queue is V8's own (Promise reactions, queueMicrotask and RN's immediateShim run in a vm context); a reading of timeRemaining is judged against the timestamps the report carries and the 50 ms of the source; every verdict of the probe is derived again from the report's raw observations.",
+    "fromRn": {
+      "flag": true,
+      "flagName": "RN$enableMicrotasksInReact",
+      "installs": {
+        "queueMicrotask": {
+          "module": "../../src/private/webapis/microtasks/specs/NativeMicrotasks",
+          "member": "queueMicrotask"
+        },
+        "setImmediate": {
+          "module": "./Timers/immediateShim",
+          "member": "setImmediate"
+        },
+        "clearImmediate": {
+          "module": "./Timers/immediateShim",
+          "member": "clearImmediate"
+        },
+        "requestIdleCallback": {
+          "module": "../../src/private/webapis/idlecallbacks/specs/NativeIdleCallbacks",
+          "member": "requestIdleCallback"
+        },
+        "cancelIdleCallback": {
+          "module": "../../src/private/webapis/idlecallbacks/specs/NativeIdleCallbacks",
+          "member": "cancelIdleCallback"
+        }
+      },
+      "moduleName": "NativeIdleCallbacksCxx",
+      "methods": [
+        "requestIdleCallback",
+        "cancelIdleCallback"
+      ],
+      "queueSpec": "src/private/webapis/idlecallbacks/specs/NativeIdleCallbacks.js",
+      "idle": {
+        "deadlineMs": 50,
+        "deadlineKeys": [
+          "didTimeout",
+          "timeRemaining"
+        ],
+        "didTimeoutRule": true,
+        "timeoutOption": true,
+        "timeoutNeverScheduled": true,
+        "handleHoldsTheTask": true,
+        "legacyThrows": true,
+        "remainingRules": true,
+        "cancelRules": true,
+        "cancelTakesAnObject": true,
+        "scheduler": {
+          "defaultIsIdleTimeout": true,
+          "resolvesCustomTimeouts": true,
+          "idleTaskPriority": true,
+          "yieldRule": true,
+          "selectSkipsCanceled": true,
+          "cancelDropsTheCallback": true,
+          "executeClearsTheCallback": true,
+          "idleTimeoutMs": 300000,
+          "modernOnly": true
+        }
+      },
+      "scheduler": {
+        "timeouts": {
+          "Immediate": 0,
+          "UserBlocking": 250,
+          "Normal": 5000,
+          "Low": 10000,
+          "Idle": 300000
+        },
+        "raw": {
+          "1": "Immediate",
+          "2": "UserBlocking",
+          "3": "Normal",
+          "4": "Low",
+          "5": "Idle"
+        },
+        "checkpointAfterEachTask": true,
+        "loopChoosesAfterEachTick": true,
+        "smallestExpirationFirst": true,
+        "workIsImmediate": true,
+        "beatIsAScheduledTask": true
+      },
+      "host": {
+        "timersTakenBeforeTheWorkDrain": true,
+        "drainsAfterEachWorkItem": true,
+        "compilesWithoutLegacyArch": true
+      }
+    },
+    "modelDidTimeout": {
+      "order": {
+        "idle-a": false,
+        "idle-b": false
+      },
+      "deadline": {
+        "idle": false
+      },
+      "yield": {
+        "idle-a": false,
+        "idle-b": false,
+        "idle-nested": false
+      },
+      "yield-immediate": {
+        "idle": false
+      },
+      "timeout": {
+        "idle-timeout-1": true,
+        "idle-timeout-60000": false,
+        "idle-timeout-0": false,
+        "idle-timeout-negative": false,
+        "idle-no-timeout": false
+      },
+      "cancel": {
+        "idle-a": false,
+        "idle-c": false,
+        "idle-d": false
+      }
+    },
+    "modelReadingClasses": {
+      "deadline": {
+        "entry": "timed",
+        "again": "timed",
+        "after-quick": "timed",
+        "after-deadline": "zero"
+      },
+      "yield": {
+        "entry": "timed",
+        "after-idle": "timed",
+        "after-task": "zero",
+        "again": "zero"
+      },
+      "yield-immediate": {
+        "entry": "timed",
+        "after-task": "zero"
+      }
+    }
+  },
+  "sourcePins": {
+    "tests/idle-callbacks-fixture.jsx": "65dceb07ca466be5220c6d9ac96acef6fa9327932715e47a59b2e8a77f283402",
+    "tests/idle-callbacks-cases.mjs": "61e6c5b1bca2c63ccd5e467b1f21fd19dacdc045460fa7532c9c713ca603c3db",
+    "tests/idle-callbacks-probe.gd": "e841ec1506daf13e06789d5aacf9ca2df3e22a7eb4f9478220c747b30a61719f",
+    "tests/idle-callbacks-native.test.mjs": "617e8a790bf0ae982a14f6c2f2a7024f34be13c4097a87026603bebd5cad33ae",
+    "tests/idle-callbacks-oracle.mjs": "0c8653906e6deca9a19a888157c8ad43463ccde5c2b4a8d833402c28e58836cd",
+    "tests/idle-callbacks-sabotages.mjs": "d7711dc145f55ff7b3130e69a219697f86194399dfbeb83eec6eb43019eb9f8b",
+    "tests/react-microtasks-host.js": "c17593f2a88a6e7ba6d29ff815c3f824e2ae795dff349f771f39f493eb59b88f",
+    "tests/react-microtasks-oracle.mjs": "c1d7adf4bdc010e461ea341549d6b69aea0a01876387f721e66499b72b36ed1c",
+    "scripts/idle-callbacks-bundle.mjs": "6d0ccd9a1310f05209e8c6dc59a831f9a78cbfe99b354b8f38c9e7de124ffa2b",
+    "scripts/idle-callbacks-sabotage.mjs": "a429b318885556dc76fcfbfba907abd3c6141a4fc9ec30640d2dec4fea0a0995",
+    "scripts/native-probe-bundle.mjs": "a90c034ccc09dd70b0b2b625bb0ea3b2a4876ad2cc3500d7d48183935453d863",
+    "src/runtime.js": "c4e888d122f037c2b00f398d893290165fbb3544430180703ca3d8fe408f9c77",
+    "src/initialize.js": "b4b6ca7e238e40317535f8ede0920b5cefa6dff074c80a3546bc4a0576335620",
+    "sdk/toolchain/platform-plugin.mjs": "37bb179a2aa2e757979cce8ec6ce3938022b427017f5555f3503d763d3c60a40",
+    "sdk/toolchain/metro-polyfills.mjs": "e1b371456bf1b6f33c817e552e21e5ca550016f3be2292455fd019454f643d29",
+    "native/application_runtime.cpp": "e2630902e2cf1548b09652ebc197c2f4ac632c64b83c372e03c03b146cf3d229",
+    "native/turbo_module_registry.cpp": "4d012cb873c56eb727bcea439e4afd377f54143f5eca3f2504254f1f20669148",
+    "native/turbo_module_registry.h": "3b732bc3151aa528ab3cd6788b2484a2269f30ddd2de41826bb7d3d49a313185",
+    "native/CMakeLists.txt": "f0176f1b670edd8cfb8c769b1e75f608762d0002fa4cf5140c499c1e45dafea0"
+  },
+  "scope": {
+    "actualHermesRuntime": true,
+    "actualFabricApplication": true,
+    "headless": true,
+    "realEventPath": true,
+    "nativeIdleCallbacksModule": true,
+    "setUpTimersUnchanged": true
+  },
+  "limits": [
+    "The cases are the handler of a Pressable's onPress in one headless root; the order of idle callbacks against other work is certified for work queued from inside a RuntimeScheduler task.",
+    "The timer cases depend on the host taking a timer registered in a handler in a later pump than the RuntimeScheduler's loop; the oracle reads that order from native/application_runtime.cpp.",
+    "The readings of timeRemaining are bounded by the timestamps of the lane, not fixed: the deadline is measured from a time the C++ takes, which the report brackets between the request and the callback's entry.",
+    "The gate is the host's extension (V2-D27); callback exceptions, setImmediate under load and a Promise storm are slice F's.",
+    "The registry counts the calls that reach RN's module in front of RN's own invokers; the module's C++ is compiled unchanged.",
+    "The headless desktop host only; no mobile export has run this bundle.",
+    "Hosted CI is pending: the record is of the local run."
+  ]
+}
