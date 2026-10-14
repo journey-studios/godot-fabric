@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-13T22:00:00.000Z",
+  "updatedAt": "2026-10-14T13:00:00.000Z",
   "source": {
     "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
@@ -113,7 +113,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Import direto com cache vazio ainda reproduz o crash upstream (godotengine/godot#111645, aberta; correção #123658 não mesclada). Por decisão de 2026-10-13, o contrato fecha com uma fronteira executável: o 4.7.2 oficial precisa travar sem a contenção e passar com ela, e o controle falha quando um Godot futuro corrigir o bug. O controle passa local (5 de 5 e 20 de 20) e no run hospedado 38403991586 (boundary-holds, 5 de 5 e 5 de 5), que fecha o checkpoint contract. Parity e targets seguem abertos, e a contenção sozinha não fecha o item. Em 2026-10-14 as faixas de parity e targets foram preparadas e aguardam o run hospedado, então nenhum checkpoint muda ainda: test:cold com no mínimo três instalações novas (projeto descartável, cache de recursos vazio e HOME novo), cada passo uma vez e sem nova tentativa; test:cold:negative com compatibility_minimum 4.99.0, que exige a recusa nas palavras do próprio Godot, processo sem crash, nenhum resíduo dentro ou fora do fixture em comparação com um controle positivo e o início seguinte limpo; parity:godot a partir de um projeto frio, com o hash do diretório do fixture no relatório que a comparação com as referências RN passa a exigir. O alvo é só macOS arm64, com compatibility_minimum 4.7.2; Linux, Windows, Android e iOS ficam como não qualificados aqui (GF-32 a GF-35).",
+      "note": "Import direto com cache vazio ainda reproduz o crash upstream (godotengine/godot#111645, aberta; correção #123658 não mesclada). Por decisão de 2026-10-13, o contrato fecha com uma fronteira executável: o 4.7.2 oficial precisa travar sem a contenção e passar com ela, e o controle falha quando um Godot futuro corrigir o bug. O controle passa local (5 de 5 e 20 de 20) e no run hospedado 38403991586 (boundary-holds, 5 de 5 e 5 de 5), que fecha o checkpoint contract. Em 2026-10-14, por decisão do usuário, parity são casos de início nativos e o alvo é só macOS arm64, com compatibility_minimum 4.7.2 mantido. O run hospedado 38560887388 (cabeça 974b46e8, todos os jobs na tentativa 1) é a evidência de targets: test:cold fez 3 instalações novas (12 passos, uma tentativa cada, sem sinal), a fronteira seguiu boundary-holds (5 de 5 e 5 de 5), o negativo de início falho passou (recusa nas palavras do Godot 4.7.2 com compatibility_minimum 4.99.0, sem resíduo, início seguinte limpo e controle causal) e o parity:godot, a partir de um projeto frio, foi comparado com as referências RN iOS e Android (13 casos). Linux, Windows, Android e iOS ficam como não qualificados aqui (GF-32 a GF-35). Achado: no projeto completo o import sem a preparação não travou em 11 de 11 execuções locais, então --without-startup não é controle e a fronteira (test:cold:boundary) segue sendo o controle executável. Ficam abertos: parity, porque o dashboard só admite todos os checkpoints concluídos com o item concluído, e isso exige a dependência GF-01 concluída.",
       "blocker": "",
       "checkpoints": [
         {
@@ -151,8 +151,17 @@
         {
           "id": "targets",
           "label": "Dependências e alvos aplicáveis aceitos com evidência",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Alvos (decisão do usuário de 2026-10-14): macOS arm64 qualificado, com Godot 4.7.2 oficial, godot-cpp da26c17 e compatibility_minimum 4.7.2 mantido; Linux, Windows, Android e iOS não qualificados aqui, cada um com dono (GF-32 a GF-35) e bloqueio",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/221913d26509633f45d54abd2dcde9f3f95ca6d2/docs/evidence/cold-start.md#targets"
+            },
+            {
+              "label": "Run hospedado 38560887388 (cabeça 974b46e8): o único alvo qualificado, macOS 15 arm64, executou todas as faixas no Godot 4.7.2.stable.official.ed1daf0bf com o mínimo 4.7.2",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/38560887388"
+            }
+          ]
         }
       ]
     },
@@ -4930,6 +4939,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-02-parity-targets-221913d",
+      "at": "2026-10-14T13:00:00.000Z",
+      "taskIds": [
+        "GF-02"
+      ],
+      "message": "GF-02, evidência hospedada de targets: run 38560887388 (cabeça 974b46e8, todos os jobs na tentativa 1). native-cold-start fez 3 instalações novas (12 passos, uma tentativa cada, sem sinal) e a fronteira seguiu boundary-holds (5 de 5 e 5 de 5); o negativo de início falho com compatibility_minimum 4.99.0 passou com controle causal, e o parity:godot, a partir de um projeto frio, foi comparado no parity-comparison com as referências RN iOS e Android (13 casos). Alvo só macOS arm64, com compatibility_minimum 4.7.2 mantido; Linux, Windows, Android e iOS não qualificados aqui (GF-32 a GF-35). Nenhum peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/221913d26509633f45d54abd2dcde9f3f95ca6d2/docs/evidence/cold-start.md#targets"
+    },
     {
       "id": "gf-02-startup-parity-66c2714",
       "at": "2026-10-14T12:00:00.000Z",
