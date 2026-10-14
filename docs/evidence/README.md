@@ -1251,6 +1251,14 @@ a census (`tests/root-names.test.mjs`) fails on an exported name without a type,
 name the consumer drops and a change in the pinned list of the 24 missing names. The facade, the 24 missing names and the
 differential certification are unchanged, and the `contract` checkpoint of GF-03 stays open.
 
+The [GF-03 ReactNativeVersion record](gf-03-react-native-version/README.md) exports `ReactNativeVersion`, the only one of the 24
+missing names that belongs to GF-03, as RN's original class with RN's type, and the independent TSX consumer now imports and uses 61
+names. `Platform.constants.reactNativeVersion` reads `major`, `minor` and `patch` from that class instead of a hand-written copy, so the
+version has one source; its shape (no `prerelease`) and the 0.5 manifest are unchanged. `tests/react-native-version.test.mjs` runs the
+facade's export in a `vm` against the installed `react-native`, and a stand-in class shows both following one source (the whole facade
+only starts on the native host, which this slice does not run). The facade now has 58 exported names, 3 placeholders and 36 missing,
+and the census pins 23 missing names of other GFs; the `contract` checkpoint of GF-03 stays open for them and for D20.
+
 These images are Godot renderer readbacks of generic fixtures, not desktop
 screenshots. They contain no other applications or game content.
 

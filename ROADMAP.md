@@ -1365,6 +1365,18 @@ export, on a name the consumer drops, and when the pinned list of the 24 missing
 certification (`parity`) do not change: `contract` stays open for those names and for D20, and no checkpoint, weight or denominator
 moves.
 
+**Progress.** GF-03, slice C of the `contract` checkpoint (code at `6022226`): `ReactNativeVersion`, the only one of the 24 missing
+names that the contract map assigns to GF-03, is now exported by the facade as RN's original class, with RN's type, and used by the
+TSX consumer (61 names). `Platform.constants.reactNativeVersion` no longer copies `0, 87, 1` by hand: it reads `major`, `minor` and
+`patch` from the same class, so the version has one source, and its shape (no `prerelease`), the 0.5 manifest and
+`tests/scope-0.5.test.mjs` are unchanged. `tests/react-native-version.test.mjs`, in `test:contracts`, bundles the facade's exports of
+the two names with the SDK's platform plugin and runs them in a `vm`: the export is RN's own object, `getVersionString()` is the
+installed `react-native` version, `Platform.constants` agrees, and a stand-in class changes both together. The whole facade only starts
+on the native host, which this slice does not run. `parity:status` goes from 57 exported, 3 placeholders and 37 missing to 58, 3 and
+36; the census pins 23 missing names, all of other GFs. The
+[evidence](docs/evidence/gf-03-react-native-version/README.md) has the numbers. `contract` stays open for D20 and for those 23
+names, and no checkpoint, weight or denominator moves.
+
 ### Focus command boundary complement (2026-10-04)
 
 The [original-dispatch guard fixture](docs/evidence/focus/commands.json) passes
