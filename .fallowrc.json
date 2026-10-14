@@ -379,7 +379,15 @@
             "PressableProps",
             "useWindowDimensions",
             "Dimensions",
-            "Platform"
+            "Platform",
+            "TouchableWithoutFeedback",
+            "TouchableHighlight",
+            "PanResponder",
+            "PixelRatio",
+            "I18nManager",
+            "KeyboardAvoidingView",
+            "RefreshControl",
+            "StatusBar"
           ]
         },
         {
