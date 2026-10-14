@@ -1,6 +1,6 @@
 // RN's own JavaScript environment, in the order of src/private/setup/setUpDefaultReactNativeEnvironment.js, over the Hermes and the
 // Fabric this host runs. docs/compatibility/bootstrap-audit-0.87.1.json says, for every step of that chain, whether it runs here,
-// is replaced, or is the host's. The Metro polyfills RN runs before all of it (console today) are not imported here: the build
+// is replaced, or is the host's. The Metro polyfills RN runs before all of it (console and error-guard) are not imported here: the build
 // injects them ahead of the first module (sdk/toolchain/metro-polyfills.mjs).
 import "react-native/Libraries/Core/setUpGlobals";
 // A relative path because RN does not export it: the platform plugin resolves it for this file only.
@@ -9,6 +9,9 @@ import "react-native/Libraries/Core/setUpPerformance";
 // The timers, the microtasks, the immediates and the animation frame, over the TimerManager the host attached.
 import "./runtime";
 import "./native-module-runtime";
+// RN's error path: ExceptionsManager's console.error reporter, and its handler on the ErrorUtils that the error-guard polyfill
+// defines. The host answers it with the JsErrorHandler's globals and the ExceptionsManager module (native/js_error_path.cpp).
+import "react-native/Libraries/Core/setUpErrorHandling";
 // RN's own web-standard globals over its original JS modules: XMLHttpRequest,
 // fetch with Headers, Request and Response, FormData, Blob, File, FileReader,
 // URL, URLSearchParams, AbortController and AbortSignal, and RN's WebSocket

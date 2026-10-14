@@ -32,6 +32,7 @@
 #include "frame_clock.h"
 #include "performance_metrics.h"
 #include "turbo_module_registry.h"
+#include "js_error_path.h"
 #include "godot_dom.h"
 #include "layout_animation.h"
 #include "native_animated.h"
@@ -240,6 +241,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::shared_ptr<rn::ContextContainer> context;
   std::shared_ptr<rn::RuntimeScheduler> runtime_scheduler;
   std::unique_ptr<fabric_godot::TurboModuleRegistry> native_modules;
+  // RN's error path (js_error_path.h): the JsErrorHandler ReactInstance owns, its globals and the ExceptionsManager module.
+  std::unique_ptr<fabric_godot::JsErrorPath> js_errors;
   // RN's networking stack over Godot's HTTP client and WebSocket peer, polled from pump() and ended by stop().
   std::unique_ptr<fabric_godot::Networking> networking;
   // The reads and decodes of RN's Image requests, on the worker pool; finished from pump() and ended by stop().
@@ -562,6 +565,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (!theme_source.has_method("set_custom_maximum_size"))
       throw std::runtime_error("Fabric frames require Godot Control maximum size");
     runtime = facebook::hermes::makeHermesRuntime(config);
+    js_errors = std::make_unique<fabric_godot::JsErrorPath>(
+        [this](const fabric_godot::ExceptionReport &report) { report_exception(report); });
     context = std::make_shared<rn::ContextContainer>();
     text_layout = std::make_shared<fabric_godot::TextLayout>(theme_source.get_theme_font("font", "Label"));
     context->insert("GodotTextLayout", text_layout);
@@ -587,9 +592,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     rn::RuntimeExecutor executor = [this](rn::RawCallback &&callback) {
       work.push_back(std::move(callback));
     };
+    // ReactInstance gives its RuntimeScheduler an error handler that reports the error as fatal (ReactInstance.cpp:128-131).
     runtime_scheduler = std::make_shared<rn::RuntimeScheduler>(executor,
         rn::HighResTimeStamp::now,
-        [this](jsi::Runtime &, jsi::JSError &error) { fail(error.what()); });
+        [this](jsi::Runtime &rt, jsi::JSError &error) { js_errors->handle_fatal(rt, error); });
     context->insert(rn::RuntimeSchedulerKey, std::weak_ptr<rn::RuntimeScheduler>(runtime_scheduler));
     ui = std::make_shared<rn::UIManager>(executor, context);
     ui->setDelegate(this);
@@ -690,7 +696,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           }, [this](const rn::ShadowNode &node) { return live(node.getSurfaceId(), node.getTag()); });
     });
     if (adapters) adapters->install_modules(*native_modules);
+    // RN's NativeExceptionsManager, which ExceptionsManager.js reports to once setUpErrorHandling has installed it.
+    native_modules->add(fabric_godot::JsErrorPath::module_name,
+        [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) { return js_errors->make_module(invoker); });
     native_modules->install(*runtime);
+    js_errors->install(*runtime);
     install_globals();
   }
 
@@ -868,6 +878,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   void fail(const std::string &error) {
     errors.push_back(error);
     UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error));
+  }
+  // Where RN's error path ends (js_error_path.h), as RN's release builds end it: Android's ExceptionsManagerModule throws on a
+  // fatal exception and logs a soft one, RCTExceptionsManager reports a fatal one with RCTFatal and a soft one to its delegate.
+  // A fatal exception is the host's failure, with the FABRIC_ERROR line the headless suites reject; a soft one (console.error,
+  // ErrorUtils.reportError) is a log line, like the console's own, and never a failure.
+  void report_exception(const fabric_godot::ExceptionReport &report) {
+    if (report.fatal) {
+      fail(fabric_godot::format_exception(report));
+      return;
+    }
+    UtilityFunctions::print(String("HERMES: ExceptionsManager soft exception: ") + gd(fabric_godot::format_exception(report)));
   }
   using HostFn = jsi::HostFunctionType;
   void bind(const char *name, unsigned int argc, HostFn callback) {
@@ -1169,6 +1190,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ExecutionScope execution(*this);
     return runtime->evaluateJavaScript(std::make_shared<jsi::StringBuffer>(source), bundle_url);
   }
+  // ReactInstance::loadScript evaluates the bundle in a task of its runtime executor. An exception that escapes the evaluation is a
+  // fatal error for JsErrorHandler, while the runtime is not ready; the runtime becomes ready when the evaluation returns, unless
+  // a fatal error was handled meanwhile (ReactInstance.cpp:287-299). False: the bundle did not evaluate and the error is reported.
+  bool load_bundle(const std::string &source) {
+    ExecutionScope execution(*this);
+    try { evaluate(source); }
+    catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); return false; }
+    js_errors->bundle_evaluated();
+    return true;
+  }
   void pump(bool frame_tick = false) {
     ExecutionScope execution(*this);
     if (stopped || stop_requested) return;
@@ -1280,8 +1311,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       for (int limit = 0; !stop_requested && !work.empty() && limit < 256; ++limit) {
         auto callback = std::move(work.front());
         work.pop_front();
+        // ReactInstance's runtime executor runs each task like this (ReactInstance.cpp:92-109): an exception that escapes it
+        // is a fatal error for JsErrorHandler.
         try { callback(*runtime); }
-        catch (const std::exception &error) { fail(error.what()); }
+        catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
         if (!stop_requested) runtime->drainMicrotasks();
       }
       if (!stop_requested) runtime->drainMicrotasks();
@@ -1470,6 +1503,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     rn::UIManagerBinding::getBinding(*runtime)->setPointerTargetForGodot({});
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(nullptr);
     window_listener.reset();
+    js_errors->release();
     timer_registry->quit();
     frame_callbacks.clear();
     work.clear();
@@ -2734,6 +2768,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("active", active_pointers)("hoverPointers", hover_pointers)("nextId", next_pointer_id)
         ("stored", pointer_routes.size())("suppressed", suppressed_pointers);
     result["nativeModules"] = native_modules->snapshot();
+    result["jsErrors"] = js_errors->snapshot();
     result["networking"] = networking->snapshot();
     result["images"] = images->snapshot();
     result["imageEffects"] = fabric_godot::PictureLayer::counters();
@@ -2881,11 +2916,12 @@ ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::functio
   impl->initialize_host_phase();
 }
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }
-void ApplicationRuntime::load_bundle(const std::string &source, const std::string &source_url) {
+bool ApplicationRuntime::load_bundle(const std::string &source, const std::string &source_url) {
   auto guard = impl;
   guard->bundle_url = source_url;
-  guard->evaluate(source);
+  if (!guard->load_bundle(source)) return false;
   ++guard->bundle_evaluations;
+  return true;
 }
 void ApplicationRuntime::invoke_callable(const std::string &name, const std::string &method, const std::string &args_json) {
   auto guard = impl;

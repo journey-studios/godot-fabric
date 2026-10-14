@@ -141,6 +141,11 @@ does not bound an infinite chain of Promise jobs or arbitrary blocking JS.
 > Later note: since the [JS globals slice](#js-globals-slice-b-2026-10-13), RN's own `window`, `self`,
 > `process`, `navigator`, DOM globals, `performance` fallback and `console` polyfill run in the
 > bundle; the idle callbacks, the encoding globals and the unhandled-error path stay open.
+>
+> Later note: since the [error path slice](#error-path-slice-c-2026-10-13), RN's own `ErrorUtils`
+> and `setUpErrorHandling` run and the host answers them with RN's `JsErrorHandler` and an
+> `ExceptionsManager` module, so the error-handler path is no longer open; callback exceptions
+> of the timers, immediates and microtasks are slice F's.
 
 RAF uses real Godot process frames rather than upstream TimerManager's
 zero-delay fallback. The oracle certifies cancellation and monotonicity; it
@@ -183,15 +188,16 @@ split into parts, and the parts must cover its globals exactly once.
 | `pending` | not done yet | the GF-05 slice (`B`, `C`, `D1`, `D2`, `E` or `F`) that does it, and a reason |
 | `not-applicable` | RN's step does not apply to this host | a reason, and `owner` when another GF task owns the gap |
 
-Where things stand after slice B, counting a split step by its parts: 6 `runs` (`setUpXHR`, and
-since slice B `setUpGlobals`, `setUpDOM`, `setUpPerformance`, `setUpNavigator` and the `console`
-polyfill), 6 `replaced` (the three upstream entry files, `AppRegistry`, and `queueMicrotask` and
-`setImmediate` out of `setUpTimers`), 4 `host` (`polyfillPromise`, `setUpRegeneratorRuntime`, and the
-timers and the animation frame out of `setUpTimers`), 4 `pending` (slices C, D1 and D2) and 12
-`not-applicable` (the `__DEV__` developer tools for GF-29, `setUpAlert` for GF-23,
+Where things stand after slice C, counting a split step by its parts: 8 `runs` (`setUpXHR`, since
+slice B `setUpGlobals`, `setUpDOM`, `setUpPerformance`, `setUpNavigator` and the `console`
+polyfill, and since slice C `setUpErrorHandling` and the `error-guard` polyfill), 6 `replaced` (the
+three upstream entry files, `AppRegistry`, and `queueMicrotask` and `setImmediate` out of
+`setUpTimers`), 4 `host` (`polyfillPromise`, `setUpRegeneratorRuntime`, and the timers and the
+animation frame out of `setUpTimers`), 2 `pending` (slices D1 and D2, both parts of `setUpTimers`)
+and 12 `not-applicable` (the `__DEV__` developer tools for GF-29, `setUpAlert` for GF-23,
 `setUpBatchedBridge` for GF-25, the segment fetcher, the two flag-gated observers and the modern
-performance classes for GF-40). Slice A recorded 1 `runs` and 9 `pending`. The JSON is the record;
-this paragraph is a snapshot.
+performance classes for GF-40). Slice A recorded 1 `runs` and 9 `pending`, slice B 6 `runs` and 4
+`pending`. The JSON is the record; this paragraph is a snapshot.
 
 **The gate** is `tests/bootstrap-audit.test.mjs` (rules in `scripts/bootstrap-audit.mjs`), part of
 `test:parity` and so of `test:contracts`. It fails when:
@@ -224,7 +230,7 @@ symbol, a missing reason, and the rest), so the gate is shown to reject what it 
 | Slice | Does | Audit entries |
 | --- | --- | --- |
 | B | JS-installed globals; the host's `performance` and `console` stubs go (done, below) | `setUpGlobals`, `setUpDOM`, `setUpPerformance`, `setUpNavigator`, the `console` polyfill |
-| C | the error path: `ErrorUtils`, `setUpErrorHandling`, `RN$handleException` | `setUpErrorHandling`, the `error-guard` polyfill |
+| C | the error path: `ErrorUtils`, `setUpErrorHandling`, `RN$handleException` (done, below) | `setUpErrorHandling`, the `error-guard` polyfill |
 | D1 | `RN$enableMicrotasksInReact` (high regression risk, full sweep) | `setUpTimers` part `react-microtasks` |
 | D2 | idle callbacks over `NativeIdleCallbacks` | `setUpTimers` part `idle-callbacks` |
 | E | web-globals probe: URL, URLSearchParams, Abort*, encoding per the decision | `setUpXHR` (`verifyIn`), decision `encoding` |
@@ -373,9 +379,10 @@ previous host's three failing checks and its SHA-256, and each sabotage's failin
 verdict. `scripts/js-globals-evidence.mjs` writes it from the reports the lanes leave in `build/`, after
 re-judging each with the oracle and checking that every lane bundled the files on disk and that the current
 lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin against
-`git show <sha>:<path>` and records the commit. Hosted CI is pending.
+`git show <sha>:<path>` and records the commit. Hosted execution: [hosted run 38459689769](https://github.com/journey-studios/godot-fabric/actions/runs/38459689769).
 
-**Limits.** The error path is slice C's: `ErrorUtils` and `RN$handleException` do not exist yet, and
+**Limits.** (Later note: the error path is [slice C's](#error-path-slice-c-2026-10-13) and now exists.)
+The error path is slice C's: `ErrorUtils` and `RN$handleException` do not exist yet, and
 nothing here certifies a thrown error. The Web Performance classes, the idle callbacks and the
 encoding globals are open as the audit records. `mark` and `measure` are RN's no-ops, not a timeline.
 The level is not mapped to a Godot log. The headless host certifies the JS environment; the mobile
@@ -388,3 +395,203 @@ rest, so a test that parses such a line should make the call log one string, as 
 do. D1 and D2 change no global this slice installs. E probes `URL`, `AbortController` and the encoding
 globals with `window`, `self` and `process` now defined: a library that checks `typeof window` takes the
 branch it takes on RN iOS and Android, where `window` exists too.
+
+
+## Error path (slice C, 2026-10-13)
+
+Slice A marked two entries `pending` for slice C: `setUpErrorHandling` and the `error-guard` Metro
+polyfill. Until now the host recorded a failure in a bare way, wherever it happened to catch one: `fail()`
+in `native/application_runtime.cpp` pushed the message and printed `FABRIC_ERROR:`. There was no
+`ErrorUtils`, so the RN modules that read it through `Libraries/vendor/core/ErrorUtils` got `undefined`;
+no `console.error` reporter; no `ExceptionsManager` module for RN's JS to report to; and no
+`RN$handleException`, which RN's JS asks first. Slice C makes RN's own error path run, in RN's own
+order, over the C++ RN ships for it.
+
+**How RN 0.87.1 bridgeless does it** (verified in the pinned sources). With
+`useAlwaysAvailableJSErrorHandling` at its default (false,
+`ReactNativeFeatureFlagsDefaults.h`), `setUpErrorHandling.js` runs: it installs
+`ExceptionsManager.installConsoleErrorReporter()` and registers a handler with
+`ErrorUtils.setGlobalHandler`. That handler calls `ExceptionsManager.handleException`, which asks
+`global.RN$handleException(e, isFatal, reportToConsole)`. `ReactInstance` installs that function over its
+`JsErrorHandler` (`ReactCommon/jserrorhandler`): once the runtime is ready (the bundle has evaluated, and
+no fatal error was handled) it answers `false`, and JS reports to the `ExceptionsManager` TurboModule
+(`reportException`); before that it handles the error in C++. `ReactInstance` also gives its runtime
+executor and its `RuntimeScheduler` a catch that hands an escaping exception to
+`JsErrorHandler::handleError` as a fatal error. On a release build the module ends it: Android's
+`ExceptionsManagerModule` throws a `JavascriptException` for a fatal exception and logs a soft one
+(`FLog.e`, with `JSStackTrace.format`); iOS's `RCTExceptionsManager` reports a fatal one with `RCTFatal`
+and gives a soft one to its delegate (nothing is logged without a redbox).
+
+### The path as it now runs
+
+| Step | Where |
+| --- | --- |
+| The build injects `error-guard.js` after `console.js`, in the order of `@react-native/js-polyfills/index.js`; `ErrorUtils` exists before any module body | `sdk/toolchain/metro-polyfills.mjs` (`METRO_POLYFILLS`), `scripts/native-probe-bundle.mjs` and every other bundler that passes `metroPolyfills` |
+| The polyfill is Flow source: the platform plugin runs it through the Babel transform Metro applies | `sdk/toolchain/platform-plugin.mjs` (`inPolyfillsPackage`) |
+| `src/initialize.js` imports RN's `setUpErrorHandling` in RN's position: after the timers and the native-module runtime, before `setUpXHR` | `src/initialize.js` |
+| The host installs five of the seven globals `ReactInstance` installs for the error family, with the same semantics and the pinned flag default (the two it leaves out are in the decisions below) | `JsErrorPath::install` in `native/js_error_path.cpp`, called from the `ApplicationRuntime::Impl` constructor |
+| JS reports to the host's `ExceptionsManager` module (RN's generated spec); the pre-ready C++ pipeline reports to the same sink | `NativeExceptionsManager` and `JsErrorPath` in `native/js_error_path.cpp`, registered by `Impl` next to the other modules |
+| A fatal exception becomes `fail()` (the `FABRIC_ERROR:` line and an entry in `errors`), with the message RN composed and the parsed stack; a soft one becomes a `HERMES: ExceptionsManager soft exception:` line | `Impl::report_exception` |
+| After the bundle evaluates the runtime is ready, unless a fatal error was handled | `Impl::load_bundle`, `JsErrorPath::bundle_evaluated` |
+
+### Decisions
+
+- **RN's JS and RN's C++, not a reimplementation.** `JsErrorHandler`, `ErrorUtils.cpp` and
+  `StackTraceParser` are compiled unchanged (the CMake already globbed `jserrorhandler`; the only new native file is `native/js_error_path.cpp`).
+  `ReactInstance`'s install code is inline in a lambda, so the globals are mirrored line for line and
+  cited. The only change of shape is that the exception listeners live in the state of the error path
+  and not in the closure of `RN$registerExceptionListener`, so that `stop()` can drop their `jsi::Function`s
+  before the VM is destroyed.
+- **Five of the seven globals of the family.** `ReactInstance` installs seven. The host installs the five that
+  change nothing about how a runtime keeps running, as `ReactInstance` defines them (read-only, with its arities):
+  `RN$handleException`, `RN$inExceptionHandler`, `RN$registerExceptionListener`, `RN$isRuntimeReady` (which
+  reads `JsErrorHandler::isRuntimeReady()`) and `RN$useAlwaysAvailableJSErrorHandling` (the pinned flag value,
+  false). It leaves out `RN$hasHandledFatalException` and `RN$notifyOfFatalException`, **excluded by V2-D26**: with
+  them `ExceptionsManager.js` (lines 127-130) reports only the first fatal exception, which suits RN's crash on a
+  fatal error, and the user decided on 2026-10-13 that this runtime keeps running after an uncaught error, with
+  root-scoped recovery. GF-07's error-cleanup slice owns any change. The probe asserts the five (descriptors and
+  arities) and the absence of exactly these two.
+- **The host's end of the path follows Android for the format and both platforms for the meaning.** A fatal
+  exception is a failure (`fail()`), where RN's release builds crash; a soft one is a log line. The text is
+  Android's `JSStackTrace.format` (`message, stack:` and one `method@file:line:column` line per frame, `-1`
+  for a missing line); Android keeps only the id of a bundle segment in place of the file, this host keeps the
+  file because its bundle has a name and a stack that does not say which file it is in is of little use.
+  A soft exception is logged with the same text under `HERMES: ExceptionsManager soft exception:`, a line
+  that no suite counts, and never reaches `push_error`, so `console.error` cannot fail a headless suite (the
+  SDK's own `console.error("GodotFabric", ...)` stays a log: `test:services`).
+- **Slice C does not touch V2-D26's root-scoped unmount** (GF-07's error-cleanup slice) **nor the callback
+  exceptions of timers, immediates and microtasks** (slice F).
+
+### The host's catch sites
+
+`ReactInstance` hands an exception that escapes a JS task to `JsErrorHandler::handleError` as a fatal error in two
+places. Each corresponding site of the host, and what slice C did with it:
+
+| Site | RN | Before | Now |
+| --- | --- | --- | --- |
+| The `RuntimeScheduler`'s task error handler (`Impl` constructor) | `ReactInstance.cpp:128-131` | `fail(error.what())` | `JsErrorPath::handle_fatal` |
+| The work queue the host's runtime executor feeds, drained in `pump()` | the runtime executor's catch, `ReactInstance.cpp:92-109` | `fail(error.what())` | `JsErrorPath::handle_fatal` |
+| The evaluation of the bundle (`Impl::load_bundle`, `FabricApplication::mount`) | `ReactInstance::loadScript`, then the runtime executor's catch; `setRuntimeReady` after it (`ReactInstance.cpp:287-299`) | `mount`'s catch: `report_error(error.what())`, then stop | `handle_fatal` while the runtime is not ready; ready after a clean evaluation; `mount` stops without reporting twice |
+| `TimerManager`'s runtime executor (timers, immediates) | the runtime executor's catch | `fail(error.what())` | unchanged: slice F |
+| `requestAnimationFrame` callbacks, Native Animated and LayoutAnimation frames | none (`ReactInstance` has no frame loop) | `fail(error.what())` | unchanged |
+| `FabricApplication.evaluate`, the validation seam | none | `fail(error.what())` | unchanged |
+
+**A finding that shapes the first two rows.** `hermesvm.framework` defines and exports its own
+`jsi::JSError`, and so does `fabric_core` (`jsi.cpp`), with a different `type_info`: a
+`catch (jsi::JSError &)` in this library, or in RN's compiled code, never matches what Hermes throws. It arrives as a
+`std::exception`. The host's own catches take `std::exception` and `JsErrorPath::handle_fatal` recognises a
+Hermes `JSError` by the name of its dynamic type (the two classes are the same source: the `jsi.h` of the
+Hermes build equals the one RN pins, byte for byte) and reports the JS error it carries. RN's `RuntimeScheduler` cannot be
+changed (it is compiled unchanged), and its `catch (jsi::JSError&)` misses too, so what a task throws reaches its handler
+wrapped, as RN says for what it does not recognise: `Non-js exception: <what>`. The probe and the oracle read that
+text from `RuntimeScheduler_Modern.cpp`. RN spells this wrap in two ways: `Non-js exception: ` in the scheduler (RN's compiled
+code, which the host cannot change) and `Non-JS exception: ` in `ReactInstance`'s runtime executor
+(`ReactInstance.cpp:104-108`), which the host's own catches mirror in `JsErrorPath::handle_fatal(const std::exception&)`. Each site
+keeps its spelling; the oracle reads both from the pinned sources and checks the host's against `ReactInstance.cpp`. The same mismatch makes RN's own `catch (jsi::JSError&)` inside
+`JsErrorHandler` miss: an error raised while the handler reports (a listener that throws) reaches the safety net of
+`handle_fatal`, which records it, instead of the next listener. Both are limits below.
+
+### The probe
+
+`npm run test:js-errors` runs `tests/js-errors-native.test.mjs`: one bundle (`tests/js-errors-fixture.jsx`, with
+`js-errors-host.js` injected before the polyfills and `js-errors-early.js` as the first module) in three actual
+Hermes applications of one Godot process, each in a scenario of its own (the application's `scenario` meta, read by
+the bundle as `godotScenario`): the **ready** lane mounts a root and runs the cases of `tests/js-errors-cases.mjs`; the
+**early** lane reports errors while the bundle is still being evaluated; the **escape** lane lets an error escape the
+evaluation. `tests/js-errors-probe.gd` makes 23 checks:
+
+- *host*: the host installs five globals as `ReactInstance` defines them (read-only; the three functions with their arities, `RN$isRuntimeReady` with arity 0 and `RN$useAlwaysAvailableJSErrorHandling` as the flag's value, false) and neither `RN$hasHandledFatalException` nor `RN$notifyOfFatalException`;
+- *first module*: RN's `error-guard` has run, with the polyfill's handler (which throws what it is handed), and
+  `setUpErrorHandling` has not; the host defines neither `ErrorUtils` nor `console`;
+- *ErrorUtils*: the members of `error-guard.js`, and the object RN reads through `Libraries/vendor/core/ErrorUtils`;
+- *handler*: `ErrorUtils.getGlobalHandler()` is the one function `setUpErrorHandling` registered (the first module
+  wraps `setGlobalHandler` to see it), once, named `handleError`, and `console.error` is `reactConsoleErrorHandler` over
+  `console._errorOriginal`;
+- *soft*: `console.error` (a string, an `Error`, several arguments), `ErrorUtils.reportError` (an `Error` and a thrown
+  string) and `ErrorUtils.applyWithGuard` reach `NativeExceptionsManager.reportException` with `isFatal: false`, the console
+  line is logged once, the host counted the report and recorded no failure; a `Warning: ` message is logged and reported to
+  nothing;
+- *fatal*: `ErrorUtils.reportFatalError` (an `Error` and a thrown string) reaches `reportException` with `isFatal: true` and
+  records exactly one host failure whose text is the message and the stack of the report; an exception that escapes a task of
+  the `RuntimeScheduler` does the same, through the scheduler's handler;
+- *module and globals*: the deprecated `reportSoftException`, a direct `reportException` and `dismissRedbox`; once the bundle has evaluated
+  `RN$isRuntimeReady()` is true, `RN$handleException` answers `false` and nothing is in the middle of reporting (`RN$inExceptionHandler` is false);
+  both globals refuse the calls `ReactInstance` refuses, with its messages;
+- *counters*: by route, eight soft and three fatal reports from `ExceptionsManager`, none from the C++ pipeline, and a failure for each fatal one only;
+- *early lane*: a listener registered with `RN$registerExceptionListener` sees each error `RN$handleException` takes into C++ (with the
+  `[runtime not ready]: ` prefix, `RN$inExceptionHandler()` true and `preventDefault` a function); the one that calls `preventDefault`
+  is not reported, the `type: 'warn'` error is skipped, the first fatal error is a failure, the second is not reported again; the
+  fatal error leaves the runtime not ready, so `RN$isRuntimeReady()` is false and `RN$handleException` still takes the next error into C++;
+- *escape lane*: an error that escapes the evaluation of the bundle is reported by `JsErrorHandler` while the runtime is not ready, is
+  the application's one failure, and nothing mounts;
+- *lifecycle*: stop releases each root without a further diagnostic.
+
+The expected `FABRIC_ERROR:` lines are five (the three fatal cases of the ready lane, the early lane's, the one that escapes);
+`tests/js-errors-native.test.mjs` requires the lines of the log to be exactly the first lines of the failures the report lists, no
+other `ERROR:` line, and one `HERMES: ExceptionsManager soft exception:` line for each soft report, in order.
+
+`tests/js-errors-oracle.mjs` is written from RN, not from the probe, in three ways. The facts RN's sources state are read out of
+the pinned files: the members of `ErrorUtils` (`error-guard.js`, with the TypeScript parser), the handler `setUpErrorHandling`
+registers, the seven globals `ReactInstance` defines with their arities and refusals, the flag's default, the not-ready prefix
+and the scheduler's wrapper. What RN's own JavaScript does with each case is what it does in **V8**: `setUpErrorHandling`,
+`ExceptionsManager` and `NativeExceptionsManager` are bundled by the same toolchain, with the same polyfills injected, and run
+in a `vm` context whose TurboModule proxy answers `ExceptionsManager` with a module that records its calls; the steps, the console
+lines and the reports (message, name, original message, component stack, `isFatal`, the extra data keys) that Hermes produced for
+the same cases must equal V8's. What the C++ pipeline does before the runtime is ready is a model written from
+`JsErrorHandler.cpp`, whose anchors the oracle finds in the source. Every verdict of the probe is derived again and must agree.
+
+### Controls
+
+**The previous host** (built from `feat/gf-05-js-globals` at `2791296d`, before this slice; the record names that commit as
+`previousHost.sourceCommit` and takes it as an input, not from `HEAD`; `node tests/js-errors-native.test.mjs
+--allow-original-negative` while it is `addons/fabric_godot.dylib`, then the current host is put back) runs the same bundle and fails
+exactly 14 of the 23 checks, the ones that need the new host, and the oracle rejects it. The 9 that hold on both hosts are the ones that
+need only the JavaScript RN runs. **Seven sabotages** (`scripts/js-errors-sabotage.mjs`, the table in
+`tests/js-errors-sabotages.mjs`) are each rejected by the probe and the oracle: `no-error-guard` (the toolchain does not inject the
+polyfill) fails 21 checks, `no-setup` (`src/initialize.js` does not import `setUpErrorHandling`) 10, `soft-fails` (a soft
+exception is recorded as a failure) 6, `fatal-swallowed` (a fatal exception is only logged) 5, `scheduler-site` (a task error goes to
+`fail()` again) 2, `bundle-site` (an error that escapes the bundle goes to `fail()` again) 1 and `never-ready` (the runtime is
+never marked ready) 7. The first two are in-memory bundle overrides, with no file edited; the other five break one line of
+`native/application_runtime.cpp`, rebuild the host, keep it in `build/js-errors-sabotage-<name>-host/` and restore the source byte
+for byte. The suite is in the `native-suites-runtime` job of `contracts.yml`.
+
+### Regressions
+
+The host was rebuilt and these suites run on it: `test:services` (the SDK's `console.error("GodotFabric", ...)` stays a log),
+`test:os-contracts`, `test:device-services`, `test:application`, `test:js-globals`, `test:runtime`, `test:modules`. One change to an earlier
+slice's suite was needed and is the only one: slice B's check that `console` has the members of RN's polyfill now expects
+`_errorOriginal` as well, which `installConsoleErrorReporter` adds in RN too (the oracle reads the name out of `ExceptionsManager.js`).
+The gate's own mutation tests (`tests/bootstrap-audit.test.mjs`) used `setUpErrorHandling` and `error-guard` as their pending
+examples; they now make a pending entry out of `setUpAlert`, and one test is new (the gate notices when `setUpErrorHandling` is not
+imported or `error-guard` is not injected). The sweep of the other native suites ran on hosted CI: [hosted run 38481790977](https://github.com/journey-studios/godot-fabric/actions/runs/38481790977) passed every job.
+
+**Evidence.** [`js-errors.json`](js-errors.json) is the committed record of the lanes above: the 23 verdicts of the current lane with
+the host and bundle SHA-256, the polyfill's place in the bundle's inputs (`tests/js-errors-host.js` first, then `console.js`, then `error-guard.js`),
+what each case reported and logged, the host counters of each lane, the RN sources and repository files it pinned, the previous
+host's 14 failing checks and its SHA-256, each sabotage's failing checks and the oracle's verdict, and the catch sites.
+`scripts/js-errors-evidence.mjs` writes it from the reports the lanes leave in `build/`, after re-judging each with the oracle and
+checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; with `--commit <sha>` it also checks
+each pin against `git show <sha>:<path>` and records the commit. It requires `--previous-host-commit <sha>` (a commit in the history of `HEAD`;
+a missing or unknown one is an error, never a guess), and it takes `executionBaseCommit` and `sourceDirtyDuringExecution` from what each
+lane recorded of the tree when it ran (the commit and every path that differed from it), not from the `HEAD` of the moment it writes:
+`--commit` ties the executed sources to a commit and does not say they were committed when they ran. Hosted execution: [hosted run 38481790977](https://github.com/journey-studios/godot-fabric/actions/runs/38481790977) passed every job.
+
+**Limits.**
+
+- The catch sites of timers, immediates, microtasks and animation frames still record `error.what()` directly; slice F measures
+  their exceptions against RN and routes them as RN does.
+- `RN$hasHandledFatalException` and `RN$notifyOfFatalException` are not installed: excluded by V2-D26, and GF-07's error-cleanup slice owns
+  any change. Without them RN's JS reports every fatal exception to the host; a second fatal exception in the C++ pipeline is still
+  dropped, because that dedupe is inside `JsErrorHandler`.
+- Because of the two `jsi::JSError` types, RN's own `RuntimeScheduler` reports a task's JS error wrapped as `Non-js exception: <what>`,
+  and an error raised while `JsErrorHandler` reports reaches the host's safety net, not the next listener.
+- A fatal exception is a recorded failure and the application keeps running, where RN's release builds crash; a soft one is a
+  log line, as on Android, where iOS drops it. V2-D26's root-scoped unmount on an uncaught error is GF-07's error-cleanup slice.
+- The headless desktop host only; no mobile export has run this bundle.
+
+**For slices D1 to F and GF-07.** D1 and D2 touch no global this slice installs. Slice F routes the remaining catch sites through
+`JsErrorPath::handle_fatal`; it no longer decides about `RN$hasHandledFatalException` and `RN$notifyOfFatalException`, which V2-D26
+excludes and GF-07's error-cleanup slice owns (installing them changes what a runtime that keeps running reports after the first fatal
+exception). A test that parses what a failure says should expect `message, stack:` and the frame lines, and the
+`[runtime not ready]: ` prefix before the bundle has evaluated; GF-07's error cleanup reads `errors` and the `jsErrors` section of the
+application's status (`runtimeReady`, `handledFatalError`, the counters by route), and an uncaught error is no longer only a message.
