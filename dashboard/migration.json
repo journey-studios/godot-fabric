@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-14T18:06:00.000Z",
+  "updatedAt": "2026-10-14T18:25:00.000Z",
   "source": {
     "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
@@ -4930,6 +4930,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-03-d20-jsx-subpaths-1cb99ba",
+      "at": "2026-10-14T18:25:00.000Z",
+      "taskIds": [
+        "GF-03"
+      ],
+      "message": "GF-03, fatia B do contrato (V2-D20, só Node, sem execução nativa): três coisas passam a ter fixture executável. (1) A identidade do react/jsx-runtime: um app TSX e uma lib instalada pré-compilada em CommonJS, que traz um node_modules/react/jsx-runtime.js falso aninhado, usam os mesmos objetos jsx, jsxs e Fragment, o único jsx-runtime.js no metafile é o do SDK, o falso nunca entra e a árvore renderiza (tests/react-jsx-identity.test.mjs, no test:contracts). (2) O runtime JSX de desenvolvimento deixa de ser aceito em silêncio: o build é só de produção (NODE_ENV=production), onde react/jsx-dev-runtime exporta jsxDEV como undefined, então um tsconfig com jsx react-jsxdev, ou uma lib compilada em modo de desenvolvimento, compilava e quebrava ao renderizar com TypeError (jsxDEV is not a function). Agora o build falha com E_PROJECT_JSX_DEV_RUNTIME, por uma regra só no onResolve do plugin do projeto (sdk/toolchain/project-resolution.mjs), que vale para o app, para uma lib e para o import que o esbuild injeta; project-config.mjs não ganhou checagem e nenhum consumidor do repositório usava react-jsxdev. (3) Subpaths e padrões de exports e arquivos concorrentes de um pacote sem exports, contra o Metro 0.87.1 real em tests/package-conditions.test.mjs (de 13 para 92 testes): concordam o subpath exato e o padrão ./features/* com ordem normal, invertida e aninhada, em import e require, o exato mais específico que o padrão, a exclusão por null, o subpath não exportado, o array cujo primeiro item é uma string válida e 15 casos de arquivos .godot, .native e lisos, inclusive a ordem completa dos arquivos do próprio projeto. Quatro diferenças com o Metro ficam fixadas por teste, com nome, sem mudar a produção: o array de fallback em exports (o Metro lê só o primeiro item, o SDK tenta cada um), a ordem TypeScript e JavaScript dentro de node_modules (o Metro tenta TypeScript primeiro, o SDK tenta JavaScript), o JSON com sufixo de plataforma (o Metro resolve x.godot.json, o SDK não: lacuna provável do SDK, candidata a correção sem escolha de política) e o main que aponta para arquivo ausente (o Metro lança InvalidPackageError, o SDK cai no index da raiz); com as duas que já existiam são seis, e qual lado vale em cada uma é decisão do usuário. Seguem pendentes o nome e o conjunto das condições do host, a resolução fora de exports além de main, os workspaces (D19), a política de peers e fixtures dos outros subpaths de react/* e react-native/*. Localmente passam o type-check, o check:static, o check:publication e o test:contracts (880 testes Node, 879 passam e 1 é pulado por falta do template de export do macOS, como antes). O contract do GF-03 continua aberto e o V2-D20 segue pendente. Nenhum checkpoint, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1cb99ba72ce97b928cf8faa682a2b1dace807006/docs/evidence/d20-jsx-subpaths/README.md"
+    },
     {
       "id": "gf-03-react-native-version-6022226",
       "at": "2026-10-14T18:06:00.000Z",

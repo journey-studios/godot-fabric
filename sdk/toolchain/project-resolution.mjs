@@ -15,6 +15,9 @@ const facades = new Map([
   ["react-native-reanimated", "unsupported-reanimated.js"],
   ["react-native-safe-area-context", "unsupported-safe-area.js"],
 ]);
+// The bundle is production-only (NODE_ENV=production), where React's development JSX runtime exports an undefined jsxDEV: a project with
+// jsx "react-jsxdev", or an installed library compiled in development mode, would build and then fail at its first element.
+const devJsxRuntime = "react/jsx-dev-runtime";
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 function fail(code, message) { throw new Error(`${code}: ${message}`); }
 function inside(root, filename) {
@@ -235,6 +238,11 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
         // SDK internals keep their provisioned dependency graph and original
         // platform/Codegen hooks. Named React/RN imports have one SDK identity.
         if (importer && inside(sdk, importer)) return;
+        // One rule for every importer outside the SDK: the app, an installed library and the import esbuild injects for react-jsxdev.
+        if (args.path === devJsxRuntime) {
+          fail("E_PROJECT_JSX_DEV_RUNTIME", `${devJsxRuntime} does not work in this build: it is production-only (NODE_ENV=production leaves jsxDEV undefined). `
+            + `Use "jsx": "react-jsx" in tsconfig.json; a library that imports ${devJsxRuntime} was compiled in development mode`);
+        }
         const importerOwner = importer ? installedOwner(importer) : null;
         const alias = !importerOwner && bare(args.path) && !sdkOwned ? matchingAlias(paths, args.path) : undefined;
         const privateImport = args.path.startsWith("#") && !alias;
