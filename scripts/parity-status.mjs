@@ -1,30 +1,14 @@
-import ts from "typescript";
 import { readFileSync, mkdirSync, writeFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { cases, assertReport } from "./parity-protocol.mjs";
+import { classifyFacade } from "./parity-facade.mjs";
 
 const inventory = JSON.parse(readFileSync("docs/compatibility/contracts-0.87.1.json", "utf8"));
 const ids = new Set(inventory.contracts.map((row) => row.id));
 for (const fixture of cases) for (const id of fixture.contracts)
   if (!ids.has(id)) throw new Error(`Fixture ${fixture.id} names an unknown RN contract: ${id}`);
 const contents = readFileSync("src/react-native-platform.jsx", "utf8");
-const source = ts.createSourceFile("facade.jsx", contents, ts.ScriptTarget.Latest, true, ts.ScriptKind.JSX);
-const facade = new Map();
-for (const statement of source.statements) {
-  if (ts.isExportDeclaration(statement) && statement.exportClause) {
-    const clause = statement.exportClause;
-    // `export { a, b as c }` names each specifier; `export * as name` binds one name to a whole module.
-    if (ts.isNamedExports(clause)) for (const exported of clause.elements) facade.set(exported.name.text, "exported_unverified");
-    else if (ts.isNamespaceExport(clause)) facade.set(clause.name.text, "exported_unverified");
-  }
-  if (!statement.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.ExportKeyword)) continue;
-  if ((ts.isFunctionDeclaration(statement) || ts.isClassDeclaration(statement)) && statement.name) facade.set(statement.name.text, "exported_unverified");
-  if (ts.isVariableStatement(statement)) for (const declaration of statement.declarationList.declarations) {
-    if (!ts.isIdentifier(declaration.name)) throw new Error("Review destructured facade exports");
-    const placeholder = ts.isCallExpression(declaration.initializer) && declaration.initializer.expression.getText(source) === "unavailable";
-    facade.set(declaration.name.text, placeholder ? "explicit_placeholder" : "exported_unverified");
-  }
-}
+const facade = classifyFacade(contents);
 const exports = inventory.contracts.filter((row) => row.kind === "value").map((row) => ({ name: row.name, status: facade.get(row.name) || "missing" }));
 const counts = {};
 for (const row of exports) counts[row.status] = (counts[row.status] || 0) + 1;
