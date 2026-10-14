@@ -64,7 +64,9 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   content that draws above other content (`Modal`, `zIndex`, the Fabric renderer's
   unexported `createPortal`), what the Godot host does with several surfaces, a table of
   a game UI's overlay needs with the owning GF of each gap, and three options for
-  portals whose choice is left to the user. Ten Node tests pin the facts it relies on.
+  portals, with the user's decision of 2026-10-14 (RN parity plus a documented host-view
+  pattern; input between overlapping surfaces by draw order). Ten Node tests pin the facts
+  it relies on.
 
 - [Pointer transport and capture lifetime](pointer-capture-boundary.md): pinned
   EventTarget flags, pending/active capture, removal and commit-order constraints.

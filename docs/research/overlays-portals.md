@@ -2,8 +2,9 @@
 
 Status: design note for GF-07 (slice 5), 2026-10-14, against RN 0.87.1, React 19.2.3 and Godot 4.7.2. It is source reading plus
 ten tests, [`tests/overlays-portals-facts.test.mjs`](../../tests/overlays-portals-facts.test.mjs), that pin its facts in `test:contracts`.
-Nothing is implemented, no native code ran, and **the choice among the options in "Options and recommendation" is open: it is
-for the user to decide.** GF-07's other open slices (error cleanup, replacement cycles, pause and resume) are not touched.
+Nothing is implemented and no native code ran. The two questions the note left open, which option to adopt and the input policy
+between overlapping surfaces, **were decided by the user on 2026-10-14** (section 4, "Decision"); the option analysis stays as the
+record. GF-07's other open slices (error cleanup, replacement cycles, pause and resume) are not touched.
 
 ## The question
 
@@ -142,11 +143,12 @@ sizes. Repo evidence covers surfaces side by side; overlapping or nested roots a
   another root's.
 - **Between surfaces Godot decides** (documentation): drawing follows `CanvasItem.z_index` and then tree order, and a
   `CanvasLayer` has its own layer.
-- **Pointer selection uses tree order** (source). `pointer_hit_surface` picks, among the surfaces of one viewport whose RN hit
+- **Pointer selection uses tree order today** (source). `pointer_hit_surface` picks, among the surfaces of one viewport whose RN hit
   test finds a View at the point, the one that is greater in tree order (`Node::is_greater_than`,
   `native/application_runtime.cpp:2130-2139`); a contact that is already pressed stays with the surface that took the press
   (`:2227`). If a scene gives overlapping surfaces different `z_index` values or layers, drawing and picking can disagree. That
-  is a reading of the code and has not been measured.
+  is a reading of the code and has not been measured. The 2026-10-14 decision (section 4) replaces this rule with the draw
+  order.
 
 ### Input on overlapping surfaces, and what V2-D10 says
 
@@ -175,7 +177,7 @@ What the host does today (source, with the repo evidence it rests on):
 What is measured: one full-screen surface, two surfaces side by side, a full-screen View overlay and a `Modal`
 (world-input.md, "Topologies"). What is not: overlapping surfaces, a HUD of several layers, a `CanvasLayer` before the world,
 keyboard and gamepad focus across surfaces, a real touch screen (world-input.md, "Not certified"). Overlapping-surface input is
-therefore uncertified, as the gap notes say.
+therefore uncertified, as the gap notes say; the policy V2-D10 left to specify is now decided (section 4).
 
 ### Modal on Godot (GF-18)
 
@@ -209,9 +211,52 @@ mechanisms plus the surfaces the host already has; on iOS and Android that case 
 a host-view library (documentation). Second, every "second surface" row runs into the same unmeasured thing: overlapping
 surfaces and the policy between them.
 
-## 4. Options and recommendation
+## 4. Decision (2026-10-14)
 
-Options (a), (b) and (c) are alternatives, though (a) and (c) combine. None is chosen here.
+The user decided both open questions of this note on 2026-10-14. The analysis that led there stays below as the record.
+
+### What was decided
+
+1. **Overlays: RN parity plus a documented pattern, and no `createPortal` in the SDK.** RN parity is the contract: `zIndex` and
+   absolute Views inside a root, `Modal` for blocking presentation (GF-18), and a second `FabricSurface` for what must leave a
+   surface or serve several. On top of it, option (c) is adopted: the pattern of a host View inside a root fed through Context,
+   documented, certified on this host by a fixture, and installable through `AppRegistry.setWrapperComponentProvider`. Option
+   (b) is rejected, so the SDK facade keeps exposing no `createPortal`.
+   - Why: it is the contract an RN app has on iOS and Android, so RN code and libraries need nothing from the SDK, and nothing is
+     added that the SDK would own across RN upgrades. Pattern (c) answers the one case RN parity leaves without a non-blocking
+     answer (content that must escape an `overflow` clip or a stacking context). The renderer's `createPortal` does not fit that
+     need: in Fabric it replaces the target surface's whole child list, the container cannot be obtained from public API, and
+     its events and geometry would follow two trees (section 1 and option (b)).
+   - Not decided: whether the fixture's host and `Portal` pair is also published as an SDK helper. It would be an extension
+     outside RN's contract, so it needs its own decision.
+2. **V2-D10, input on overlapping surfaces: follow the draw order.** The surface drawn on top receives the pointer. The host's
+   surface pick (`pointer_hit_surface`, tree order today) must respect `z_index` and `CanvasLayer` as Godot does when it orders
+   Controls, and the change is certified with overlapping surfaces.
+   - Why: drawing and picking then agree, so a scene that raises a HUD layer with `z_index` or a `CanvasLayer` gets the pointer
+     on what the player sees on top. Today the two can disagree (section 2).
+
+The second open question of the analysis (whether a second `FabricSurface` is the sanctioned route for overlays that leave a
+surface or serve several) is settled by the first decision: it is part of the RN parity contract.
+
+### Follow-up slices (none started)
+
+- **Pattern (c) fixture** (GF-07). A documented host View and `Portal` pair installed per root through
+  `setWrapperComponentProvider`, with a fixture on this host that proves the clipped and stacking case (a dropdown or tooltip
+  inside a ScrollView or an `overflow` clip, non-blocking), one host per root with no Context across roots, and the pattern's
+  documentation. A portal library on top of it belongs to GF-27.
+- **V2-D10 draw-order input** (GF-07, with GF-13). Change `pointer_hit_surface` to rank surfaces by Godot's draw order
+  (`z_index`, `CanvasLayer` layer, then tree order) and certify it with overlapping surfaces: a native probe, an independent
+  oracle and a causal control on the host that precedes the change. The cases to cover are a higher `z_index` earlier in the tree,
+  a higher `CanvasLayer`, a transparent `box-none` root of the upper surface that lets the point reach the one below, a contact
+  that stays with the surface that took the press, hover across the boundary and the claim over the world. Ownership is not
+  fixed by the map: `ROADMAP.md` maps V2-D09 to V2-D12 jointly to GF-07, GF-08, GF-09, GF-10, GF-13 and GF-21, and the change
+  sits in the multi-surface routing of GF-07 while it changes a pointer contract GF-13 owns. Confirm the owner when it is planned.
+- **Modal** (GF-18). Its open contract, parity and targets checkpoints: orientation, insets, mobile presentation, nesting and
+  focus. `Alert` is GF-23's.
+
+### Options considered (the record)
+
+Options (a), (b) and (c) were alternatives, though (a) and (c) combine. The user adopted (a) with (c) and rejected (b).
 
 ### (a) RN parity only
 
@@ -260,16 +305,13 @@ members"), or by the author.
   outside the surface's rectangle. If the SDK ships a helper component it becomes an extension outside RN's contract, and a
   pattern with no fixture on this host is a promise, not a contract.
 
-### Recommendation (for the user to decide)
+### Recommendation made with the analysis
 
-(a) as the SDK contract now, with (c) as the documented answer to the clipped and stacking case, to be certified by a fixture
-and, through GF-27, by one portal library, instead of becoming an API. (b) is not recommended: its semantics do not match what
-an overlay needs, and its container handle would be an SDK invention. What the user decides:
-
-1. Option (a), (b), (c) or a combination, and in particular whether the SDK only documents (c) or also ships a host helper.
-2. Whether a second `FabricSurface` is the sanctioned route for overlays that leave a surface or are shared by several.
-3. The policy between overlapping surfaces that V2-D10 asks for: whether `z_index` and `CanvasLayer` of a surface are supported
-   for input, or tree order stays the rule (see "Z-order between surfaces").
+(a) as the SDK contract, with (c) as the documented answer to the clipped and stacking case, to be certified by a fixture and,
+through GF-27, by one portal library, instead of becoming an API; (b) not recommended, because its semantics do not match what an
+overlay needs and its container handle would be an SDK invention. The decision above follows it, and settles the two points that
+the analysis had put to the user: the sanctioned route for overlays that leave a surface, and the input policy between
+overlapping surfaces.
 
 ## 5. Executable facts
 
@@ -295,10 +337,10 @@ If an RN upgrade moves one of these, the test fails and this note has to be revi
 ## 6. Not certified, and who would close it
 
 - Overlapping surfaces: which surface takes the pointer, hover across the boundary, capture, the claim over the world and the
-  disagreement between `z_index` and tree order. Owner: a later GF-07 slice with a native probe and an independent oracle
-  (V2-D10's policy for overlays).
+  disagreement between `z_index` and tree order. The policy is decided (draw order); the change and its fixture are the
+  V2-D10 follow-up slice in section 4.
 - Pattern (c) on this host, with a host installed through `setWrapperComponentProvider`, and a portal library. Owner: GF-07 for
-  the fixture, GF-27 for the library.
+  the fixture (follow-up slice in section 4), GF-27 for the library.
 - Escaping a surface's rectangle (whether a root's overflow is drawn and targeted outside it is measured for Views, not for
   the root itself). Owner: GF-07 with GF-10.
 - Drag previews across surfaces, tooltip hover across surfaces. Owner: GF-13 and GF-07.

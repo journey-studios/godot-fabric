@@ -478,11 +478,15 @@ Input não consumido segue a política do Godot. A especificação deve definir
 essas políticas para fundo transparente, teclado/gamepad e overlays, sem dupla
 ativação do gameplay quando um botão ou modal consome a interação.
 
-Overlays e portals: a [nota de pesquisa](research/overlays-portals.md) mede o que o
-RN 0.87.1 oferece publicamente (`Modal`, `zIndex` e o `createPortal` do renderer, que
-o pacote não exporta), o que o host faz hoje com várias surfaces e apresenta três
-opções para portals. A escolha entre elas, e a política de input entre surfaces
-sobrepostas, seguem em aberto.
+Overlays e portals (decidido em 2026-10-14): a [nota de pesquisa](research/overlays-portals.md)
+mede o que o RN 0.87.1 oferece publicamente (`Modal`, `zIndex` e o `createPortal` do
+renderer, que o pacote não exporta) e o que o host faz hoje com várias surfaces. O contrato
+é a paridade com o RN (`zIndex`, `Modal` do GF-18 e uma segunda surface), mais o padrão de
+Context com um host view dentro da raiz, documentado, certificado por um fixture e instalável
+por `AppRegistry.setWrapperComponentProvider`; o SDK não expõe `createPortal`. Para o input
+entre surfaces sobrepostas, a política segue a ordem de desenho: recebe o ponteiro a surface
+desenhada por cima, e a escolha da surface pelo host, hoje pela ordem da árvore, deve respeitar
+`z_index` e `CanvasLayer` como o Godot faz com Controls, certificada com surfaces sobrepostas.
 
 ### V2-D11
 
