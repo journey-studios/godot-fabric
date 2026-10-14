@@ -4340,6 +4340,36 @@ no checkpoint and changes no weight or denominator. The [record](docs/evidence/m
 [research note](docs/research/mobile-density.md) and implementation
 [`05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6`](https://github.com/journey-studios/godot-fabric/commit/05ff576cf9f218e581bc03e9ca05ae2a59c7e6a6) have the numbers.
 
+### AppRegistry at parity with RN 0.87.1 (2026-10-13)
+
+GF-07 stays **In progress**; this slice is its AppRegistry facade, and it closes no checkpoint: `slice` was closed by an earlier
+slice, and the full item, contract, parity and targets remain open. The
+[AppRegistry evidence](docs/evidence/app-registry/README.md) makes the public `AppRegistry` expose all 19 members React Native
+0.87.1 declares, over RN's own `AppRegistryImpl` (the user's decision of 2026-10-13: RN parity, and a member with no meaning on the
+host becomes a documented typed error, never a silent no-op). Registration (`registerComponent`, `registerSection`,
+`registerRunnable` and `registerConfig`, sections included, with V2-D01's refusal of a key registered twice or reserved on every
+route), the readers (`getAppKeys`, `getSectionKeys`, `getSections`, `getRunnable`, `getRegistry`), the wrapper, root view style
+and instrumentation providers, and `runApplication` and `setSurfaceProps` for a surface the scene mounted work as in RN;
+`unmountApplicationComponentAtRootTag` only logs RN's error, as in RN's Fabric, and the root unmounts through
+`FabricSurface.unmount()`. The four headless-task members throw `E_APP_REGISTRY_HEADLESS_TASK` (a headless task is an Android
+service), and `runApplication` or `setSurfaceProps` for a `rootTag` no running surface owns throws `E_APP_REGISTRY_UNKNOWN_ROOT`:
+the container reports the roots it renders and the host's `RN$stopSurface` makes the facade forget a stopped one. The public type
+is RN's own declaration (`AppRegistry: typeof RN.AppRegistry`, with the AppRegistry types), checked by a consumer type test, and the
+stale `missing_public_export` rows of the 2026-10-01 audit for `AppRegistry` and `RootTagContext` are corrected.
+
+The suite (`npm run test:app-registry`) runs **41 headless checks** on six real roots of one application, with the wrapper and
+the style read from the native Controls and the `FabricSurface.update_props` path beside the facade's, and an independent oracle
+that replays the registry script against a model of `AppRegistryImpl.js` and reads RN's own strings from its source. The slice
+changes no native code, so its control is **nine retained sabotages of the SDK** (`scripts/app-registry-sabotage.mjs`) that fail
+3, 1, 1, 5, 8, 1, 9, 1 and 2 checks, each rejected by the probe and by the oracle. The
+[example](examples/app-registry/README.md) passes 15 checks headless and 20 with the native renderer and two captures; its card
+mounts again when the wrapper is first applied, as in RN, and later prop updates keep its state.
+
+Open: root replacement over many cycles with component-owned timers and requestAnimationFrame, pause and resume, scene
+change, error cleanup (V2-D26), the suspended and hidden display modes (still refused by `render-application.jsx`),
+overlays and portals. The record is pinned to the implementation commit `baa1c4cf`. Hosted run 38473856206, on head `9cdae802`, passed every job: `native-suites-frontier` passed on rerun, after the known `cpu-time-instrument` flake that PR #162 fixes separately. The implementation commit is `baa1c4cf`, not that head. No checkpoint, whole GF,
+weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

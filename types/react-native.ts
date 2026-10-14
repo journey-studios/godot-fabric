@@ -1,10 +1,22 @@
 import type * as React from "react";
 import type * as RN from "../node_modules/react-native/types_generated/index";
 
-export declare const AppRegistry: Pick<typeof RN.AppRegistry, "getAppKeys"> & {
-  registerComponent(key: Parameters<typeof RN.AppRegistry.registerComponent>[0],
-    provider: Parameters<typeof RN.AppRegistry.registerComponent>[1]): string;
-};
+/** RN's original AppRegistry registry over the Godot host: every member RN 0.87.1 declares exists and has RN's type. Sections,
+ * runnables, configs, the wrapper, root view style and instrumentation providers, runApplication and setSurfaceProps work as
+ * in RN (the last two only for a surface the host mounted, else E_APP_REGISTRY_UNKNOWN_ROOT), and a key registered once is
+ * refused again. unmountApplicationComponentAtRootTag only logs RN's error: a root unmounts through FabricSurface.unmount().
+ * The four headless-task members throw E_APP_REGISTRY_HEADLESS_TASK (see docs/API.md). */
+export declare const AppRegistry: typeof RN.AppRegistry;
+export type TaskProvider = RN.TaskProvider;
+export type ComponentProvider = RN.ComponentProvider;
+export type ComponentProviderInstrumentationHook = RN.ComponentProviderInstrumentationHook;
+export type AppConfig = RN.AppConfig;
+export type Runnable = RN.Runnable;
+export type Runnables = RN.Runnables;
+export type Registry = RN.Registry;
+export type WrapperComponentProvider = RN.WrapperComponentProvider;
+export type RootViewStyleProvider = RN.RootViewStyleProvider;
+export type RootTag = RN.RootTag;
 export declare const RootTagContext: typeof RN.RootTagContext;
 export declare const NativeModules: typeof RN.NativeModules;
 export declare const NativeEventEmitter: typeof RN.NativeEventEmitter;

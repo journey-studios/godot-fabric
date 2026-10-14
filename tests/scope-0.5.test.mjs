@@ -61,7 +61,7 @@ test("the manifest decides exactly thirteen names, each with its audit row as re
     assert.ok(row.runtime.length > 0, row.name);
   }
   // The audit's rows that are stale in the way the brief records.
-  assert.deepEqual(manifest.names.filter(row => row.auditStale.stale).map(row => row.name).sort(), ["ActivityIndicator", "AppRegistry", "AppState", "Image", "Modal", "SafeAreaView"]);
+  assert.deepEqual(manifest.names.filter(row => row.auditStale.stale).map(row => row.name).sort(), ["ActivityIndicator", "AppState", "Image", "Modal", "SafeAreaView"]);
   // PR #58 landed: the ScrollView is classified like the other six, and nothing in the manifest waits on another change.
   assert.deepEqual(manifest.names.filter(row => row.pendingOn !== undefined).map(row => row.name), []);
   assert.deepEqual(Object.keys(manifest.notInTheManifest).sort(), ["FlatList", "PixelRatio"]);
@@ -543,7 +543,8 @@ test("Platform, Dimensions, useWindowDimensions and StyleSheet have the members 
   assert.deepEqual(JSON.parse(JSON.stringify(StyleSheet.flatten([{width: 1}, [{height: 2}, null]]))), {width: 1, height: 2});
   const created = {a: {width: 1}};
   assert.equal(StyleSheet.create(created), created);
-  // AppRegistry, the HUD's entry point: the manifest names the two members the facade declares
+  // AppRegistry, the HUD's entry point: the 0.5 subset is the two members the HUD uses, and the facade (which declares all 19 of RN's since the GF-07
+  // AppRegistry slice) keeps both
   const registry = row("AppRegistry");
   assert.deepEqual(registry.members, ["registerComponent", "getAppKeys"]);
   assert.match(read("src/app-registry.js"), /registerComponent\(key, provider, section\)[\s\S]*getAppKeys:/);

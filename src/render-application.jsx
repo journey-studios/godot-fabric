@@ -3,6 +3,16 @@ import * as Fabric from "react-native/Libraries/Renderer/implementations/ReactFa
 import { RootTagContext, createRootTag } from "react-native/Libraries/ReactNative/RootTag";
 import { View } from "./components";
 
+// The root tags this container has rendered and the host has not stopped. The AppRegistry facade (app-registry.js) uses
+// them to tell a surface it can run again from a tag no Godot surface owns.
+const running = new Set();
+export function isRunningSurface(rootTag) {
+  return running.has(rootTag);
+}
+export function forgetSurface(rootTag) {
+  running.delete(rootTag);
+}
+
 // Platform container invoked by the original AppRegistryImpl. Keep its type
 // stable across setSurfaceProps so React preserves the registered root state.
 export default function renderApplication({ RootComponent, initialProps, rootTag,
@@ -26,4 +36,5 @@ export default function renderApplication({ RootComponent, initialProps, rootTag
       onRecoverableError(error) { console.warn(error.message); },
     },
   );
+  running.add(rootTag);
 }

@@ -34,7 +34,7 @@ roots before mounting again. Shared module state and application timers remain
 alive; subscriptions and native tags belong to each mounted root. Finally
 `SharedApplication.stop()` cleans up the remaining tree and scheduling queues.
 The failure suite checks invalid owner/entry/bundle, duplicate keys, reserved
-keys, unsupported sections and attempts to restart a stopped application.
+keys, duplicate keys through a section, and attempts to restart a stopped application.
 
 ![Initial registered roots](../../docs/evidence/shared-roots/initial.png)
 

@@ -610,6 +610,20 @@ checks, and three retained sabotages are rejected. A package that imports a gene
 Android and iOS implementations, the OS-specific props and OS-version comparisons are open. Hosted
 CI is pending. [Evidence](docs/evidence/os-contracts/README.md); [research](docs/research/os-contracts.md).
 
+The [AppRegistry example](examples/app-registry/README.md) runs React Native's original `AppRegistry` from the public
+import with all 19 members RN 0.87.1 declares: components, sections, runnables and configs (a key registered once is never
+replaced), the readers, the wrapper, root view style and instrumentation providers, and `runApplication` and `setSurfaceProps`
+for a surface the scene mounted. A button there sets the two providers and runs the root again with `setSurfaceProps`, which
+puts the wrapper around the card (React mounts the card again under it, as in RN, so its state starts over) and the style on the
+root Control, and later `setSurfaceProps` runs change the props and keep the state.
+`unmountApplicationComponentAtRootTag` only logs RN's error (a root unmounts through `FabricSurface.unmount()`), the four
+headless-task members throw `E_APP_REGISTRY_HEADLESS_TASK`, and a `rootTag` no running surface owns throws
+`E_APP_REGISTRY_UNKNOWN_ROOT`. The headless suite (41 checks) runs six real roots of one application with an independent oracle
+that replays the registry against a model of `AppRegistryImpl.js`; the slice changes no native code, so nine retained SDK
+sabotages are its control and each is rejected. Root replacement over many cycles, pause and resume, scene change, error
+cleanup and the suspended display modes are open. Hosted run 38473856206, on head `9cdae802`, passed every job: `native-suites-frontier` passed on rerun, after the known `cpu-time-instrument` flake that PR #162 fixes separately. The implementation commit is `baa1c4cf`, not that head. [Evidence](docs/evidence/app-registry/README.md)
+and [API](docs/API.md#appregistry-members).
+
 The 0.5 milestone's reference app is **Frontier**, a small turn-based strategy game in the interaction style of
 Civilization 2 whose map, rules, scripted faction and turns live in plain GDScript
 ([`consumers/civ-lite/game/`](consumers/civ-lite/game/)), with the HUD to be React Native over Godot. This first package has
@@ -915,6 +929,7 @@ release with prebuilt binaries. The consumer builder compiles a project's own Ta
 npm run test:examples                    # all interactive demos, headless and sequential
 npm run test:runtime                     # native deadline budget and callback error recovery
 npm run test:application                 # shared roots and rejected activation/lifetime cases
+npm run test:app-registry                # RN's AppRegistry over the host: its 19 members, the providers on real roots and the typed errors; the sabotages: node scripts/app-registry-sabotage.mjs
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
 npm run test:consumer:libraries -- --capture   # NativeWind and Chart Kit in an independent project with its own lockfile
 npm run test:consumer:civ-lite -- --capture    # Frontier provisioned as a consumer, ten cycles with no leak and a monotonic epoch; sabotages: node scripts/consumer-civ-lite-sabotage.mjs
