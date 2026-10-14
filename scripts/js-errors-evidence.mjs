@@ -240,7 +240,7 @@ const record = {
     "A soft exception is a log line, as on Android; iOS drops it without a redbox or a delegate. A fatal exception is a recorded failure and the application keeps running, where RN's release builds crash.",
     "V2-D26's root-scoped unmount on an uncaught error belongs to GF-07's error-cleanup slice.",
     "The headless desktop host only; no mobile export has run this bundle.",
-    "Hosted CI is pending: the record is of the local run."],
+    "The lanes of this record are local. Hosted run 38481790977 (https://github.com/journey-studios/godot-fabric/actions/runs/38481790977), on head 26a3a908 (the slice before the review fixes), passed every job, native-suites-runtime with test:js-errors among them. The branch's later commits changed the evidence script, the oracle, the lane runner's provenance record, a named constant in native/js_error_path.cpp (the host built from it is byte-identical to the one built before it) and docs, so that run did not execute these exact bytes."],
 };
 writeFileSync(path.join(root, "docs/evidence/runtime/js-errors.json"), JSON.stringify(record, null, 2) + "\n");
 console.log(`JS_ERRORS_EVIDENCE_WRITTEN: ${current.report.checks.length} checks, ${original.report.checks.length - failures(original.report).length} held on the previous host, ${sabotages.length} sabotages`);

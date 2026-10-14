@@ -379,7 +379,7 @@ previous host's three failing checks and its SHA-256, and each sabotage's failin
 verdict. `scripts/js-globals-evidence.mjs` writes it from the reports the lanes leave in `build/`, after
 re-judging each with the oracle and checking that every lane bundled the files on disk and that the current
 lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin against
-`git show <sha>:<path>` and records the commit. Hosted CI is pending.
+`git show <sha>:<path>` and records the commit. Hosted execution: [hosted run 38459689769](https://github.com/journey-studios/godot-fabric/actions/runs/38459689769).
 
 **Limits.** (Later note: the error path is [slice C's](#error-path-slice-c-2026-10-13) and now exists.)
 The error path is slice C's: `ErrorUtils` and `RN$handleException` do not exist yet, and
@@ -563,7 +563,7 @@ slice's suite was needed and is the only one: slice B's check that `console` has
 `_errorOriginal` as well, which `installConsoleErrorReporter` adds in RN too (the oracle reads the name out of `ExceptionsManager.js`).
 The gate's own mutation tests (`tests/bootstrap-audit.test.mjs`) used `setUpErrorHandling` and `error-guard` as their pending
 examples; they now make a pending entry out of `setUpAlert`, and one test is new (the gate notices when `setUpErrorHandling` is not
-imported or `error-guard` is not injected). The sweep of the other native suites runs on hosted CI.
+imported or `error-guard` is not injected). The sweep of the other native suites ran on hosted CI: [hosted run 38481790977](https://github.com/journey-studios/godot-fabric/actions/runs/38481790977) passed every job.
 
 **Evidence.** [`js-errors.json`](js-errors.json) is the committed record of the lanes above: the 23 verdicts of the current lane with
 the host and bundle SHA-256, the polyfill's place in the bundle's inputs (`tests/js-errors-host.js` first, then `console.js`, then `error-guard.js`),
@@ -574,7 +574,7 @@ checking that every lane bundled the files on disk and that the current lane ran
 each pin against `git show <sha>:<path>` and records the commit. It requires `--previous-host-commit <sha>` (a commit in the history of `HEAD`;
 a missing or unknown one is an error, never a guess), and it takes `executionBaseCommit` and `sourceDirtyDuringExecution` from what each
 lane recorded of the tree when it ran (the commit and every path that differed from it), not from the `HEAD` of the moment it writes:
-`--commit` ties the executed sources to a commit and does not say they were committed when they ran. Hosted CI is pending.
+`--commit` ties the executed sources to a commit and does not say they were committed when they ran. Hosted execution: [hosted run 38481790977](https://github.com/journey-studios/godot-fabric/actions/runs/38481790977) passed every job.
 
 **Limits.**
 
