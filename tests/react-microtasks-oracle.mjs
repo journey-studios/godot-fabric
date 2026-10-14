@@ -350,6 +350,7 @@ export function derivedChecks(report, expected) {
   const many = drained.many ?? {};
   const gate = stages.gate?.state ?? {};
   const afterStop = stages.after_stop ?? {};
+  const reentrant = stages.reentrant ?? {};
   const stop = stages.stop?.application;
   const rootState = stages.stop?.root;
   const caseRow = (key, name, sentence) => row(`${name}/${sentence}`, same(labels(stages[`case_${key}`]?.record), expected.orders.on[name]));
@@ -379,14 +380,17 @@ export function derivedChecks(report, expected) {
     caseRow("react_microtask", "react-microtask", "A sync-lane update commits in a microtask: after the microtask queued before it, ahead of the microtask and the Promise reaction queued after it"),
     caseRow("react_tasks", "react-tasks", "The commit comes before every task queued earlier through the RuntimeScheduler, an Immediate one included, and before a timer"),
     caseRow("react_batched", "react-batched", "Two updates in one handler are one commit, ahead of the microtasks queued between and after them"),
-    row("gate/A microtask and an immediate queued before the application stops do not run once it is inactive, while the Promise reaction queued with them does",
-      gate.queued === true && gate.promiseRan === true && gate.microtaskRan === false && gate.immediateRan === false),
-    row("gate/Stop unmounts the root through React's own microtask: its effect cleanup runs once, although the gate is closed to what user code queued",
+    row("gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
+      gate.queued === true && gate.microtaskAlive === true && gate.immediateAlive === true && gate.promiseAlive === true),
+    row("gate/Stop unmounts the root through React's own microtask: the update pending at the stop is not lost, and the root's effect cleanup runs once",
       gate.cleanups === 1),
-    row("gate/Once the application is inactive, queueMicrotask schedules nothing and does not reach the module",
-      afterStop.result?.threw === false && afterStop.calls === callsOf(stop) && afterStop.calls >= 0),
+    row("gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs",
+      afterStop.result?.threw === false && afterStop.calls === callsOf(stop) && afterStop.calls >= 0 && afterStop.ran === false),
     row("lifecycle/Stop releases the root, and all native Controls of the root are balanced",
       stop?.stopped === true && stop.rootCount === 0 && (rootState?.nativeTags ?? -1) === 0 && (rootState?.creates ?? 0) === (rootState?.deletes ?? -1)),
+    row("reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it",
+      reentrant.controlFound === true && reentrant.requests >= 1 && reentrant.application?.stopped === true && reentrant.application.rootCount === 0 &&
+        reentrant.state?.cleanups === 1),
     row("report/The React microtasks report is saved with any normative failure visible", true),
   ];
 }

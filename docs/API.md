@@ -627,8 +627,8 @@ its registration; a failed interval remains recurring until cancelled.
 `queueMicrotask` is the function of RN's `NativeMicrotasks` module, and the host sets
 `RN$enableMicrotasksInReact` as RN's bridgeless `setUpTimers` does, so React commits the work
 of its sync lanes (a press handler's update, for instance) in a microtask. Application
-shutdown cancels registered timers/frames and suppresses pending
-microtask/immediate callbacks. Retained scheduling functions cannot
+shutdown cancels registered timers/frames; the microtask/immediate callbacks queued before it
+complete first, in one microtask checkpoint, and none is accepted once it has begun. Retained scheduling functions cannot
 restart them after shutdown. Individual named root unmounts preserve application
 timers/frames and module state; component effects must dispose their own subscriptions
 and clocks. Ordinary Promises are not a cancellation API.

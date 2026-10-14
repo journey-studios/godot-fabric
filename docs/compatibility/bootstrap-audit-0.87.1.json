@@ -242,7 +242,7 @@
           "name": "queue-microtask",
           "globals": ["queueMicrotask"],
           "status": "replaced",
-          "reason": "RN bridgeless installs the function of its NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, which queues on the runtime's microtask queue). src/runtime.js installs that same function from RN's spec module, wrapped in the host's lifecycle gate: a callback does not run once the application is inactive. The gate is a host extension for shutdown (V2-D27) that RN does not have, kept as thin as it was; the host registers RN's module in its TurboModule registry, compiled unchanged, as NativeMicrotasksCxx. Whether an exception thrown by a callback surfaces as it does in RN is certified by slice F.",
+          "reason": "RN bridgeless installs the function of its NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, which queues on the runtime's microtask queue). src/runtime.js installs that same function from RN's spec module, wrapped in the host's lifecycle gate: once stop() has begun nothing is queued, and what was queued before it completes first, in one microtask checkpoint at its head. The gate is a host extension for shutdown (V2-D27) that RN does not have, kept as thin as it was; the host registers RN's module in its TurboModule registry, compiled unchanged, as NativeMicrotasksCxx. Whether an exception thrown by a callback surfaces as it does in RN is certified by slice F.",
           "evidence": [
             { "file": "src/runtime.js", "symbol": "globalThis.queueMicrotask =" },
             { "file": "src/runtime.js", "symbol": "microtasks/specs/NativeMicrotasks" },

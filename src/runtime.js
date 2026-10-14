@@ -4,11 +4,11 @@
 import { setImmediate, clearImmediate } from "react-native/Libraries/Core/Timers/immediateShim";
 
 const active = globalThis.godotRuntimeActive;
-// The host's lifecycle gate (V2-D27), which RN does not have: once the application is inactive, no timer, frame or microtask callback
-// runs and none is scheduled. RN destroys its runtime with the callbacks still pending; this host stops an application while its Hermes
-// still drains microtasks (Impl::stop pumps), so the callbacks check. The host keeps the gate open while stop() unmounts the roots,
-// because React's own unmount queues a microtask (RN$enableMicrotasksInReact below), and drains what user code queued before the stop with
-// the gate closed.
+// The host's lifecycle gate (V2-D27), which RN does not have: once stop() has begun, no timer, frame or microtask is scheduled and none runs. RN
+// destroys its runtime with the callbacks still pending; this host stops an application while its Hermes still drains microtasks, so the callbacks
+// check. The microtasks queued before the stop complete first, in one checkpoint at the head of stop(), and the host opens the gate again while it
+// unmounts the roots, because React's own jobs use queueMicrotask (RN$enableMicrotasksInReact below) and a call the gate refuses leaves React
+// waiting for the job for good. A stop request alone does not close it: React finishes a commit in flight after the request returns.
 for (const name of ["setTimeout", "setInterval", "requestAnimationFrame"]) {
   const native = globalThis[name];
   globalThis[name] = (...args) => active() ? native(...args) : 0;

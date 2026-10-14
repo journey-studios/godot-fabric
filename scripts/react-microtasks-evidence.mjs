@@ -102,7 +102,7 @@ const summary = ({report, oracle, logSha256}) => ({
 const record = {
   schemaVersion: 1,
   scenario: "react-microtasks",
-  status: "verified-local-headless-previous-host-control-five-sabotages",
+  status: "verified-local-headless-previous-host-control-seven-sabotages",
   at: new Date().toISOString(),
   executionBaseCommit: git("rev-parse", "HEAD"),
   sourceDirtyDuringExecution: commit === null,
@@ -133,7 +133,9 @@ const record = {
     orders: ordersOf(current.report),
     modelOrders: expected.orders,
     casesThatDifferWithTheFlagOff: expected.differing,
-    gate: {state: stages.gate.state, afterStop: stages.after_stop, finalApplication: {stopped: stages.stop.application.stopped, rootCount: stages.stop.application.rootCount}},
+    gate: {state: stages.gate.state, afterStop: stages.after_stop, finalApplication: {stopped: stages.stop.application.stopped, rootCount: stages.stop.application.rootCount},
+      reentrant: {requests: stages.reentrant.requests, controlFound: stages.reentrant.controlFound, state: stages.reentrant.state,
+        stopped: stages.reentrant.application.stopped, rootCount: stages.reentrant.application.rootCount}},
   },
   previousHostControl: {
     ...summary(original),
@@ -146,7 +148,7 @@ const record = {
   retainedSabotage: {
     script: "scripts/react-microtasks-sabotage.mjs",
     table: "tests/react-microtasks-sabotages.mjs",
-    mechanism: "flag-unset, promise-shim and gate-removed are in-memory esbuild overrides of src/runtime.js (scripts/react-microtasks-bundle.mjs), no file is edited; no-module breaks one line of native/application_runtime.cpp, rebuilds the host, keeps it in the variant's hostDirectory and restores the source byte for byte (scripts/sabotage-sources.mjs)",
+    mechanism: "flag-unset, promise-shim and gate-removed are in-memory esbuild overrides of src/runtime.js (scripts/react-microtasks-bundle.mjs), no file is edited; no-module, gate-closed, request-closes-gate and checkpoint-gate-closed each break one line of native/application_runtime.cpp, rebuild the host, keep it in the variant's hostDirectory and restore the source byte for byte (scripts/sabotage-sources.mjs)",
     variants: sabotages.map(({variant, report, oracle, logSha256}) => ({name: variant.name, host: variant.host === true, file: variant.file, find: variant.find,
       replace: variant.replace, ...summary({report, oracle, logSha256}), orders: ordersOf(report)})),
     flagUnsetMatchesModel: "The flag-unset lane comes out, case by case, in the order the oracle's model gives for the flag off (modelOrders.off), which says the model describes this host in the direction the passing lane does not show.",
@@ -161,7 +163,7 @@ const record = {
   scope: {actualHermesRuntime: true, actualFabricApplication: true, headless: true, realEventPath: true, nativeMicrotasksModule: true},
   limits: ["The cases are the handler of a Pressable's onPress in one headless root; the order of the commit relative to other work is certified for sync-lane updates of a discrete event, not for every lane.",
     "The timer cases depend on the host taking a timer registered in a handler in a later pump than the RuntimeScheduler's loop; the oracle reads that order from native/application_runtime.cpp.",
-    "The gate is the host's extension (V2-D27); callback exceptions and a Promise storm are slice F's.",
+    "The gate is the host's extension (V2-D27); callback exceptions and a Promise storm are slice F's. Hermes ignores the hint of drainMicrotasks(int), so the checkpoint at the head of stop() is bounded as every pump is: by the queue.",
     "The registry counts the calls that reach RN's module in front of RN's own invoker; the module's C++ is compiled unchanged.",
     "The headless desktop host only; no mobile export has run this bundle.",
     "Hosted CI is pending: the record is of the local run."],

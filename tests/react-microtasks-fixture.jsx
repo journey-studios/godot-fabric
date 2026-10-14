@@ -9,12 +9,22 @@ import {bulk, cases, runCase} from "./react-microtasks-cases.mjs";
 // events, the host's input adapter turns the release into a touch end, and Fabric's event beat delivers it to React's event system
 // (EventBeat::induce, a RuntimeScheduler task) as a discrete event.
 const update = {current: null};
-const gate = {queued: false, microtaskRan: false, immediateRan: false, promiseRan: false, cleanups: 0};
+const gate = {queued: false, microtaskAlive: null, immediateAlive: null, promiseAlive: null, afterStopRan: false, cleanups: 0, nativeTag: null};
+const resize = {current: null};
+
+// Whether the application is still alive, as the host says it to JS: godotNode answers null once a stop is requested or under way.
+function alive() {
+  return gate.nativeTag !== null && typeof globalThis.godotNode === "function" && globalThis.godotNode(gate.nativeTag) !== null;
+}
 function ReactMicrotasksApp() {
   const [count, setCount] = useState(0);
+  const [narrow, setNarrow] = useState(false);
   const committed = useRef(0);
+  const target = useRef(null);
   useLayoutEffect(() => {
     update.current = () => setCount(value => value + 1);
+    resize.current = () => setNarrow(true);
+    gate.nativeTag = target.current?.tag ?? null;
   }, []);
   // The cleanup that unmounting the root at stop() runs: React queues its own microtask for it, through the gate.
   useEffect(() => () => {
@@ -27,7 +37,7 @@ function ReactMicrotasksApp() {
       committed.current = count;
     }
   }, [count]);
-  return <Pressable style={{flex: 1}} onPress={start} />;
+  return <Pressable ref={target} testID="pressable" style={narrow ? {width: 120, height: 60} : {flex: 1}} onPress={start} />;
 }
 AppRegistry.registerComponent("ReactMicrotasksApp", () => ReactMicrotasksApp);
 
@@ -137,19 +147,26 @@ globalThis.ReactMicrotasksProbe = {
   state() {
     return {presses: state.presses, armed: state.armed === null ? null : state.armed.name, results};
   },
-  // The lifecycle gate: a microtask, an immediate and a Promise reaction are queued in one turn and the probe stops the application before
-  // the host drains them. The Promise reaction is not gated, so that it ran says the host did drain; the other two must not have run.
+  // The lifecycle gate: a microtask, an immediate and a Promise reaction are queued in one turn, with an update of the component (so that
+  // React's own job is pending too), and the probe stops the application before the host drains them. Each records whether the application was
+  // still alive when it ran: they were queued before the stop, so they complete first.
   queueGated() {
     gate.queued = true;
     globalThis.queueMicrotask(() => {
-      gate.microtaskRan = true;
+      gate.microtaskAlive = alive();
     });
     globalThis.setImmediate(() => {
-      gate.immediateRan = true;
+      gate.immediateAlive = alive();
     });
     Promise.resolve().then(() => {
-      gate.promiseRan = true;
+      gate.promiseAlive = alive();
     });
+    update.current();
+    return true;
+  },
+  // A stop requested by a native signal in the middle of a commit: the probe connects the signal of the root's Control and this changes its size.
+  resize() {
+    resize.current();
     return true;
   },
   // What the gate lets through once the application is inactive: nothing is queued.

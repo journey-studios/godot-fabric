@@ -8,7 +8,8 @@ extends SceneTree
 #   - the microtask queue: FIFO order, interleaved with Promise reactions, ahead of the next RuntimeScheduler task and of a timer;
 #   - React: a sync-lane update inside a press handler, driven by a Godot mouse event through the host's real event path, commits in a
 #     microtask, in the order the pinned renderer's flag branch dictates (the cases of tests/react-microtasks-cases.mjs);
-#   - the lifecycle gate: a microtask queued before the application stops does not run once it is inactive.
+#   - the lifecycle gate: what was queued before the application stops completes first, while it is alive, and what is queued once it has
+#     stopped is dropped; the stop unmounts the root through React's own microtask, also when a native signal requested it in the middle of a commit.
 # tests/react-microtasks-oracle.mjs derives every order again from RN's sources, the pinned renderer and V8.
 const DEVICE := 1001
 const SIZE := Vector2(200, 100)
@@ -29,6 +30,8 @@ var sabotage := false
 var bundle_file := "react-microtasks-probe.js"
 var application: Node
 var surface: Control
+# The nodes of the lane that has ended: they are freed with the last one.
+var retired: Array = []
 
 func check(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -230,6 +233,7 @@ func run_probe() -> void:
       stages["case_" + name.replace("-", "_")] = {"labels": []}
     check_cases_missing()
   await check_gate()
+  await check_reentrant()
   await finish()
 
 # The root did not mount, so no handler ran: every case fails its check, and says so.
@@ -240,31 +244,75 @@ func check_cases_missing() -> void:
   host_check(false, "react-batched/Two updates in one handler are one commit, ahead of the microtasks queued between and after them")
 
 func check_gate() -> void:
-  # A microtask, an immediate and a Promise reaction are queued in one turn and the application stops before the host drains them.
+  # A microtask, an immediate and a Promise reaction are queued in one turn, with an update of the component, and the application stops before
+  # the host drains them.
   js("ReactMicrotasksProbe.queueGated()")
   application.call("stop")
   await settle()
   var stopped := snap()
   var gate: Variant = js("ReactMicrotasksProbe.gateState()")
   stages.gate = {"state": gate, "application": stopped}
-  host_check((dig(gate, ["queued"]) == true and dig(gate, ["promiseRan"]) == true and dig(gate, ["microtaskRan"]) == false
-    and dig(gate, ["immediateRan"]) == false),
-    "gate/A microtask and an immediate queued before the application stops do not run once it is inactive, while the Promise reaction queued with them does")
+  host_check((dig(gate, ["queued"]) == true and dig(gate, ["microtaskAlive"]) == true and dig(gate, ["immediateAlive"]) == true
+    and dig(gate, ["promiseAlive"]) == true),
+    "gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive")
   host_check(dig(gate, ["cleanups"]) == 1,
-    "gate/Stop unmounts the root through React's own microtask: its effect cleanup runs once, although the gate is closed to what user code queued")
+    "gate/Stop unmounts the root through React's own microtask: the update pending at the stop is not lost, and the root's effect cleanup runs once")
   var calls_before := calls(stopped)
   var after_stop: Variant = js("ReactMicrotasksProbe.queueAfterStop()")
   var after := snap()
-  stages.after_stop = {"result": after_stop, "calls": calls(after)}
-  host_check(dig(after_stop, ["threw"]) == false and calls(after) == calls_before and calls_before >= 0,
-    "gate/Once the application is inactive, queueMicrotask schedules nothing and does not reach the module")
+  await settle(2)
+  var late: Variant = js("ReactMicrotasksProbe.gateState()")
+  stages.after_stop = {"result": after_stop, "calls": calls(after), "ran": dig(late, ["afterStopRan"])}
+  host_check(dig(after_stop, ["threw"]) == false and calls(after) == calls_before and calls_before >= 0 and dig(late, ["afterStopRan"]) == false,
+    "gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs")
   var root_state: Dictionary = JSON.parse_string(surface.call("snapshot"))
   check(stopped.get("stopped", false) == true and int(stopped.get("rootCount", -1)) == 0 and int(root_state.get("nativeTags", -1)) == 0
     and int(root_state.get("creates", 0)) == int(root_state.get("deletes", -1)),
     "lifecycle/Stop releases the root, and all native Controls of the root are balanced")
   stages.stop = {"application": stopped, "root": root_state}
 
+# A second application: a native signal asks for the stop in the middle of a React commit (the Control of the root is resized by it), as the adapter
+# acceptance does with an external Control. React finishes the commit after the signal returns and queues its next job; the stop that follows must
+# still be able to unmount the root.
+func check_reentrant() -> void:
+  retired.append(application)
+  retired.append(surface)
+  application = ClassDB.instantiate("FabricApplication")
+  application.name = "ReactMicrotasksReentrantApplication"
+  application.set("bundle_path", "res://build/" + bundle_file)
+  root.add_child(application)
+  surface = ClassDB.instantiate("FabricSurface")
+  surface.name = "ReactMicrotasksReentrantRoot"
+  surface.size = SIZE
+  surface.set("application_path", NodePath("../ReactMicrotasksReentrantApplication"))
+  surface.set("component_name", "ReactMicrotasksApp")
+  root.add_child(surface)
+  await wait_mounted()
+  var mounted := snap()
+  var control: Node = surface.find_child("pressable", true, false)
+  var found := control != null
+  var requests: Array = []
+  if found:
+    control.connect("resized", func() -> void:
+      requests.append(1)
+      application.call("stop"))
+  js("ReactMicrotasksProbe.resize()")
+  var waited := 0
+  while not bool(snap().get("stopped", false)) and waited < 600:
+    await process_frame
+    waited += 1
+  await settle()
+  var stopped := snap()
+  var gate: Variant = js("ReactMicrotasksProbe.gateState()")
+  stages.reentrant = {"mounted": mounted, "requests": requests.size(), "controlFound": found, "state": gate, "application": stopped}
+  host_check((found and requests.size() >= 1 and stopped.get("stopped", false) == true and int(stopped.get("rootCount", -1)) == 0
+    and dig(gate, ["cleanups"]) == 1),
+    "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it")
+
 func finish() -> void:
+  for node: Node in retired:
+    if is_instance_valid(node):
+      node.queue_free()
   surface.queue_free()
   application.queue_free()
   await settle(2)
