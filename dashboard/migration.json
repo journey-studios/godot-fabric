@@ -4922,6 +4922,15 @@
   ],
   "activity": [
     {
+      "id": "gf-05-microtasks-slice-d1-970fb01",
+      "at": "2026-10-13T23:00:00.000Z",
+      "taskIds": [
+        "GF-05"
+      ],
+      "message": "GF-05, fatia D1: o caminho de microtasks do React roda como no RN bridgeless. O host nunca definia RN$enableMicrotasksInReact, então o renderer fixado agendava o trabalho das lanes síncronas como tarefa Immediate do RuntimeScheduler, e o queueMicrotask era o shim portátil do RN (um job numa Promise) porque o host não tinha o módulo NativeMicrotasks. Agora o host compila o NativeMicrotasks do RN sem mudança (ReactCommon/react/nativemodule/microtasks) e o registra como NativeMicrotasksCxx, com um contador das chamadas que chegam a ele; o src/runtime.js define o flag antes de o renderer avaliar e instala o queueMicrotask a partir do módulo do RN, atrás do portão de ciclo de vida do host (V2-D27, que o RN não tem), e o setImmediate segue sendo o shim do RN sobre esse queueMicrotask. A fila é a do Hermes, drenada no ponto em que o RuntimeScheduler faz o checkpoint (depois de cada tarefa), que o host já espelhava. A varredura de regressão achou um problema real: o portão fechado no stop() recusava o próprio queueMicrotask do React, e as raízes nunca desmontavam; agora o host drena com o portão fechado o que o usuário enfileirou antes do stop e o mantém aberto só enquanto desmonta as raízes. Sonda headless (npm run test:react-microtasks, 18 checagens): o flag é escrito como true antes de o renderer lê-lo e o renderer captura o queueMicrotask do host; cada chamada pelo global chega ao módulo C++; a fila é FIFO entre Promises, queueMicrotask e setImmediate, antes da próxima tarefa do RuntimeScheduler e de um timer; um setState dentro de um onPress, dirigido por eventos reais do mouse do Godot, comita num microtask, na ordem que o ramo do flag do renderer dita, em quatro casos (três mudam de ordem com o flag desligado); o portão segura e a desmontagem do stop roda. O oráculo lê os fatos dos fontes fixados e deriva a ordem de um modelo cujo microtask é o do V8; o host anterior falha exatamente as 13 checagens que dependem do módulo, e cinco sabotagens (flag desligado, shim de Promise, portão removido, módulo não registrado, portão fechado na desmontagem) são rejeitadas. Os 61 suites que observam a ordem do commit ou o encerramento das raízes passam no host novo. Nenhum GF, checkpoint, peso ou denominador fecha; a execução hospedada está pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/970fb01b5b1e64025bbdc33857d752a6da84c412/docs/evidence/runtime/README.md#react-microtask-path-slice-d1-2026-10-13"
+    },
+    {
       "id": "gf-05-error-path-slice-c-2362089",
       "at": "2026-10-13T20:30:00.000Z",
       "taskIds": [
