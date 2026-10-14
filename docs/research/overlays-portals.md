@@ -141,8 +141,12 @@ sizes. Repo evidence covers surfaces side by side; overlapping or nested roots a
   [View evidence](../evidence/view/README.md), "Observed behavior"). A surface's content is therefore one contiguous block in
   Godot's draw order (documentation: equal `z_index` draws in tree order), and one root's content is never interleaved with
   another root's.
-- **Between surfaces Godot decides** (documentation): drawing follows `CanvasItem.z_index` and then tree order, and a
-  `CanvasLayer` has its own layer.
+- **Between surfaces Godot decides** (documentation, [CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html)
+  and [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html), not verifiable in a pinned source here):
+  the draw order compares the `CanvasLayer` first. A layer's `layer` is the numeric index of its draw order, the default 2D scene
+  (a node outside any `CanvasLayer`) renders at index 0, and a higher layer is drawn above a lower one whatever the `z_index` of
+  the nodes under them. Only inside one layer does `CanvasItem.z_index` apply (a higher one in front, its effective value
+  adding the parent's when `z_as_relative` is on), and nodes with an equal `z_index` draw in tree order.
 - **Pointer selection uses tree order today** (source). `pointer_hit_surface` picks, among the surfaces of one viewport whose RN hit
   test finds a View at the point, the one that is greater in tree order (`Node::is_greater_than`,
   `native/application_runtime.cpp:2130-2139`); a contact that is already pressed stays with the surface that took the press
@@ -230,10 +234,11 @@ The user decided both open questions of this note on 2026-10-14. The analysis th
    - Not decided: whether the fixture's host and `Portal` pair is also published as an SDK helper. It would be an extension
      outside RN's contract, so it needs its own decision.
 2. **V2-D10, input on overlapping surfaces: follow the draw order.** The surface drawn on top receives the pointer. The host's
-   surface pick (`pointer_hit_surface`, tree order today) must respect `z_index` and `CanvasLayer` as Godot does when it orders
-   Controls, and the change is certified with overlapping surfaces.
-   - Why: drawing and picking then agree, so a scene that raises a HUD layer with `z_index` or a `CanvasLayer` gets the pointer
-     on what the player sees on top. Today the two can disagree (section 2).
+   surface pick (`pointer_hit_surface`, tree order today) must follow the order Godot draws Controls in, which is a comparison
+   in three steps: the `CanvasLayer` first, then `z_index` only among surfaces in the same layer, then tree order for what is
+   still equal ("Z-order between surfaces"). The change is certified with overlapping surfaces.
+   - Why: drawing and picking then agree, so a scene that raises a HUD with a `CanvasLayer` or, inside one layer, with `z_index`
+     gets the pointer on what the player sees on top. Today the two can disagree (section 2).
 
 The second open question of the analysis (whether a second `FabricSurface` is the sanctioned route for overlays that leave a
 surface or serve several) is settled by the first decision: it is part of the RN parity contract.
@@ -244,11 +249,14 @@ surface or serve several) is settled by the first decision: it is part of the RN
   `setWrapperComponentProvider`, with a fixture on this host that proves the clipped and stacking case (a dropdown or tooltip
   inside a ScrollView or an `overflow` clip, non-blocking), one host per root with no Context across roots, and the pattern's
   documentation. A portal library on top of it belongs to GF-27.
-- **V2-D10 draw-order input** (GF-07, with GF-13). Change `pointer_hit_surface` to rank surfaces by Godot's draw order
-  (`z_index`, `CanvasLayer` layer, then tree order) and certify it with overlapping surfaces: a native probe, an independent
-  oracle and a causal control on the host that precedes the change. The cases to cover are a higher `z_index` earlier in the tree,
-  a higher `CanvasLayer`, a transparent `box-none` root of the upper surface that lets the point reach the one below, a contact
-  that stays with the surface that took the press, hover across the boundary and the claim over the world. Ownership is not
+- **V2-D10 draw-order input** (GF-07, with GF-13). Change `pointer_hit_surface` to rank surfaces by Godot's draw order, in this
+  order of comparison: the `CanvasLayer` first (a surface outside any `CanvasLayer` is on the default canvas, index 0), then
+  `z_index` only among surfaces of the same layer, then tree order. Certify it with overlapping surfaces: a native probe, an
+  independent oracle and a causal control on the host that precedes the change. The cases to cover are a higher `CanvasLayer`
+  that must win over a lower layer whose surface has a higher `z_index`, a higher `z_index` earlier in the tree within one layer,
+  equal layers and equal `z_index` falling back to tree order, a transparent `box-none` root of the upper surface that lets the
+  point reach the one below, a contact that stays with the surface that took the press, hover across the boundary and the claim
+  over the world. Ownership is not
   fixed by the map: `ROADMAP.md` maps V2-D09 to V2-D12 jointly to GF-07, GF-08, GF-09, GF-10, GF-13 and GF-21, and the change
   sits in the multi-surface routing of GF-07 while it changes a pointer contract GF-13 owns. Confirm the owner when it is planned.
 - **Modal** (GF-18). Its open contract, parity and targets checkpoints: orientation, insets, mobile presentation, nesting and
@@ -337,7 +345,7 @@ If an RN upgrade moves one of these, the test fails and this note has to be revi
 ## 6. Not certified, and who would close it
 
 - Overlapping surfaces: which surface takes the pointer, hover across the boundary, capture, the claim over the world and the
-  disagreement between `z_index` and tree order. The policy is decided (draw order); the change and its fixture are the
+  disagreement between the draw order (layer, `z_index`) and tree order. The policy is decided (draw order); the change and its fixture are the
   V2-D10 follow-up slice in section 4.
 - Pattern (c) on this host, with a host installed through `setWrapperComponentProvider`, and a portal library. Owner: GF-07 for
   the fixture (follow-up slice in section 4), GF-27 for the library.
@@ -354,5 +362,8 @@ If an RN upgrade moves one of these, the test fails and this note has to be revi
 - [UIManager.cpp](https://github.com/facebook/react-native/blob/v0.87.1/packages/react-native/ReactCommon/react/renderer/uimanager/UIManager.cpp)
 - [AppContainer-dev.js](https://github.com/facebook/react-native/blob/v0.87.1/packages/react-native/Libraries/ReactNative/AppContainer-dev.js)
 - [AppRegistry.js](https://github.com/facebook/react-native/blob/v0.87.1/packages/react-native/Libraries/ReactNative/AppRegistry.js)
+- [Godot CanvasLayer](https://docs.godotengine.org/en/stable/classes/class_canvaslayer.html) and
+  [CanvasItem](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html) (draw order; documentation, stable branch,
+  not fetched while writing)
 
 The versioned source and lockfiles define this release; online documentation may evolve independently.

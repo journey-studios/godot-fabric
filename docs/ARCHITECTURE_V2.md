@@ -485,8 +485,10 @@ renderer, que o pacote não exporta) e o que o host faz hoje com várias surface
 Context com um host view dentro da raiz, documentado, certificado por um fixture e instalável
 por `AppRegistry.setWrapperComponentProvider`; o SDK não expõe `createPortal`. Para o input
 entre surfaces sobrepostas, a política segue a ordem de desenho: recebe o ponteiro a surface
-desenhada por cima, e a escolha da surface pelo host, hoje pela ordem da árvore, deve respeitar
-`z_index` e `CanvasLayer` como o Godot faz com Controls, certificada com surfaces sobrepostas.
+desenhada por cima, e a escolha da surface pelo host, hoje pela ordem da árvore, deve seguir a
+ordem em que o Godot desenha os Controls: compara-se o `CanvasLayer` primeiro, depois o `z_index`
+só entre surfaces do mesmo layer e, por fim, a ordem da árvore. A regra é certificada com
+surfaces sobrepostas.
 
 ### V2-D11
 
