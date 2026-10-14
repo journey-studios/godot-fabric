@@ -609,16 +609,20 @@
         "auditDate": "2026-10-01",
         "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
         "name": "AppRegistry",
-        "status": "missing_public_export",
+        "status": "environment_or_utility_subset",
         "target": "1_0",
         "roadmap": "GF-07",
         "evidence": [
-          "src/react-native-platform.jsx"
-        ]
+          "src/react-native-platform.jsx",
+          "src/app-registry.js",
+          "src/render-application.jsx",
+          "tests/app-registry-native.test.mjs",
+          "docs/evidence/app-registry/README.md"
+        ],
+        "note": "RN's original AppRegistryImpl behind a frozen facade that exposes all 19 members RN declares: the registry (components, sections, runnables, configs) with a key registered once and never replaced, the wrapper, root view style and instrumentation providers, and runApplication and setSurfaceProps for a surface the scene mounted (E_APP_REGISTRY_UNKNOWN_ROOT otherwise). unmountApplicationComponentAtRootTag only logs RN's error; the four headless-task members throw E_APP_REGISTRY_HEADLESS_TASK. Suspended and hidden display modes, root replacement, pause and resume and error cleanup are not certified."
       },
       "auditStale": {
-        "stale": true,
-        "current": "the audit records a missing public export; AppRegistry has been exported by src/react-native-platform.jsx since the shared-roots slice (docs/evidence/shared-roots/README.md): registerComponent and getAppKeys over RN's original AppRegistryImpl, which is how the HUD registers its component"
+        "stale": false
       },
       "facade": [
         "src/app-registry.js"
@@ -630,10 +634,10 @@
           "registerComponent",
           "getAppKeys"
         ],
-        "registerComponent": "a nonempty string key and a function that gives the component; a section is refused (`Godot AppRegistry does not implement sections`), and so is a key already registered or reserved",
+        "registerComponent": "a nonempty string key and a function that gives the component, and a key that is not already registered or reserved",
         "reason": "the HUD's entry point: consumers/civ-lite/ui/index.tsx registers `FrontierHUD` with it, and the application mounts the component by that key",
         "limits": [
-          "runApplication, registerRunnable, registerConfig and the other members of RN's module are not part of the subset"
+          "the facade exposes the other 17 members of RN's module since the GF-07 AppRegistry slice (docs/evidence/app-registry/README.md), but they stay outside the 0.5 subset: the HUD scan refuses any member that is not registerComponent or getAppKeys"
         ]
       },
       "evidence": [

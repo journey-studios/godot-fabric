@@ -2,18 +2,12 @@
   "schemaVersion": 1,
   "scenario": "js-errors",
   "status": "verified-local-headless-previous-host-control-seven-sabotages",
-  "at": "2026-10-14T04:45:18.795Z",
-  "executionBaseCommit": "638b8158ab085261046a2e577c33a6f50db10b22",
-  "sourceDirtyDuringExecution": true,
-  "dirtyPathsDuringExecution": [
-    "docs/evidence/runtime/README.md",
-    "native/js_error_path.cpp",
-    "scripts/js-errors-evidence.mjs",
-    "tests/js-errors-native.test.mjs",
-    "tests/js-errors-oracle.mjs"
-  ],
+  "at": "2026-10-14T11:28:41.654Z",
+  "executionBaseCommit": "0ae2201f4a66af58f296e5b1ec4861b5e0a31492",
+  "sourceDirtyDuringExecution": false,
+  "dirtyPathsDuringExecution": [],
   "implementationCommit": "1c26dd8522f3d2426432c31261bbc8c6990c4966",
-  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>. The lanes ran on top of executionBaseCommit with the uncommitted paths of dirtyPathsDuringExecution, so the pins, not the commit the lanes ran on, tie what they executed to the implementation commit.",
+  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>. The lanes ran on a clean tree at executionBaseCommit.",
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -43,7 +37,7 @@
     "oracleVerdict": null,
     "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
     "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-    "logSha256": "04e9960aeac8744b6d26122667080eab6cc43a225d2b70097af8f12477abe776",
+    "logSha256": "288538f4469f07aa005077f5d141e23e878f4b06b629eaee15ca2480d914b4dd",
     "result": "JS_ERRORS_PASSED: 23",
     "checkVerdicts": [
       {
@@ -956,7 +950,7 @@
     "oracleVerdict": "The oracle fails 14 check(s), the first of them host/The host installs the five globals of ReactInstance's error family that keep a runtime running as ReactInstance defines them, and neither RN$hasHandledFatalException nor RN$notifyOfFatalException",
     "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
     "nativeHostSha256": "5777dced1ace3694ffe3351c790fa6a759d052d095b30a1c9f193c55f86ada6a",
-    "logSha256": "0fce6c85b79aa1dd41bbd6d27f21aa1fc68fde8ae94ab1d52c6d75309f07764f",
+    "logSha256": "905563fed3b0c373753890317124e63d8eac63c46c62af7f5189daa025df9c9a",
     "sameBundleAsCurrent": true,
     "result": "JS_ERRORS_ORIGINAL_NEGATIVE: 14",
     "expectedOriginalFailures": [
@@ -1060,7 +1054,7 @@
         "oracleVerdict": "The oracle fails 21 check(s), the first of them mount/The ready lane mounts a root through the original AppRegistry without a diagnostic",
         "bundleSha256": "d2e5aefdbe4eb2b4fb999615c175f994dbd65ed20827afa788f653ebd7616caa",
         "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-        "logSha256": "0f60c0d30adaf7705f553c166b098b6057d1d7f4117dc123c5980209e50e5d98"
+        "logSha256": "5ff6f062a8b239f6b5af676527f4f4c6cadeff11654a900a082463a640405254"
       },
       {
         "name": "no-setup",
@@ -1084,7 +1078,7 @@
         "oracleVerdict": "The oracle fails 10 check(s), the first of them handler/ErrorUtils.getGlobalHandler() is the handler setUpErrorHandling registered, once, and console.error is ExceptionsManager's reporter",
         "bundleSha256": "03ca0ad28d7e99066a31f1c5fdd16f43664e696f833ae680e4bded0ba42e1e70",
         "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-        "logSha256": "e1c6aef99238364c5b762fee9aa64a644880034f3f1b638d25e7af06ab267f15"
+        "logSha256": "aca58efa177f315e7ad376488d448b1cc1e5799dd1b53639b00ddb17ad02f896"
       },
       {
         "name": "soft-fails",
@@ -1104,7 +1098,7 @@
         "oracleVerdict": "The oracle fails 6 check(s), the first of them soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "beb4f855521eaff0fe830ebb036b90e588c1d39a0faf57bc2126561bd6252707",
-        "logSha256": "4cfce69be6eb0dd6f9b0ff94dcacdf0c902e0ac1493bbc8688bfc42e0e550654"
+        "logSha256": "986d5742a3ed798cec8a9aed95aff9dc1377b60e3eb258b60e11bc51f44d5d12"
       },
       {
         "name": "fatal-swallowed",
@@ -1123,7 +1117,7 @@
         "oracleVerdict": "The oracle fails 5 check(s), the first of them fatal/ErrorUtils.reportFatalError reaches reportException with isFatal true and records exactly one host failure, with the message and the parsed stack",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "c009089ca658cab1a00d41e9a437d07f9fe431d5a6f75e7240ea724b877f6754",
-        "logSha256": "82b5353e764d1a4148d2cd2d4157a60ee24dd241d5036e4c7bd32e9cc9513bad"
+        "logSha256": "acabdde845f0308412477f0221f1785a7c6d66e10d966c1261ee2c97e4412558"
       },
       {
         "name": "scheduler-site",
@@ -1139,7 +1133,7 @@
         "oracleVerdict": "The oracle fails 2 check(s), the first of them fatal/An exception that escapes a task of RN's RuntimeScheduler reaches ErrorUtils as a fatal error and records exactly one host failure",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "99b32c9985170643d4756857f3d6da2829e05200d66e835da22ab2ea6ebd3a4c",
-        "logSha256": "060d68d6ddba78ff533f48427786085b9de280473daad4b54e5182c5a468890b"
+        "logSha256": "4b92e5817227ff2c580064d7ae6feae526dc6a0995bec8e17ba4689b7db501a1"
       },
       {
         "name": "bundle-site",
@@ -1154,7 +1148,7 @@
         "oracleVerdict": "The oracle fails 1 check(s), the first of them escape/An error that escapes the evaluation of the bundle is reported by JsErrorHandler while the runtime is not ready, is the application's one failure, and nothing mounts",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "039b72daac1ea1d9e355f96a378040706c7e5132c63ed31c4fb28d93a587bd96",
-        "logSha256": "a2d4b3bae0072aeb95c10ac95ae78cf0835f90a44eb419ce22b032a08914abf6"
+        "logSha256": "aba72b3e7818ac71af28ac3a73f4395368287b732d5d2905e7aecd384e3fa036"
       },
       {
         "name": "never-ready",
@@ -1175,7 +1169,7 @@
         "oracleVerdict": "The oracle fails 7 check(s), the first of them soft/console.error goes through ExceptionsManager to NativeExceptionsManager.reportException with isFatal false, is logged, and records no failure",
         "bundleSha256": "340a906777fb6846476e635ed788decb552582cd9b5e567cec90c27559dc3a36",
         "nativeHostSha256": "1d1cddeecbe9bb0145842c2a4cfbe05e10f73adb92fd45833c869866f272eca7",
-        "logSha256": "499645fc85f20cf68d392ddbf4dc77f36403ed1eeff17d1da4333805e0f783b4"
+        "logSha256": "8339d3573b3ab10ee441724cbce619b790b63647d9e9b09fb14e5010460ea199"
       }
     ]
   },
@@ -1590,6 +1584,6 @@
     "A soft exception is a log line, as on Android; iOS drops it without a redbox or a delegate. A fatal exception is a recorded failure and the application keeps running, where RN's release builds crash.",
     "V2-D26's root-scoped unmount on an uncaught error belongs to GF-07's error-cleanup slice.",
     "The headless desktop host only; no mobile export has run this bundle.",
-    "Hosted CI is pending: the record is of the local run."
+    "The lanes of this record are local. Hosted run 38481790977 (https://github.com/journey-studios/godot-fabric/actions/runs/38481790977), on head 26a3a908 (the slice before the review fixes), passed every job, native-suites-runtime with test:js-errors among them. The branch's later commits changed the evidence script, the oracle, the lane runner's provenance record, a named constant in native/js_error_path.cpp (the host built from it is byte-identical to the one built before it) and docs, so that run did not execute these exact bytes."
   ]
 }
