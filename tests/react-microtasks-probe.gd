@@ -65,6 +65,10 @@ func dig(value: Variant, path: Array, fallback: Variant = null) -> Variant:
       return fallback
   return current
 
+# A count the bundle reports, or 0 where it reported none (a bundle that did not evaluate, as slice D2's setUpTimers makes of a host without the module, has no probe object).
+func whole(value: Variant) -> int:
+  return int(value) if (value is float or value is int) else 0
+
 # How many calls the registry counted for RN's NativeMicrotasks module.
 func calls(snapshot: Dictionary) -> int:
   return int(dig(snapshot, ["nativeModules", "microtasks", "calls"], -1))
@@ -155,7 +159,7 @@ func check_module(environment: Variant) -> void:
   host_check(calls(registered) >= 0,
     "module/The registry serves RN's NativeMicrotasks module and counts the calls that reach it")
   # No frame passes between the two snapshots, so the host queues nothing of its own in between.
-  var count := int(js("ReactMicrotasksProbe.bulk"))
+  var count := whole(js("ReactMicrotasksProbe.bulk"))
   var before := snap()
   js("ReactMicrotasksProbe.queueMany(%d)" % count)
   var after := snap()
@@ -165,7 +169,7 @@ func check_module(environment: Variant) -> void:
 
 func check_module_drained() -> void:
   var many: Variant = js("ReactMicrotasksProbe.queueManyState()")
-  host_check(dig(many, ["ran"]) == dig(many, ["queued"]) and int(dig(many, ["queued"], 0)) == int(dig(stages, ["queue_many", "count"], -1)),
+  host_check(dig(many, ["queued"]) != null and dig(many, ["ran"]) == dig(many, ["queued"]) and int(dig(many, ["queued"], 0)) == int(dig(stages, ["queue_many", "count"], -1)),
     "module/The host drains the callbacks it queued on the module's microtask queue")
   var before := snap()
   js("ReactMicrotasksProbe.queueImmediate()")

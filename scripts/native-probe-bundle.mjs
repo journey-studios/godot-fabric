@@ -15,6 +15,28 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const requireSdk = createRequire(import.meta.url);
 const digest = content => createHash("sha256").update(content).digest("hex");
 
+// An in-memory sabotage of one file the bundle holds: the plugin hands esbuild the text of `variant.file` with the one replacement made, and no file is
+// edited. A file of RN is Flow source, so it goes through the babel preset that the platform plugin gives every RN file before it is bundled. Put it before
+// the platform plugin in `plugins`.
+export function sabotageOverride(name, variant) {
+  const target = path.join(root, variant.file);
+  return {name, setup(builder) {
+    builder.onLoad({filter: /\.js$/}, async args => {
+      if (args.path !== target) {
+        return undefined;
+      }
+      const text = await readFile(target, "utf8");
+      assert.equal(text.split(variant.find).length, 2, `The ${variant.name} sabotage must replace exactly one place in ${variant.file}: ${variant.find}`);
+      const replaced = text.replace(variant.find, () => variant.replace);
+      const contents = variant.file.startsWith("node_modules/react-native/")
+        ? (await transformAsync(replaced, {filename: target, configFile: false, babelrc: false,
+          presets: [[requireSdk.resolve("@react-native/babel-preset"), {disableImportExportTransform: true}]]})).code
+        : replaced;
+      return {contents, loader: "js", resolveDir: path.dirname(target)};
+    });
+  }};
+}
+
 // One immutable bundle for a platform-module probe, written to
 // build/<name>-probe.js with its receipt; build/app.js is never written here.
 // seams are the public SDK files and bundled the original RN modules the

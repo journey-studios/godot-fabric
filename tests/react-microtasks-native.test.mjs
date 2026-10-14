@@ -121,7 +121,9 @@ test("React's sync work flushes in a microtask over RN's NativeMicrotasks module
     assert.ok(inputs.includes("node_modules/react-native/" + file), "The bundle runs RN's own module: " + file);
     assert.match(bundle.originalReactNativeSources[file], /^[0-9a-f]{64}$/);
   }
-  assert.ok(!inputs.includes("node_modules/react-native/Libraries/Core/Timers/queueMicrotask.js"), "The portable queueMicrotask shim is no longer in the bundle");
+  // Slice D2 imports setUpTimers unchanged. Its non-bridgeless branch requires the portable queueMicrotask shim, so the bundler holds it, but RN$Bridgeless is
+  // true and the branch never runs: the counter checks say that queueMicrotask reaches the C++ module.
+  assert.ok(inputs.includes("node_modules/react-native/Libraries/Core/setUpTimers.js"), "The bundle runs RN's own setUpTimers");
   for (const file of ["Libraries/Core/setUpTimers.js", "Libraries/Core/Timers/queueMicrotask.js", "Libraries/Renderer/implementations/ReactFabric-prod.js",
     "ReactCommon/react/nativemodule/microtasks/NativeMicrotasks.cpp", "ReactCommon/react/nativemodule/microtasks/NativeMicrotasks.h",
     "ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp", "ReactCommon/react/renderer/runtimescheduler/SchedulerPriorityUtils.h",

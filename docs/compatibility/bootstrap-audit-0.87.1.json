@@ -18,8 +18,8 @@
   "slices": {
     "B": "JS-installed globals (done). src/initialize.js imports RN's own setUpGlobals, setUpDOM, setUpPerformance and setUpNavigator, the build injects RN's console polyfill ahead of every module, and the host no longer defines performance or console, only nativePerformanceNow and nativeLoggingHook (native build; headless probe tests/js-globals-native.test.mjs).",
     "C": "The error path (done). The build injects RN's error-guard polyfill, src/initialize.js imports RN's setUpErrorHandling, and the host answers with RN's JsErrorHandler (ReactCommon/jserrorhandler, compiled unchanged), five of the seven globals ReactInstance installs for the error family over it (RN$handleException, RN$inExceptionHandler, RN$registerExceptionListener, RN$isRuntimeReady and RN$useAlwaysAvailableJSErrorHandling, the flag's pinned value; not RN$hasHandledFatalException and RN$notifyOfFatalException, which V2-D26 excludes because they make RN's JS report only the first fatal exception) and an ExceptionsManager module: a fatal exception is the host's failure, a soft one is a log line (native build; headless probe tests/js-errors-native.test.mjs).",
-    "D1": "RN$enableMicrotasksInReact (done). src/runtime.js sets the flag before the renderer evaluates and installs queueMicrotask from RN's NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, compiled unchanged and registered by the host as NativeMicrotasksCxx), behind the host's lifecycle gate; React's sync work commits in a microtask as in RN bridgeless (native build; headless probe tests/react-microtasks-native.test.mjs).",
-    "D2": "Idle callbacks. The NativeIdleCallbacks module backs requestIdleCallback and cancelIdleCallback as in RN bridgeless (cold native build); the slice then imports setUpTimers unchanged and removes from src/runtime.js the duplicates of what it installs (the flag, queueMicrotask, setImmediate and clearImmediate), keeping the host's lifecycle gate.",
+    "D1": "RN$enableMicrotasksInReact (done). The host sets the flag before the renderer evaluates and registers RN's NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, compiled unchanged, as NativeMicrotasksCxx), so that React's sync work commits in a microtask as in RN bridgeless; the host's lifecycle gate drains what user code queued before a stop and stays open only while stop() unmounts the roots (native build; headless probe tests/react-microtasks-native.test.mjs). Slice D2 handed the flag and the installation to RN's own setUpTimers.",
+    "D2": "Idle callbacks and setUpTimers unchanged (done). The host registers RN's NativeIdleCallbacks module (ReactCommon/react/nativemodule/idlecallbacks, compiled unchanged, as NativeIdleCallbacksCxx), src/initialize.js imports setUpTimers unchanged at RN's place in the chain, and src/runtime.js keeps only the host's lifecycle gate, a lazy getter over each function setUpTimers installs, and the gate over the timers and the animation frame; it no longer sets the flag or installs queueMicrotask, setImmediate or clearImmediate (native build; headless probe tests/idle-callbacks-native.test.mjs).",
     "E": "The web-globals probe. URL, URLSearchParams, AbortController and AbortSignal members, and the encoding globals per the decision: TextEncoder, atob and btoa present and tested, TextDecoder absent with a negative fixture.",
     "F": "Exceptions and starvation parity. Callback exceptions (timers, setImmediate, queueMicrotask) and a Promise storm are measured against RN bridgeless and the host behaves the same."
   },
@@ -241,11 +241,11 @@
         {
           "name": "queue-microtask",
           "globals": ["queueMicrotask"],
-          "status": "replaced",
-          "reason": "RN bridgeless installs the function of its NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, which queues on the runtime's microtask queue). src/runtime.js installs that same function from RN's spec module, wrapped in the host's lifecycle gate: a callback does not run once the application is inactive. The gate is a host extension for shutdown (V2-D27) that RN does not have, kept as thin as it was; the host registers RN's module in its TurboModule registry, compiled unchanged, as NativeMicrotasksCxx. Whether an exception thrown by a callback surfaces as it does in RN is certified by slice F.",
+          "status": "runs",
+          "reason": "src/initialize.js imports RN's setUpTimers unchanged, which installs the function of RN's NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, which queues on the runtime's microtask queue) as a lazy getter; the host registers that module in its TurboModule registry, compiled unchanged, as NativeMicrotasksCxx. src/runtime.js puts the host's lifecycle gate over the getter without replacing the function: a callback does not run once the application is inactive. The gate is a host extension for shutdown (V2-D27) that RN does not have. Whether an exception thrown by a callback surfaces as it does in RN is certified by slice F.",
           "evidence": [
-            { "file": "src/runtime.js", "symbol": "globalThis.queueMicrotask =" },
-            { "file": "src/runtime.js", "symbol": "microtasks/specs/NativeMicrotasks" },
+            { "file": "src/initialize.js", "symbol": "import \"react-native/Libraries/Core/setUpTimers\"" },
+            { "file": "src/runtime.js", "symbol": "gate(\"queueMicrotask\"" },
             { "file": "native/application_runtime.cpp", "symbol": "native_modules->add_microtasks()" }
           ],
           "verifyIn": ["F"]
@@ -253,31 +253,32 @@
         {
           "name": "immediate",
           "globals": ["setImmediate", "clearImmediate"],
-          "status": "replaced",
-          "reason": "src/runtime.js assigns RN's own immediateShim, the module RN bridgeless installs lazily, eagerly instead. The shim defers through global.queueMicrotask, so it inherits that part's semantics; ordering, exceptions and starvation are certified by slice F.",
+          "status": "runs",
+          "reason": "setUpTimers installs RN's own immediateShim lazily, and the host adds nothing over it. The shim defers through global.queueMicrotask, which is the gated function of the queue-microtask part, so it inherits that part's semantics; ordering, exceptions and starvation are certified by slice F.",
           "evidence": [
-            { "file": "src/runtime.js", "symbol": "globalThis.setImmediate = setImmediate" },
-            { "file": "src/runtime.js", "symbol": "import { setImmediate, clearImmediate } from \"react-native/Libraries/Core/Timers/immediateShim\"" }
+            { "file": "src/initialize.js", "symbol": "import \"react-native/Libraries/Core/setUpTimers\"" }
           ],
           "verifyIn": ["F"]
         },
         {
           "name": "react-microtasks",
           "globals": ["RN$enableMicrotasksInReact"],
-          "status": "replaced",
-          "reason": "RN bridgeless sets the flag to true in setUpTimers, and the pinned renderer reads it once, when it evaluates (Libraries/Renderer/implementations/ReactFabric-prod.js, supportsMicrotasks), to schedule the work of its sync lanes with queueMicrotask instead of a RuntimeScheduler Immediate task. src/runtime.js sets it to true before the renderer evaluates. setUpTimers itself is not imported yet: its bridgeless branch also installs the idle callbacks from a module the host lacks, and slice D2 adds that module and imports setUpTimers unchanged. Slice D1 certifies the flag and the order it produces (tests/react-microtasks-native.test.mjs).",
+          "status": "runs",
+          "reason": "setUpTimers sets the flag to true, and the pinned renderer reads it once, when it evaluates (Libraries/Renderer/implementations/ReactFabric-prod.js, supportsMicrotasks), to schedule the work of its sync lanes with queueMicrotask instead of a RuntimeScheduler Immediate task. src/initialize.js imports setUpTimers before the renderer evaluates; slice D1 certified the flag and the order it produces (tests/react-microtasks-native.test.mjs), slice D2 that it is RN's own setUpTimers that sets it (tests/idle-callbacks-native.test.mjs).",
           "evidence": [
-            { "file": "src/runtime.js", "symbol": "globalThis.RN$enableMicrotasksInReact = true" }
+            { "file": "src/initialize.js", "symbol": "import \"react-native/Libraries/Core/setUpTimers\"" }
           ]
         },
         {
           "name": "idle-callbacks",
           "globals": ["requestIdleCallback", "cancelIdleCallback"],
-          "status": "pending",
-          "slice": "D2",
-          "reason": "Neither function exists: RN installs them from the NativeIdleCallbacks module, which the host does not provide (the name is reserved). Slice D2 adds the module, then imports setUpTimers unchanged, which installs them along with the flag, queueMicrotask and setImmediate.",
+          "status": "runs",
+          "reason": "setUpTimers installs both lazily from RN's NativeIdleCallbacks module (ReactCommon/react/nativemodule/idlecallbacks, which schedules the callback as an idle-priority task of the RuntimeScheduler); the host registers that module, compiled unchanged, as NativeIdleCallbacksCxx. src/runtime.js puts the host's lifecycle gate over the getters without replacing the functions, with the strict form of the gate that the unmount window of stop() does not open. Slice D2 certifies them in tests/idle-callbacks-native.test.mjs.",
           "evidence": [
-            { "file": "native/adapter_loader.cpp", "symbol": "\"NativeIdleCallbacksCxx\"" }
+            { "file": "src/initialize.js", "symbol": "import \"react-native/Libraries/Core/setUpTimers\"" },
+            { "file": "src/runtime.js", "symbol": "gate(\"requestIdleCallback\"" },
+            { "file": "src/runtime.js", "symbol": "gate(\"cancelIdleCallback\"" },
+            { "file": "native/application_runtime.cpp", "symbol": "native_modules->add_idle_callbacks()" }
           ]
         }
       ]

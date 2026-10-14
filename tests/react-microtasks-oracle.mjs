@@ -10,7 +10,7 @@ import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
 import {bulk, cases, priorities, runCase} from "./react-microtasks-cases.mjs";
 
-// The independent oracle of the React microtasks slice. It is written from RN, not from the probe, in three ways:
+// The independent oracle of the React microtasks slice (its RN fact readers are also used by the idle callbacks slice's oracle). It is written from RN, not from the probe, in three ways:
 //   - the facts RN's sources state are read out of the pinned files: setUpTimers' flag and where it installs queueMicrotask from, the spec and
 //     the C++ of the NativeMicrotasks module, the renderer's flag branch (supportsMicrotasks, scheduleMicrotask, scheduleImmediateRootScheduleTask
 //     and the job they queue), how an event becomes a discrete update, and what the RuntimeScheduler does: the priority timeouts, the checkpoint
@@ -39,14 +39,14 @@ function visit(node, callback) {
 
 // The first group of the first match of `pattern` in `source`, or a failure that names what was looked for: the oracle reads these words out
 // of RN, so a source that no longer says them is a reason to look again, not to guess.
-function found(source, pattern, what) {
+export function found(source, pattern, what) {
   const match = source.match(pattern);
   assert.ok(match, `RN's sources no longer say ${what}`);
   return match[1];
 }
 
 // The text of a function of a C++ source, from its signature to the closing brace at the start of a line.
-function cppFunction(source, signature) {
+export function cppFunction(source, signature) {
   const start = source.indexOf(signature);
   assert.notEqual(start, -1, `RN's sources no longer define ${signature}`);
   const end = source.indexOf("\n}\n", start);
@@ -117,7 +117,7 @@ function rendererFacts(source) {
 
 // RN's RuntimeScheduler and what feeds it, from the C++: the timeout of each priority, that a task is followed by a microtask checkpoint before the next
 // one is chosen, that the smallest expiration runs first, and that the work a press handler runs in is itself an Immediate task.
-function schedulerFacts(rn) {
+export function schedulerFacts(rn) {
   const utils = rn("ReactCommon/react/renderer/runtimescheduler/SchedulerPriorityUtils.h");
   const modern = rn("ReactCommon/react/renderer/runtimescheduler/RuntimeScheduler_Modern.cpp");
   const task = rn("ReactCommon/react/renderer/runtimescheduler/Task.h");
@@ -164,7 +164,7 @@ function eventFacts(rn) {
 
 // The host's own order, from its source: a timer registered while a pump drains the work queue is taken by the next pump, after the scheduler's loop of this
 // one, and the host drains the microtasks after each item of the queue.
-function hostFacts(base) {
+export function hostFacts(base) {
   const source = readFileSync(path.join(base, "native/application_runtime.cpp"), "utf8");
   const pump = source.slice(source.indexOf("void pump(bool frame_tick = false) {"), source.indexOf("void unmount(int id, bool legacy_hook = false) {"));
   const takeDue = pump.indexOf("timer_registry->take_due(now_ms())");
@@ -174,7 +174,7 @@ function hostFacts(base) {
 }
 
 // RN's immediateShim run in V8, so that setImmediate defers as RN's own JavaScript says: through the global queueMicrotask.
-async function immediateShimBundle() {
+export async function immediateShimBundle() {
   const result = await build({absWorkingDir: root, stdin: {contents: `
 import {setImmediate, clearImmediate} from "react-native/Libraries/Core/Timers/immediateShim";
 globalThis.__immediateShim = {setImmediate, clearImmediate};

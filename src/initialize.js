@@ -6,7 +6,11 @@ import "react-native/Libraries/Core/setUpGlobals";
 // A relative path because RN does not export it: the platform plugin resolves it for this file only.
 import setUpDOM from "../node_modules/react-native/src/private/setup/setUpDOM";
 import "react-native/Libraries/Core/setUpPerformance";
-// The timers, the microtasks, the immediates and the animation frame, over the TimerManager the host attached.
+// The microtasks, the immediates and the idle callbacks, installed as RN installs them over the host's modules (setUpTimers, which also sets
+// RN$enableMicrotasksInReact), and the timers and the animation frame, which are the host's functions over the TimerManager it attached. RN
+// calls polyfillPromise before it; the Hermes the host runs has Promise.
+import "react-native/Libraries/Core/setUpTimers";
+// The host's lifecycle gate over what setUpTimers installed and over the timers (src/runtime.js).
 import "./runtime";
 import "./native-module-runtime";
 // RN's error path: ExceptionsManager's console.error reporter, and its handler on the ErrorUtils that the error-guard polyfill

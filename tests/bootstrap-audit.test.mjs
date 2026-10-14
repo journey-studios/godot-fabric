@@ -49,13 +49,18 @@ const GLOBALS = "Libraries/Core/setUpGlobals.js";
 const NAVIGATOR = "Libraries/Core/setUpNavigator.js";
 const DOM = "src/private/setup/setUpDOM.js";
 const ERROR_HANDLING = "Libraries/Core/setUpErrorHandling.js";
-// Slice C made the last two pending steps run. The mutations below that need a pending entry make one of a not-applicable step.
+// Slice C made the last two pending steps run and slice D2 the last pending part. The mutations below that need a pending entry make one of a
+// not-applicable step, or of a part of a split step.
 const ALERT = "Libraries/Core/setUpAlert.js";
 const toPending = (copy, file, slice = "D2") => {
   const entry = step(copy, file);
   delete entry.owner;
   Object.assign(entry, { status: "pending", slice });
 };
+const partToPending = (copy, file, name, slice = "D2") => Object.assign(part(copy, file, name), { status: "pending", slice });
+// The parts of setUpTimers that RN's own module installs from JS, and the two that are the host's (the C++ TimerManager and the animation frame).
+const TIMERS_RUN = ["queue-microtask", "immediate", "react-microtasks", "idle-callbacks"];
+const TIMERS_HOST = ["timers", "animation-frame"];
 const POLYFILL_LIST = "sdk/toolchain/metro-polyfills.mjs";
 const CONSOLE = "@react-native/js-polyfills/console.js";
 const ERROR_GUARD = "@react-native/js-polyfills/error-guard.js";
@@ -201,17 +206,17 @@ test("fails when the Metro polyfills change", () => {
 
 test("fails when evidence names a symbol its file no longer holds", () => {
   const issues = mutate((copy) => {
-    const evidence = part(copy, TIMERS, "queue-microtask").evidence[0];
-    evidence.symbol = "globalThis.queueMicrotaskRenamed";
+    const evidence = part(copy, TIMERS, "queue-microtask").evidence.find((item) => item.file === "src/runtime.js");
+    evidence.symbol = 'gate("queueMicrotaskRenamed"';
   });
-  assert.ok(mentions(issues, "setUpTimers.js part queue-microtask", "src/runtime.js", "globalThis.queueMicrotaskRenamed"), explain(issues));
+  assert.ok(mentions(issues, "setUpTimers.js part queue-microtask", "src/runtime.js", 'gate(\\"queueMicrotaskRenamed\\"'), explain(issues));
 });
 
 test("fails when a cited symbol is renamed or removed in its file", () => {
   const renamed = mutate((copy) => {
-    copy.readSource = (file) => file === "src/runtime.js" ? read(file).replace("globalThis.queueMicrotask =", "globalThis.enqueueMicrotask =") : read(file);
+    copy.readSource = (file) => file === "src/runtime.js" ? read(file).replace('gate("queueMicrotask"', 'gate("enqueueMicrotask"') : read(file);
   });
-  assert.ok(mentions(renamed, "part queue-microtask", "src/runtime.js no longer contains", "globalThis.queueMicrotask ="), explain(renamed));
+  assert.ok(mentions(renamed, "part queue-microtask", "src/runtime.js no longer contains", 'gate(\\"queueMicrotask\\"'), explain(renamed));
   const removed = mutate((copy) => {
     copy.readSource = (file) => file === "native/application_runtime.cpp" ? read(file).replace("globalThis.__DEV__=false;", "") : read(file);
   });
@@ -244,11 +249,11 @@ test("fails when a symbol that occurs several times has no anchor, or its anchor
   });
   assert.ok(mentions(ambiguous, "the anchor", "is ambiguous", "times"), explain(ambiguous));
   const stale = mutate((copy) => {
-    step(copy, "Libraries/Core/polyfillPromise.js").evidence[1] = { file: "src/runtime.js", symbol: "globalThis.queueMicrotask =", anchor: "globalThis.queueMicrotask = gone" };
+    step(copy, "Libraries/Core/polyfillPromise.js").evidence[1] = { file: "src/runtime.js", symbol: "polyfillGlobal(name,", anchor: "polyfillGlobal(name, gone" };
   });
   assert.ok(mentions(stale, "the anchor", "is no longer in the file"), explain(stale));
   const foreign = mutate((copy) => {
-    step(copy, "Libraries/Core/polyfillPromise.js").evidence[1] = { file: "src/runtime.js", symbol: "globalThis.queueMicrotask =", anchor: "globalThis.setImmediate = setImmediate" };
+    step(copy, "Libraries/Core/polyfillPromise.js").evidence[1] = { file: "src/runtime.js", symbol: "polyfillGlobal(name,", anchor: "const live = () => active(true);" };
   });
   assert.ok(mentions(foreign, "does not contain the symbol"), explain(foreign));
   const empty = mutate((copy) => {
@@ -318,7 +323,7 @@ test("fails when a step has no reason where one is required", () => {
     assert.ok(mentions(blank, file, `a ${status} entry needs a reason`), explain(blank));
   }
   const inPart = mutate((copy) => {
-    delete part(copy, TIMERS, "idle-callbacks").reason;
+    delete partToPending(copy, TIMERS, "idle-callbacks").reason;
   });
   assert.ok(mentions(inPart, "part idle-callbacks", "a pending entry needs a reason"), explain(inPart));
   const runs = mutate((copy) => {
@@ -334,7 +339,7 @@ test("fails when a pending step names a slice that is not in the plan", () => {
   });
   assert.ok(mentions(unknown, ALERT, "names a slice of the plan"), explain(unknown));
   const none = mutate((copy) => {
-    delete part(copy, TIMERS, "idle-callbacks").slice;
+    delete partToPending(copy, TIMERS, "idle-callbacks").slice;
   });
   assert.ok(mentions(none, "part idle-callbacks", "names a slice of the plan"), explain(none));
   const misplaced = mutate((copy) => {
@@ -385,6 +390,37 @@ test("the error path runs since slice C: the gate notices when setUpErrorHandlin
     copy.readSource = (file) => file === POLYFILL_LIST ? listing([CONSOLE]) : read(file);
   });
   assert.ok(mentions(uninjected, `polyfill ${ERROR_GUARD}`, "claims runs", `${POLYFILL_LIST} does not inject it`), explain(uninjected));
+});
+
+test("setUpTimers runs since slice D2: the gate notices when src/initialize.js does not import it, and asks nothing of the parts that are the host's", () => {
+  const countPending = (audit) => audit.steps.flatMap((entry) => entry.parts ?? [entry]).filter((each) => each.status === "pending").length;
+  assert.equal(countPending(inputs.audit), 0, "slice D2 made the last pending part run");
+  for (const name of TIMERS_RUN) {
+    assert.equal(part(inputs, TIMERS, name).status, "runs", name);
+  }
+  for (const name of TIMERS_HOST) {
+    assert.equal(part(inputs, TIMERS, name).status, "host", name);
+  }
+  const dropped = mutate((copy) => {
+    copy.readSource = (file) => file === "src/initialize.js" ? read(file).replace('import "react-native/Libraries/Core/setUpTimers";', "") : read(file);
+  });
+  // Every part of the split step that claims runs says so, and the parts that are the host's are not asked to be imported.
+  for (const name of TIMERS_RUN) {
+    assert.ok(mentions(dropped, `part ${name}`, "claims runs", "does not import react-native/Libraries/Core/setUpTimers"), `${name}: ${explain(dropped)}`);
+  }
+  for (const name of TIMERS_HOST) {
+    assert.ok(!mentions(dropped, `part ${name}`), `${name}: ${explain(dropped)}`);
+  }
+  // A part that claims runs while the step is still partly the host's is judged like a step of its own: it needs the import and no reason.
+  const claimed = mutate((copy) => {
+    Object.assign(part(copy, TIMERS, "timers"), { status: "runs" });
+    delete part(copy, TIMERS, "timers").reason;
+  });
+  assert.deepEqual(claimed, [], "a runs part needs no reason once the step is imported");
+  const unreasoned = mutate((copy) => {
+    delete part(copy, TIMERS, "timers").reason;
+  });
+  assert.ok(mentions(unreasoned, "part timers", "a host entry needs a reason"), explain(unreasoned));
 });
 
 test("fails when a runs step imports a setup function without calling it", () => {

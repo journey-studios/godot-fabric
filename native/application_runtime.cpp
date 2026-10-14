@@ -671,6 +671,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // callbacks join the microtask queue that pump() drains after each task, the checkpoint RuntimeScheduler_Modern::runEventLoopTick
     // performs after each of its own (RuntimeScheduler_Modern.cpp, performMicrotaskCheckpoint).
     native_modules->add_microtasks();
+    // RN's NativeIdleCallbacks, which setUpTimers installs requestIdleCallback and cancelIdleCallback from. Its callbacks are idle-priority
+    // tasks of the RuntimeScheduler (the lowest, scheduleIdleTask), which pump() runs through the runtime executor like every other task.
+    native_modules->add_idle_callbacks();
     if (native_animated) native_modules->add_native_animated();
     native_modules->add_source_code([this] { return bundle_url; });
     native_modules->add_device_info([this] {
@@ -1047,8 +1050,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     });
     timer_manager->attachGlobals(*runtime);
     clear_timer.emplace(runtime->global().getPropertyAsFunction(*runtime, "clearTimeout"));
-    bind("godotRuntimeActive", 0, [this](auto &, auto &, const auto *, size_t) {
-      return jsi::Value(!inactive() || unmounting_roots);
+    // godotRuntimeActive() is the host's lifecycle gate (src/runtime.js). With a true argument it is the strict one: the window in which stop()
+    // unmounts the roots is closed to it, for the callbacks of user code that React's own unmount has no part in.
+    bind("godotRuntimeActive", 0, [this](jsi::Runtime &, auto &, const jsi::Value *args, size_t count) {
+      const bool strict = count > 0 && args[0].isBool() && args[0].getBool();
+      return jsi::Value(!inactive() || (unmounting_roots && !strict));
     });
     bind("requestAnimationFrame", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (!count || !args[0].isObject() || !args[0].asObject(rt).isFunction(rt))

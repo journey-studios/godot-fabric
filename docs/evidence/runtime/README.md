@@ -150,7 +150,11 @@ does not bound an infinite chain of Promise jobs or arbitrary blocking JS.
 > Later note: since the [React microtask path slice](#react-microtask-path-slice-d1-2026-10-13), `queueMicrotask`
 > is the function of RN's `NativeMicrotasks` module (a C++ module the host registers, compiled unchanged) behind the
 > host's lifecycle gate, and the host sets `RN$enableMicrotasksInReact` as RN's bridgeless `setUpTimers` does, so
-> React commits the work of its sync lanes in a microtask; the idle callbacks (slice D2) stay open.
+> React commits the work of its sync lanes in a microtask.
+>
+> Later note: since the [idle callbacks slice](#idle-callbacks-and-setuptimers-unchanged-slice-d2-2026-10-13), RN's `setUpTimers` is imported unchanged and installs
+> `queueMicrotask`, `setImmediate`, `clearImmediate`, `requestIdleCallback` and `cancelIdleCallback` and sets the flag, so the idle callbacks are no longer open;
+> `src/runtime.js` keeps only the host's lifecycle gate. The encoding globals and the callback exceptions (slice F) stay open.
 
 RAF uses real Godot process frames rather than upstream TimerManager's
 zero-delay fallback. The oracle certifies cancellation and monotonicity; it
@@ -237,7 +241,7 @@ symbol, a missing reason, and the rest), so the gate is shown to reject what it 
 | B | JS-installed globals; the host's `performance` and `console` stubs go (done, below) | `setUpGlobals`, `setUpDOM`, `setUpPerformance`, `setUpNavigator`, the `console` polyfill |
 | C | the error path: `ErrorUtils`, `setUpErrorHandling`, `RN$handleException` (done, below) | `setUpErrorHandling`, the `error-guard` polyfill |
 | D1 | `RN$enableMicrotasksInReact` and `queueMicrotask` over `NativeMicrotasks` (high regression risk, full sweep; done, below) | `setUpTimers` parts `react-microtasks` and `queue-microtask` |
-| D2 | idle callbacks over `NativeIdleCallbacks`, then `setUpTimers` imported unchanged | `setUpTimers` part `idle-callbacks` |
+| D2 | idle callbacks over `NativeIdleCallbacks`, then `setUpTimers` imported unchanged (done, below) | `setUpTimers` part `idle-callbacks`, and the parts D1 left `replaced` (`queue-microtask`, `immediate`, `react-microtasks`), now `runs` |
 | E | web-globals probe: URL, URLSearchParams, Abort*, encoding per the decision | `setUpXHR` (`verifyIn`), decision `encoding` |
 | F | callback exceptions and starvation against RN | `verifyIn` on the timers, animation frame, `queueMicrotask`, `setImmediate` and `polyfillPromise` entries |
 
@@ -596,6 +600,8 @@ application's status (`runtimeReady`, `handledFatalError`, the counters by route
 
 ## React microtask path (slice D1, 2026-10-13)
 
+> Slice D2 (below) moved what this section describes in `src/runtime.js` (the flag, the installation of `queueMicrotask`, `setImmediate`) to RN's own `setUpTimers`, which `src/initialize.js` now imports unchanged. The section stays as D1 certified it; where it names `src/runtime.js` as the place that sets the flag or installs the global, read RN's `setUpTimers`, with the host's gate over the getter that `setUpTimers` installs.
+
 Slice A marked two parts of `setUpTimers` for slice D1: `RN$enableMicrotasksInReact` (`pending`) and the `queueMicrotask` part,
 which wrapped RN's portable `Libraries/Core/Timers/queueMicrotask` (a job on a resolved Promise) because the host had no
 `NativeMicrotasks` module. The host never set the flag, so the pinned renderer kept scheduling the work of its sync lanes as a
@@ -762,3 +768,176 @@ before the renderer must not read `RN$enableMicrotasksInReact` early: `tests/rea
 `queueMicrotask` callback against RN: RN's module lets the exception escape `drainMicrotasks`, which `RuntimeScheduler_Modern::performMicrotaskCheckpoint` reports through its task error handler, where the
 host's own `drainMicrotasks` calls (`pump()`, and the drain at the head of `stop()`) have catches of their own; slice C's catch sites table lists the rest. GF-06 (events and input) now commits a discrete update in the
 microtask that follows the beat's task: a test that reads the tree right after dispatching an event, in the same `pump()`, sees the commit, and one that expects it a task later does not.
+
+## Idle callbacks and setUpTimers unchanged (slice D2, 2026-10-13)
+
+Slice A marked one part of `setUpTimers` for slice D2, `idle-callbacks` (`pending`: neither `requestIdleCallback` nor `cancelIdleCallback` existed, because RN installs them
+from a C++ module the host did not register), and slice D1 left three more `replaced` by `src/runtime.js` (`queue-microtask`, `immediate`, `react-microtasks`), because
+importing `setUpTimers` would have installed the idle callbacks from that missing module. Slice D2 registers the module, imports `setUpTimers` unchanged at RN's place in the
+chain and removes from `src/runtime.js` everything `setUpTimers` now installs. No part of the audit is `pending` afterwards.
+
+**How RN 0.87.1 bridgeless does it** (verified in the pinned sources). `Libraries/Core/setUpTimers.js`, in its `RN$Bridgeless` branch, sets
+`global.RN$enableMicrotasksInReact = true` and installs five globals with `polyfillGlobal` (a lazy getter that looks the module up on first read):
+`queueMicrotask` from `NativeMicrotasks`, `setImmediate` and `clearImmediate` from `Timers/immediateShim`, `requestIdleCallback` and `cancelIdleCallback` from
+`src/private/webapis/idlecallbacks/specs/NativeIdleCallbacks`, a TurboModule named `NativeIdleCallbacksCxx` that
+`ReactCommon/react/nativemodule/idlecallbacks/NativeIdleCallbacks.cpp` backs. The timers (`setTimeout`, `setInterval`) and the animation frame are host functions
+from C++ (`TimerManager`), which the host already installs. What the C++ does:
+
+- `requestIdleCallback(callback, options)` schedules a task at the RuntimeScheduler's idle priority (`scheduleIdleTask`; the raw-callback overload, which supports
+  only `RuntimeScheduler_Modern`: the host compiles RN with `RCT_REMOVE_LEGACY_ARCH`, so its scheduler is always that one) and returns a `jsi::Object` handle that holds the task.
+  The task's expiration is the scheduler's default for the idle priority, 5 minutes after the request; tasks run smallest expiration first (`TaskPriorityComparer`),
+  and the priorities' timeouts are 0, 250 ms, 5 s and 10 s for Immediate, UserBlocking, Normal and Low, so an idle callback runs behind anything of another
+  priority queued within the 5 minutes before it, and idle callbacks run in the order they were requested.
+- When the task runs, the callback is called with `{didTimeout, timeRemaining}`. `timeRemaining()` is `max(deadline - now, 0)` milliseconds, with the deadline
+  50 ms after the task started; it is `0` when `getShouldYield()` is true, that is when the top of the scheduler's queue is a task other than the one running, and once
+  it has read `0` it reads `0` for good (`expired` is sticky).
+- **The `timeout` option does not move the callback.** The function declares a local `timeout` that is the argument of the scheduling call and never assigns it, so the task
+  always takes the idle priority's default. The option sets an expiration time (`now + timeout`, only for a positive timeout) that does one thing: `didTimeout` is
+  `executionStartTime > expirationTime`. A callback with `timeout: 1` waits behind a scheduler that stays busy exactly as one without, and learns afterwards that it timed out.
+  The probe certifies RN's behaviour, not the browser's, where a timeout makes the callback run once it expires.
+- `cancelIdleCallback(handle)` takes a `jsi::Object`: a handle that was never one (no native state) is ignored, the task's callback is dropped, and a task that has
+  run or was canceled is left alone; a value that is not an object throws at the bridging.
+
+### What runs now
+
+| Step | Where |
+| --- | --- |
+| `NativeIdleCallbacksCxx` is RN's `NativeIdleCallbacks`, compiled unchanged, registered like the other C++ modules; the registry counts the calls that reach it | `native/CMakeLists.txt` (`react/nativemodule/idlecallbacks`), `TurboModuleRegistry::add_idle_callbacks` in `native/turbo_module_registry.cpp`, registered in the `Impl` constructor |
+| `src/initialize.js` imports RN's `setUpTimers` unchanged, after `setUpPerformance` and before the error path, where RN's chain has it (RN calls `polyfillPromise` between; Hermes has `Promise`) | `src/initialize.js` |
+| The flag, `queueMicrotask`, `setImmediate`, `clearImmediate`, `requestIdleCallback` and `cancelIdleCallback` are `setUpTimers`'. `src/runtime.js` no longer sets, assigns or imports any of them | RN, via `src/initialize.js` |
+| The host's lifecycle gate wraps the functions `setUpTimers` installed (`queueMicrotask`, `requestIdleCallback`, `cancelIdleCallback`) and the timers and the animation frame | `src/runtime.js` |
+| `godotRuntimeActive(true)` is the strict gate: the unmount window of `stop()` is closed to it | `native/application_runtime.cpp` |
+| The platform plugin no longer resolves RN's unexported `NativeMicrotasks` spec for `src/runtime.js` | `sdk/toolchain/platform-plugin.mjs` |
+
+### Decisions
+
+- **RN's C++ module, compiled unchanged.** The registry's `CountedIdleCallbacks` derives from `rn::NativeIdleCallbacks` and puts a counter in front of RN's own invokers (the
+  `methodMap_` entries of the two methods), as `CountedMicrotasks` does; the calls themselves are RN's. The counters are in `snapshot().nativeModules.idleCallbacks`
+  (`requests`, `cancels`).
+- **The gate is a lazy getter over RN's, made with RN's own `polyfillGlobal`.** `setUpTimers` installs each global as a lazy accessor. `src/runtime.js` reads the descriptor
+  of the accessor (without reading the global), and installs with `polyfillGlobal` a second lazy accessor whose getter resolves RN's, wraps the result in the gate and
+  becomes a value, as RN's does. It does not replace RN's functions: the function the gate calls is whatever RN's getter resolves, looked up when the global is first read.
+  The alternatives were worse here. Wrapping after the getters resolve means reading the globals when `src/runtime.js` evaluates: a host without a module would fail the whole
+  bundle at evaluation, not the first use, and the previous-host control could not tell the checks that need the module from the ones that do not. A gate inside the
+  module's invoker (C++, as D1 counts) would have to wrap the user's callback in a native function per call, to check the gate when the task runs, and would move
+  the host's lifecycle rule from the JS that already holds the timers' gate into the registry. If `setUpTimers` has not run (or something has read a global already) the gate refuses
+  to start, loudly, and the `set-up-timers-not-imported` sabotage shows it.
+- **Idle callbacks use the strict gate.** D1's gate stays open while `stop()` unmounts the roots, because React's own unmount queues a microtask; it drains the user's microtasks
+  first, with the gate closed. A `requestIdleCallback` queued before the stop is an idle task in the RuntimeScheduler's queue, which `stop()` runs when it pumps to unmount
+  the roots, and the gate there would let the user's callback run. React queues no idle callback, so the idle callbacks have no use of the window: `godotRuntimeActive(true)`
+  is `false` through it. The `window-open` and `strict-ignored` sabotages break each half.
+- **The gate keeps D1's checks of its argument** (`queueMicrotask` and `requestIdleCallback` throw a `TypeError` for a non-function, as the gate has to wrap the callback), returns `0` from
+  `requestIdleCallback` once the application is inactive, as the timers do, and ignores `cancelIdleCallback` then. What the callbacks do with exceptions is slice F's.
+- **`setImmediate` and `clearImmediate` have no wrapper**: RN's `immediateShim` defers through `global.queueMicrotask`, the gated function.
+
+### The finding that comes with importing `setUpTimers`
+
+The bundler follows `require` calls by their text, so importing `setUpTimers` bundles both of its branches: `Timers/JSTimers` and `Timers/queueMicrotask` (the portable shim D1
+replaced) are in the bundle again. They never run (`RN$Bridgeless` is `true`); the counters say so. D1's runner asserted that the shim was absent, and now asserts that `setUpTimers` is
+present. The renderer reads `queueMicrotask` when it evaluates, which resolves the getter: a host without `NativeMicrotasksCxx` now fails when the bundle evaluates, as RN does, and not
+at the first update. That is why the previous-host control of D1 cannot be run again against this SDK (below).
+
+### The probe
+
+`npm run test:idle-callbacks` runs `tests/idle-callbacks-native.test.mjs`: one bundle (`tests/idle-callbacks-fixture.jsx`, with the host-state module of the microtasks slice injected
+before everything) in an actual Hermes application, headless, with one mounted root. The handler of each case is a `Pressable`'s `onPress`, driven by Godot mouse events through the host's
+real event path, as in D1, so that everything a case queues is queued from inside a RuntimeScheduler task. `tests/idle-callbacks-probe.gd` makes 25 checks:
+
+- *setUpTimers* (hold on the previous host): the flag is written `true` by `setUpTimers` before the renderer reads it (the host-state module follows the write and the reads); the host defines none of the
+  five globals before the bundle and the idle callbacks are lazy getters that nothing has read when it has evaluated; `setImmediate` and `clearImmediate` are `immediateShim`'s;
+  `setImmediate` reaches `NativeMicrotasks` through the gated `queueMicrotask` and runs;
+- *module*: the spec module loads over `NativeIdleCallbacksCxx`; the registry counts; three requests through the global reach the C++ module exactly three times and give
+  three distinct handle objects; callbacks requested outside any task run and are told `didTimeout: false` and a `timeRemaining` function; three cancels reach the module three times
+  and a control requested behind the canceled ones runs while none of them did; the edges of cancel are RN's;
+- *cases*, each one press, judged against the oracle's model:
+
+| Case | What it does | What RN's rules give |
+| --- | --- | --- |
+| `order` | two idle callbacks (the first queues a microtask, a Promise reaction and an immediate), a timer, tasks at the three priorities, a microtask, a Promise reaction, an immediate | `microtask, promise, immediate, task-immediate, task-user-blocking, task-normal, idle-a, idle-a-microtask, idle-a-promise, idle-a-immediate, idle-b, timeout` |
+| `deadline` | one idle callback reads `timeRemaining()` twice, after a 10 ms spin, and after a spin that carries it past the 50 ms | `~50`, `~50`, `~40`, exactly `0` |
+| `yield` | inside an idle callback: a reading, a nested idle request, a reading, a Normal task, two readings; another idle callback behind | readings `~50`, `~50`, `0`, `0`; `idle-a, task-normal, idle-b, idle-nested` |
+| `yield-immediate` | inside an idle callback: a reading, an Immediate task, a reading | `~50`, then `0` |
+| `timeout` | five idle callbacks with `timeout` 1, 60000, 0, -5 and none, behind a chain of three Normal tasks that spin | the busy tasks first, then the idle callbacks in request order; `didTimeout` true only for the first |
+| `cancel` | five idle callbacks, one canceled in the handler, one canceled from inside another | `idle-a, idle-c, idle-d` |
+
+  A reading of `timeRemaining()` is not a count: the deadline is measured from a time the C++ takes when the task starts, which lies between the request and the callback's entry, and
+  the reading from a time between two timestamps the fixture takes around the call. So the oracle accepts a reading between `max(0, request + 50 - end of the call)` and `min(50, max(0, entry + 50 - start of the call))`, from
+  the lane's own timestamps (`nativePerformanceNow` and `HighResTimeStamp::now` are the same `steady_clock`), requires the readings in a callback never to grow, and requires exactly `0` where the model says the scheduler yields or the deadline is past (a spin
+  longer than the deadline, measured). The spins are margins in the model (1 ms against 20 ms, 60 s against 20 ms), so no verdict depends on the pace of the frames;
+- *gate*: an idle callback and a Normal task are queued in one turn and the application stops before the host pumps; the task runs during the stop (the scheduler ran) and the idle
+  callback behind it does not (the gate dropped it, in the window in which the roots unmount); once the application is inactive `requestIdleCallback` returns `0`, schedules nothing and does not reach the
+  module, and `cancelIdleCallback` does nothing, not even for a value that is no object;
+- *lifecycle*: stop releases the root with balanced native Controls.
+
+`tests/idle-callbacks-oracle.mjs` is written from RN, not from the probe. It reads the facts out of the pinned files (what `setUpTimers`' bridgeless branch installs and from where, the spec's name and
+methods, the 50 ms, the shape of the deadline object, the rule of `didTimeout`, the timeout option that never reaches the scheduler, the rules of `timeRemaining`, the handle and the cancel, the
+priorities' timeouts, the idle default and how a custom one resolves, the yield rule, the cancel and the skip of canceled tasks, the checkpoint after each task, the host's order of timers before the work drain)
+and derives the order of each case and what each idle callback is told from a model of the host's event loop: the scheduler is the C++ one (a queue ordered by expiration that keeps canceled and run tasks until `selectTask` pops them) over a virtual clock that only a spin advances, and the microtask queue is V8's own
+(Promise reactions, `queueMicrotask` and RN's `immediateShim` in a `vm` context). Every verdict of the probe is derived again from the report's raw observations and must agree.
+
+### Controls
+
+**The previous host** (the tip of `feat/gf-05-microtasks`, slice D1, built before this slice, kept in `build/gf05-idle-previous-host/`;
+`node tests/idle-callbacks-native.test.mjs --allow-original-negative` while it is `addons/fabric_godot.dylib`, then the current host is put back) runs the same bundle and fails exactly 18 of the 25
+checks, the ones that need the module, and the oracle rejects it. The idle callbacks are lazy getters, so the bundle evaluates and the root mounts, `queueMicrotask` and `setImmediate` work, and the first read of
+`requestIdleCallback` fails. The 7 that hold on both hosts are the four about `setUpTimers` (the flag, the lazy getters, `immediateShim`, `setImmediate` over `NativeMicrotasks`), the mount, the lifecycle and the report.
+**Eight sabotages** (`scripts/idle-callbacks-sabotage.mjs`, the table in `tests/idle-callbacks-sabotages.mjs`) are each rejected by the probe and the oracle:
+
+| Sabotage | Breaks | Checks it fails |
+| --- | --- | --- |
+| `set-up-timers-not-imported` | `src/initialize.js` does not import `setUpTimers` (the gate finds nothing to wrap and refuses to start; the bundle does not evaluate) | 23 |
+| `timeout-ignored` | the gate drops the options of `requestIdleCallback` | 1, the `didTimeout` one |
+| `reimplemented` | `requestIdleCallback` is a timer in the gate, not RN's function | 11 (the counters of the module, the order, the readings, `didTimeout`, cancel) |
+| `cancel-dropped` | the gate does not pass `cancelIdleCallback` on | 3 (the counter, the edges, the cancel case) |
+| `gate-removed` | the callback handed to the module does not check the gate | 1, the gate check |
+| `window-open` | the idle callbacks use the gate that the unmount window opens | 1, the gate check |
+| `no-module` (host) | `NativeIdleCallbacksCxx` is not registered | 18, as the previous host |
+| `strict-ignored` (host) | `godotRuntimeActive` ignores its strict argument | 1, the gate check |
+
+The first six are in-memory bundle overrides, with no file edited; each of the last two breaks one line of `native/application_runtime.cpp`, rebuilds the host, keeps it in
+`build/idle-callbacks-sabotage-<name>-host/` and restores the source byte for byte. The suite is in the `native-suites-runtime` job of `contracts.yml`.
+
+**Slice D1's controls under this SDK.** `flag-unset` is now an in-memory override of RN's own `Libraries/Core/setUpTimers.js` (the flag is no longer set by `src/runtime.js`), `promise-shim` and `gate-removed`
+are anchored on the gate's new text, and `gate-closed` on the new text of `godotRuntimeActive`; they still fail 4, 2, 1 and 1 checks as before. `no-module` fails 17 of 18 now, because the renderer cannot evaluate without the module.
+D1's previous-host control (a host without `NativeMicrotasksCxx`) cannot run against this SDK: the bundle does not evaluate, as RN's does not. Its record, `react-microtasks.json`, stays as D1 executed it. Two checks of D1's probe
+were vacuously true without a probe object (the batch size, the drain) and now require one; its oracle is unchanged. D1's host-state module follows RN's `defineProperty` of the `queueMicrotask` accessor now, because `setUpTimers`
+replaces an accessor the module put there; it logs the same writes and reads.
+
+### Regressions
+
+This moves the installation of the flag and of the microtask path from `src/runtime.js` to RN's `setUpTimers`, adds a native module and changes `godotRuntimeActive`, so the host was rebuilt and these suites ran on it: `test:runtime`, `test:application`,
+`test:events:original|ancestry|dispatch|integrated`, `test:pointers:processor|geometry|interest|query-faults|documents|resolver-faults|up|move|documents:up|documents:move|hover|root-path|documents:hover|click|capture`,
+`test:responders:pan|shared-touches`, `test:animated`, `test:layout-animation`, `test:frame-clock`, `test:js-globals`, `test:js-errors`, `test:react-microtasks`, `test:services`, `test:app-state`, `test:lists`, `test:modal`,
+`test:text-original|layout|style`, `test:modules`, `test:touchables`, `test:scroll-view`, `test:switch`, `test:focus:commands`, `test:accessibility`, `test:accessibility-info`, `test:activity-indicator`,
+`test:appearance`, `test:performance`, `test:networking`, `test:device-services`, `test:os-contracts`, `test:world-input`, `test:mobile-density`, `test:scope-0.5` and this slice's own (53 suites) all pass, with the stale controls moved
+aside (`build/stale-controls-gf05-d2/`, 36 report files named as they were: the preceding-host and sabotage reports of the pointer, event, text and microtask suites, produced from other bundles and hosts).
+No oracle of an earlier suite changed. The consumer adapter runtime check (`scripts/adapter-runtime-check.mjs`, over a freshly packed `build/native-sdk`) passes all its modes but one: `--reentrant-stop`
+(`resize`) fails "Views, module providers and React effects dispose once on reentrant stop"; it is the failure D1's hosted sweep found, inherited unchanged (below).
+
+### The audit
+
+`docs/compatibility/bootstrap-audit-0.87.1.json` after this slice: the four JS parts of `setUpTimers` (`queue-microtask`, `immediate`, `react-microtasks`, `idle-callbacks`) are `runs`, with the import of `setUpTimers` in `src/initialize.js` as evidence
+(and the gate's `gate(...)` in `src/runtime.js` and the host's registration where they apply); `timers` and `animation-frame` stay `host`. The gate needed no new rule: its `runs` check is made per part with the step's module, so a
+split step that is partly `runs` and partly `host` is judged part by part, which `tests/bootstrap-audit.test.mjs` now proves with a mutation (drop the import: the four parts that claim `runs` complain, the two that are the host's are not asked for it).
+Counting a split step by its parts, the chain stands at 10 `runs`, 4 `replaced`, 4 `host`, 0 `pending` and 12 `not-applicable`; slice E owns the web-globals probe and slice F the callback exceptions and starvation, through `verifyIn`.
+
+**Evidence.** [`idle-callbacks.json`](idle-callbacks.json) is the committed record of the lanes above: the 25 verdicts of the current lane with the host and bundle SHA-256, the accessor log of the flag and `queueMicrotask`, the module's counters
+before and after each batch, the order each case came out in with the model's, the readings and the `didTimeout` flags, the previous host's 18 failing checks and its SHA-256, each sabotage's failing checks, the orders of its cases and the oracle's
+verdict, and the RN sources it pinned. `scripts/idle-callbacks-evidence.mjs` writes it from the reports the lanes leave in `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current
+lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
+
+**Limits.**
+
+- The cases are the handler of a `Pressable`'s `onPress` in one headless root: the order of idle callbacks against other work is certified for work queued from inside a RuntimeScheduler task.
+- The timer in the `order` case depends on the host taking a timer that a handler registers in a later pump than the RuntimeScheduler's loop of this one (the oracle reads that order from `native/application_runtime.cpp`); RN's own platforms deliver a timer when the platform does.
+- A reading of `timeRemaining()` is bounded by the lane's timestamps, not fixed, and a stall of the process longer than the 50 ms between two statements would make a first reading zero where the bounds allow it (the lower bound is then zero).
+- The registry counts the calls that reach RN's module in front of RN's own invokers; the module's C++ is compiled unchanged.
+- The gate is the host's extension (V2-D27). Exceptions thrown by an idle callback, a microtask or an immediate, `setImmediate` under load and a Promise storm are slice F's.
+- The headless desktop host only; the mobile exports have not run this bundle.
+
+**For slices E, F and GF-06.** E adds globals after `setUpTimers`' place and before the error path in `src/initialize.js` only through RN's own imports; nothing there may read `queueMicrotask` or the flag before the renderer does, and `tests/react-microtasks-host.js` (which the idle
+suite reuses) logs the flag's write and every read. F measures callback exceptions against RN: an exception in an idle callback is thrown out of `SyncCallback::call` inside the scheduler's task, so
+`RuntimeScheduler_Modern::executeTask` catches it and reports it through the task error handler (`handle_fatal` in this host), which clears the scheduler's queues when `enableRuntimeSchedulerQueueClearingOnError` is on (it is off in RN 0.87.1's defaults); the timer and microtask catch sites are in the earlier tables.
+GF-06 gains nothing visible. **For whoever fixes D1's reentrant stop:** `--reentrant-stop` in `resize` mode fails and its `raf` and `timer` modes pass, so what drops React's effect cleanups is a React commit in flight when the stop is
+requested: React has queued its post-commit microtask (`didScheduleMicrotask` is set), `stop()` drains the microtasks that are pending with the gate closed, the gate drops React's own along with the user's, and the unmount never schedules another. The window of `unmounting_roots` does not help, because the drain
+comes before it. D2's gate does not change this (the run-time check of `queueMicrotask`'s callback is D1's), and the idle callbacks are independent of any change to the window: they ask `godotRuntimeActive(true)`, which must stay `false` through whatever opens the gate for React.

@@ -569,8 +569,11 @@ The host compiles the pinned RN `TimerManager.cpp` unchanged. `setTimeout` and
 `setInterval` preserve callback arguments and upstream delay coercion;
 `clearTimeout`/`clearInterval` share cancellation authority. Missing callbacks
 throw, while non-function timer callbacks return zero in this pinned RN version.
-The original portable RN microtask and immediate modules provide
-`queueMicrotask`, `setImmediate` and `clearImmediate` over Hermes Promise jobs.
+RN's own `setUpTimers` (its bridgeless branch, imported unchanged) installs
+`queueMicrotask` from the `NativeMicrotasks` module, `requestIdleCallback` and
+`cancelIdleCallback` from the `NativeIdleCallbacks` module (both C++ modules compiled
+unchanged and registered by the host), and `setImmediate` and `clearImmediate` from RN's
+`immediateShim`, which defers through `queueMicrotask`.
 
 Godot supplies deadlines and a bounded native work pump. Overdue intervals do
 not replay missed ticks in a burst. RAF callbacks and RN's Native Animated frames
@@ -624,17 +627,21 @@ uneven as those frames.
 
 Callback exceptions reach the host error channel. A failed one-shot releases
 its registration; a failed interval remains recurring until cancelled.
-`queueMicrotask` is the function of RN's `NativeMicrotasks` module, and the host sets
-`RN$enableMicrotasksInReact` as RN's bridgeless `setUpTimers` does, so React commits the work
-of its sync lanes (a press handler's update, for instance) in a microtask. Application
-shutdown cancels registered timers/frames and suppresses pending
-microtask/immediate callbacks. Retained scheduling functions cannot
+`setUpTimers` sets `RN$enableMicrotasksInReact`, so React commits the work of its sync
+lanes (a press handler's update, for instance) in a microtask. An idle callback is a task of
+the RuntimeScheduler at its idle priority: it runs after the work queued with it, and its
+deadline is 50 ms long; `timeRemaining()` reads zero once the scheduler holds another task
+or the deadline is past; the `timeout` option only makes `didTimeout` true for a callback
+that runs after it, and does not run the callback early (RN 0.87.1's module never passes it
+on to the scheduler). Application shutdown cancels registered timers/frames and suppresses
+pending microtask/immediate/idle callbacks (the host's lifecycle gate, which RN does not
+have). Retained scheduling functions cannot
 restart them after shutdown. Individual named root unmounts preserve application
 timers/frames and module state; component effects must dispose their own subscriptions
 and clocks. Ordinary Promises are not a cancellation API.
 
 [Runtime evidence](evidence/runtime/README.md) documents the positive and
-negative native checks. This is a partial GF-05 bootstrap: idle callbacks,
+negative native checks. This is a partial GF-05 bootstrap:
 unhandled rejection/error-handler parity, encoding globals and microtask starvation
 protection remain uncertified, and so does the full contract of `URL`, `URLSearchParams`,
 `AbortController` and `AbortSignal`, which are RN's own since the

@@ -8,6 +8,7 @@
 #include <react/bridging/Bridging.h>
 #include <react/bridging/Promise.h>
 #include <react/nativemodule/featureflags/NativeReactNativeFeatureFlags.h>
+#include <react/nativemodule/idlecallbacks/NativeIdleCallbacks.h>
 #include <react/nativemodule/microtasks/NativeMicrotasks.h>
 #include <react/renderer/animated/AnimatedModule.h>
 #include <react/renderer/runtimescheduler/RuntimeSchedulerCallInvoker.h>
@@ -297,6 +298,43 @@ class CountedMicrotasks final : public rn::NativeMicrotasks {
   Invoker original_{};
 };
 
+struct IdleCallbacksState {
+  size_t requests{};
+  size_t cancels{};
+};
+
+// RN's NativeIdleCallbacks, unchanged (ReactCommon/react/nativemodule/idlecallbacks/NativeIdleCallbacks.cpp): requestIdleCallback schedules the
+// callback as an idle-priority task of the RuntimeScheduler and cancelIdleCallback cancels that task. As with the microtasks, the only addition is a
+// count in front of RN's own invokers, so that a suite can tell this module from a shim.
+class CountedIdleCallbacks final : public rn::NativeIdleCallbacks {
+ public:
+  CountedIdleCallbacks(const std::shared_ptr<rn::CallInvoker> &invoker, std::shared_ptr<IdleCallbacksState> state)
+      : rn::NativeIdleCallbacks(invoker), state_(std::move(state)) {
+    auto &request = methodMap_.at("requestIdleCallback");
+    request_ = request.invoker;
+    request.invoker = &CountedIdleCallbacks::counted_request;
+    auto &cancel = methodMap_.at("cancelIdleCallback");
+    cancel_ = cancel.invoker;
+    cancel.invoker = &CountedIdleCallbacks::counted_cancel;
+  }
+
+ private:
+  using Invoker = decltype(MethodMetadata::invoker);
+  static jsi::Value counted_request(jsi::Runtime &runtime, rn::TurboModule &module, const jsi::Value *args, size_t count) {
+    auto &self = static_cast<CountedIdleCallbacks &>(module);
+    ++self.state_->requests;
+    return self.request_(runtime, module, args, count);
+  }
+  static jsi::Value counted_cancel(jsi::Runtime &runtime, rn::TurboModule &module, const jsi::Value *args, size_t count) {
+    auto &self = static_cast<CountedIdleCallbacks &>(module);
+    ++self.state_->cancels;
+    return self.cancel_(runtime, module, args, count);
+  }
+  std::shared_ptr<IdleCallbacksState> state_;
+  Invoker request_{};
+  Invoker cancel_{};
+};
+
 struct FixtureState {
   bool active{true};
   uint64_t runtime_id;
@@ -503,6 +541,7 @@ struct TurboModuleRegistry::State {
   std::map<std::string, Callable> callables;
   std::shared_ptr<FixtureState> fixture;
   std::shared_ptr<MicrotasksState> microtasks;
+  std::shared_ptr<IdleCallbacksState> idle_callbacks;
 
   State(uint64_t id, const std::shared_ptr<rn::RuntimeScheduler> &scheduler)
       : runtime_id(id), invoker(std::make_shared<rn::RuntimeSchedulerCallInvoker>(scheduler)) {}
@@ -581,6 +620,14 @@ void TurboModuleRegistry::add_microtasks() {
         return std::make_shared<CountedMicrotasks>(invoker, state);
       });
   state_->microtasks = std::move(state);
+}
+void TurboModuleRegistry::add_idle_callbacks() {
+  auto state = std::make_shared<IdleCallbacksState>();
+  add(std::string(rn::NativeIdleCallbacks::kModuleName),
+      [state](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
+        return std::make_shared<CountedIdleCallbacks>(invoker, state);
+      });
+  state_->idle_callbacks = std::move(state);
 }
 void TurboModuleRegistry::add_native_animated() {
   add(std::string(rn::AnimatedModule::kModuleName),
@@ -691,6 +738,8 @@ folly::dynamic TurboModuleRegistry::snapshot() const {
       ("retainedUntilVMDestroy", state_->retired_modules.size())
       ("callableModules", state_->callables.size())("callableCalls", state_->callable_calls)("staleCalls", state_->stale_calls);
   if (state_->microtasks) result["microtasks"] = folly::dynamic::object("calls", state_->microtasks->calls);
+  if (state_->idle_callbacks)
+    result["idleCallbacks"] = folly::dynamic::object("requests", state_->idle_callbacks->requests)("cancels", state_->idle_callbacks->cancels);
   if (state_->fixture) result["fixture"] = folly::dynamic::object("active", state_->fixture->active)
       ("listeners", state_->fixture->legacy_listeners)("disposals", state_->fixture->disposals);
   return result;

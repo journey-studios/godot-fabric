@@ -71,6 +71,8 @@ set(MODULES
   react/nativemodule/featureflags react/bridging
   # RN's NativeMicrotasks module (queueMicrotask over the runtime's microtask queue), compiled unchanged.
   react/nativemodule/microtasks
+  # RN's NativeIdleCallbacks module (requestIdleCallback over the RuntimeScheduler's idle priority), compiled unchanged.
+  react/nativemodule/idlecallbacks
   react/renderer/uimanager/consistency react/renderer/consistency
   react/renderer/bridging react/renderer/dom react/renderer/leakchecker
   react/renderer/runtimescheduler react/renderer/animationbackend

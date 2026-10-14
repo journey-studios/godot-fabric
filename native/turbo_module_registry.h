@@ -41,6 +41,9 @@ class TurboModuleRegistry {
   // RN's NativeMicrotasks (NativeMicrotasksCxx), compiled unchanged: queueMicrotask hands its callback to the runtime's microtask queue.
   // The registry counts the calls that reach it (snapshot().microtasks.calls) and does nothing else to them.
   void add_microtasks();
+  // RN's NativeIdleCallbacks (NativeIdleCallbacksCxx), compiled unchanged: requestIdleCallback schedules its callback on the RuntimeScheduler
+  // at idle priority. The registry counts the calls that reach it (snapshot().idleCallbacks) and does nothing else to them.
+  void add_idle_callbacks();
   // RN's C++ AnimatedModule and nodes manager provider, served as
   // DefaultTurboModules serves them with the shared AnimationBackend, which the
   // runtime attaches to its UIManager before installation.
