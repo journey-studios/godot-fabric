@@ -91,12 +91,17 @@
     },
     {
       "name": "AppRegistry",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-07",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/app-registry.js",
+        "src/render-application.jsx",
+        "tests/app-registry-native.test.mjs",
+        "docs/evidence/app-registry/README.md"
+      ],
+      "note": "RN's original AppRegistryImpl behind a frozen facade that exposes all 19 members RN declares: the registry (components, sections, runnables, configs) with a key registered once and never replaced, the wrapper, root view style and instrumentation providers, and runApplication and setSurfaceProps for a surface the scene mounted (E_APP_REGISTRY_UNKNOWN_ROOT otherwise). unmountApplicationComponentAtRootTag only logs RN's error; the four headless-task members throw E_APP_REGISTRY_HEADLESS_TASK. Suspended and hidden display modes, root replacement, pause and resume and error cleanup are not certified."
     },
     {
       "name": "AppState",
@@ -535,12 +540,16 @@
     },
     {
       "name": "RootTagContext",
-      "status": "missing_public_export",
+      "status": "environment_or_utility_subset",
       "target": "1_0",
       "roadmap": "GF-07",
       "evidence": [
-        "src/react-native-platform.jsx"
-      ]
+        "src/react-native-platform.jsx",
+        "src/app-registry.js",
+        "src/render-application.jsx",
+        "tests/app-registry-native.test.mjs"
+      ],
+      "note": "RN's original context, provided by Godot's renderApplication container for every root with the root tag of its surface."
     },
     {
       "name": "SafeAreaView",

@@ -1228,6 +1228,20 @@ application owner, original AppRegistry, independent lifetimes and three actual
 captures. Its matrix retains the 12-example regression results; this earlier
 release snapshot and its hashes remain historical.
 
+The [AppRegistry record](app-registry/README.md) makes the public `AppRegistry` expose all 19 members React Native
+0.87.1 declares over RN's own `AppRegistryImpl`: GF-07's AppRegistry slice. Registration (components, sections, runnables
+and configs, with V2-D01's refusal of a key registered twice or reserved on every route), the readers, the wrapper, root
+view style and instrumentation providers, and `runApplication` and `setSurfaceProps` for a surface the scene mounted work as
+in RN; `unmountApplicationComponentAtRootTag` only logs RN's error, the four headless-task members throw
+`E_APP_REGISTRY_HEADLESS_TASK`, and a `rootTag` no running surface owns throws `E_APP_REGISTRY_UNKNOWN_ROOT`. One bundle on six
+real roots of one application runs 41 headless checks, with the style and the wrapper read from the native Controls, and an
+independent oracle that replays the registry script against a model of `AppRegistryImpl.js` and reads RN's own strings from
+its source. The slice changes no native code, so its control is nine retained SDK sabotages (3, 1, 1, 5, 8, 1, 9, 1 and 2
+failed checks), each rejected by the probe and by the oracle. Two renderer captures of the
+[example](../../examples/app-registry/README.md) show a root before and with the providers. Root replacement over many cycles,
+pause and resume, scene change, error cleanup and the suspended display modes are open. The record is pinned to the implementation
+commit `baa1c4cf`. Hosted run 38473856206, on head `9cdae802`, passed every job: `native-suites-frontier` passed on rerun, after the known `cpu-time-instrument` flake that PR #162 fixes separately. The implementation commit is `baa1c4cf`, not that head.
+
 These images are Godot renderer readbacks of generic fixtures, not desktop
 screenshots. They contain no other applications or game content.
 

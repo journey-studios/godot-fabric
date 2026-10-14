@@ -59,7 +59,7 @@ globalThis.SharedRoots = {
   registrationProbe(kind) {
     try {
       if (kind === "duplicate") AppRegistry.registerComponent("HUD", () => Inventory);
-      else if (kind === "section") AppRegistry.registerComponent("Section", () => HUD, true);
+      else if (kind === "section") AppRegistry.registerSection("HUD", () => Inventory);
       else AppRegistry.registerComponent("__proto__", () => HUD);
       return "unexpected success";
     } catch (error) { return error.message; }
