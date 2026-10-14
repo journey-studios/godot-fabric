@@ -154,8 +154,10 @@ func check_dom(env: Dictionary) -> void:
     "dom/RN$isNativeEventTargetEventDispatchingEnabled is a function that answers a boolean")
 
 func check_console(env: Dictionary) -> void:
-  var names := ["_isPolyfilled", "assert", "count", "countReset", "createTask", "debug", "error", "group", "groupCollapsed", "groupEnd",
-    "info", "log", "table", "time", "timeEnd", "timeStamp", "trace", "warn"]
+  # The polyfill's members, and the one that RN's setUpErrorHandling adds since slice C: ExceptionsManager.installConsoleErrorReporter
+  # keeps the polyfill's console.error as console._errorOriginal.
+  var names := ["_errorOriginal", "_isPolyfilled", "assert", "count", "countReset", "createTask", "debug", "error", "group", "groupCollapsed",
+    "groupEnd", "info", "log", "table", "time", "timeEnd", "timeStamp", "trace", "warn"]
   var kinds: Dictionary = env.console.kinds
   check((env.console.type == "object" and env.console.names == names and env.console.polyfilled == true
     and names.all(func(name: String) -> bool: return kinds.get(name) == ("boolean" if name == "_isPolyfilled" else "function"))

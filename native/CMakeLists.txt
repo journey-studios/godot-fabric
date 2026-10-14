@@ -235,6 +235,8 @@ target_sources(fabric_godot PRIVATE accessibility_info.cpp accessibility_announc
 target_sources(fabric_godot PRIVATE layout_animation.cpp)
 # SafeAreaView: the window's unsafe bands from Godot, and the padding that RN's own State carries to Yoga.
 target_sources(fabric_godot PRIVATE display_insets.cpp)
+# The error path: RN's JsErrorHandler and the globals ReactInstance installs over it, and the ExceptionsManager module.
+target_sources(fabric_godot PRIVATE js_error_path.cpp)
 
 # Explicit test-only extension for synchronous listener reentrancy. Its class is
 # registered only in this library; the shipped Fabric extension has no probe API.

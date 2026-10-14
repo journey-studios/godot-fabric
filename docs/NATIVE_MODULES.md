@@ -46,6 +46,18 @@ eager loading starts a public-instance initialization cycle, while named
 export copying loses methods populated later. Both laboratory and external
 consumer entry orders must reach the same completed renderer exports.
 
+The [error path record](evidence/runtime/README.md#error-path-slice-c-2026-10-13) registers
+`ExceptionsManager` (RN's generated spec, in `native/js_error_path.cpp`): the module that RN's
+`ExceptionsManager.js` reports to once `setUpErrorHandling` has installed it. A fatal exception
+becomes the application's failure (the `FABRIC_ERROR` line and an entry in `errors`), as the
+release builds of RN's Android (a thrown `JavascriptException`) and iOS (`RCTFatal`) end it; a
+soft one (`console.error`, `ErrorUtils.reportError`) is a `HERMES:` log line and never a
+failure. The same unit holds RN's `JsErrorHandler` (compiled unchanged) with five of the globals
+`ReactInstance` installs over it (`RN$handleException`, `RN$inExceptionHandler`,
+`RN$registerExceptionListener`, `RN$isRuntimeReady` and `RN$useAlwaysAvailableJSErrorHandling`), which take
+an error into C++ while the runtime is not ready. `RN$hasHandledFatalException` and
+`RN$notifyOfFatalException` are left out (V2-D26): with them RN's JS reports only the first fatal exception.
+
 The [networking record](evidence/networking/README.md) registers three more C++
 TurboModules in the same registry: `Networking` (RN's generated Android spec), `BlobModule`
 and `FileReaderModule`, created when JS first asks for them. They share one application

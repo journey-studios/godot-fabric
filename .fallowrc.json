@@ -67,6 +67,8 @@
     "tests/performance-fixture.jsx",
     "tests/js-globals-fixture.jsx",
     "tests/js-globals-host.js",
+    "tests/js-errors-fixture.jsx",
+    "tests/js-errors-host.js",
     "tests/frontier-baseline-fixture.jsx",
     "tests/text-layout-fixture.jsx",
     "tests/text-original-fixture.jsx",

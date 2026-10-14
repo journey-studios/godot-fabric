@@ -673,6 +673,7 @@ test("the typecheck worker rejects configuration saved after the builder's prefl
 test("the Metro polyfills the build injects pass project ownership, and no other SDK file does as an entry point", async t => {
   const f = fixture(t);
   f.write("addons/godot_fabric/toolchain/node_modules/@react-native/js-polyfills/console.js", "globalThis.order = ['polyfill'];");
+  f.write("addons/godot_fabric/toolchain/node_modules/@react-native/js-polyfills/error-guard.js", "globalThis.order.push('error-guard');");
   f.write("ui/index.ts", "// @ts-nocheck\nglobalThis.order.push('entry');");
   f.write("addons/godot_fabric/src/internal.js", "globalThis.order = ['internal'];");
   const resolution = await prepare(f);
@@ -683,6 +684,6 @@ test("the Metro polyfills the build injects pass project ownership, and no other
   const result = await run(metroPolyfills(f.resolveSdk));
   const context = {};
   vm.runInNewContext(result.outputFiles[0].text, context);
-  assert.deepEqual([...context.order], ["polyfill", "entry"]);
+  assert.deepEqual([...context.order], ["polyfill", "error-guard", "entry"]);
   await assert.rejects(run([path.join(f.sdk, "src/internal.js")]), diagnostic("E_PROJECT_SDK_IDENTITY"));
 });

@@ -301,7 +301,11 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
       if (!FileAccess::file_exists(bundle_path)) throw std::runtime_error("Missing application bundle; run npm run bundle");
       const auto bundle = FileAccess::get_file_as_string(bundle_path);
       if (bundle.is_empty()) throw std::runtime_error("Missing application bundle; run npm run bundle");
-      runtime->load_bundle(utf8(bundle), utf8(bundle_path));
+      if (!runtime->load_bundle(utf8(bundle), utf8(bundle_path))) {
+        // The bundle threw and RN's error path recorded it; an application whose bundle did not evaluate has nothing to mount.
+        stop();
+        return 0;
+      }
       bundle_loaded = true;
     }
     return legacy_id ? legacy_id : runtime->mount(host, utf8(component), utf8(JSON::stringify(props)));

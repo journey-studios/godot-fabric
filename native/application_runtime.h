@@ -25,7 +25,8 @@ class ApplicationRuntime {
       std::shared_ptr<AccessibilityInfo> accessibility_info = {}, std::function<bool()> collect_garbage_on_status = {},
       std::function<bool()> performance_samples = {});
   ~ApplicationRuntime();
-  void load_bundle(const std::string &source, const std::string &source_url);
+  // False when the bundle threw: RN's error path (js_error_path.h) already reported the error, and the bundle is not evaluated.
+  bool load_bundle(const std::string &source, const std::string &source_url);
   void invoke_callable(const std::string &name, const std::string &method, const std::string &args_json);
   int mount(FabricSurface &host, const std::string &component, const std::string &props_json);
   void update_props(int surface_id, const std::string &props_json);
