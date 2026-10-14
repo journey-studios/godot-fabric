@@ -210,7 +210,11 @@ export async function rnExpectations(base = root) {
   assert.equal(found(hostSource, /non_js_exception_prefix = "([^"]*)";/, "the host's prefix for an exception that is not a JS error"), executorWrap,
     "The host spells the runtime executor's wrap as ReactInstance.cpp does");
   const hostCode = hostSource.split("\n").filter(line => !/^\s*\/\//.test(line)).join("\n");
-  assert.equal([...hostCode.matchAll(/"Non-/g)].length, 1, "The host spells the wrap once, outside its comments");
+  // Slice F's microtask checkpoint mirrors RuntimeScheduler_Modern::performMicrotaskCheckpoint, whose catch wraps with the scheduler's own spelling
+  // (RuntimeScheduler_Modern.cpp:402 and 442): the host spells each of RN's two wraps once, outside its comments.
+  assert.equal(found(hostSource, /task_non_js_exception_prefix = "([^"]*)";/, "the host's prefix for the scheduler's tasks and checkpoint"), schedulerWrap,
+    "The host spells the scheduler's wrap as RuntimeScheduler_Modern.cpp does");
+  assert.equal([...hostCode.matchAll(/"Non-/g)].length, 2, "The host spells each wrap of RN once, outside its comments");
   // The parts of Android's format the host keeps.
   for (const part of ['", stack:\\n"', '"@"', "append(-1)"]) {
     assert.ok(kotlin.includes(part), `JSStackTrace.kt no longer says ${part}`);

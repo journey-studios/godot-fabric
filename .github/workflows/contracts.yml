@@ -382,6 +382,18 @@ jobs:
             build/web-globals-current.log
             build/web-globals-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:js-exceptions
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-js-exceptions
+          path: |
+            build/js-exceptions-report.json
+            build/js-exceptions-current-report.json
+            build/js-exceptions-comparison.json
+            build/js-exceptions-current.log
+            build/js-exceptions-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:text-layout
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

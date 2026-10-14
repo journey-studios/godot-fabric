@@ -73,6 +73,8 @@
     "tests/idle-callbacks-fixture.jsx",
     "tests/web-globals-fixture.jsx",
     "tests/web-globals-host.js",
+    "tests/js-exceptions-fixture.jsx",
+    "tests/js-exceptions-host.js",
     "tests/frontier-baseline-fixture.jsx",
     "tests/text-layout-fixture.jsx",
     "tests/text-original-fixture.jsx",

@@ -21,7 +21,7 @@
     "D1": "RN$enableMicrotasksInReact (done). The host sets the flag before the renderer evaluates and registers RN's NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, compiled unchanged, as NativeMicrotasksCxx), so that React's sync work commits in a microtask as in RN bridgeless; the host's lifecycle gate stays open until stop() begins, which completes in one microtask checkpoint what was queued before it, and is open again only while stop() unmounts the roots (native build; headless probe tests/react-microtasks-native.test.mjs). Slice D2 handed the flag and the installation to RN's own setUpTimers.",
     "D2": "Idle callbacks and setUpTimers unchanged (done). The host registers RN's NativeIdleCallbacks module (ReactCommon/react/nativemodule/idlecallbacks, compiled unchanged, as NativeIdleCallbacksCxx), src/initialize.js imports setUpTimers unchanged at RN's place in the chain, and src/runtime.js keeps only the host's lifecycle gate, a lazy getter over each function setUpTimers installs, and the gate over the timers and the animation frame; it no longer sets the flag or installs queueMicrotask, setImmediate or clearImmediate (native build; headless probe tests/idle-callbacks-native.test.mjs).",
     "E": "The web-globals probe (done). Headless probe tests/web-globals-native.test.mjs, in the real host: URL, URLSearchParams, AbortController and AbortSignal are the exports of the modules RN's setUpXHR names and answer every case as RN's own files do in V8 (members read from the source, fetch and XMLHttpRequest observing the signal), and the encoding globals follow the decision: TextEncoder, atob and btoa are the engine's own, tested against Node and the documented Hermes deviations, and TextDecoder is absent with a negative fixture, checked in the pinned hermesvm binaries. No native code changed.",
-    "F": "Exceptions and starvation parity. Callback exceptions (timers, setImmediate, queueMicrotask) and a Promise storm are measured against RN bridgeless and the host behaves the same."
+    "F": "Callback exceptions and starvation (done). Headless probe tests/js-exceptions-native.test.mjs, in the real host: the exception of a timer, an interval, a frame callback, an immediate, a queueMicrotask callback, an idle callback and an event handler is a fatal error for JsErrorHandler, as RN bridgeless reports it (a Promise reaction's is swallowed, and a release bundle tracks no rejection), the rest of the queue still runs, and the host's microtask drains are RN's performMicrotaskCheckpoint (255 retries, then \"Hits microtasks retries bound.\") at every point where the host drains; a chain of microtasks that does not throw is bounded by nothing in RN or in the host, so a Promise storm starves the timers and the frames of both, and reports nothing (native build; the Native Animated and LayoutAnimation frames keep a recorded failure, because RN has no catch around them either)."
   },
   "decisions": [
     {
@@ -61,7 +61,7 @@
       "decision": "Parity with RN bridgeless. What RN does under a Promise storm is measured, and the host must behave the same; there is no deliberate deviation.",
       "scope": "1_0",
       "slice": "F",
-      "reason": "A guard that RN does not have would be a behaviour the certification cannot compare against RN. If the measurement shows RN starves too, the host starves the same way."
+      "reason": "A guard that RN does not have would be a behaviour the certification cannot compare against RN. If the measurement shows RN starves too, the host starves the same way. Slice F measured it: RN's performMicrotaskCheckpoint bounds only failures (255 consecutive drains that threw, then \"Hits microtasks retries bound.\"), Hermes ignores the drain hint, and a chain of microtasks that does not throw is never counted, so RN's event loop is starved for the length of the chain and nothing is reported. The host mirrors the loop, and starves the same way (tests/js-exceptions-native.test.mjs)."
     }
   ],
   "polyfills": [
@@ -199,7 +199,7 @@
       "summary": "Uses the engine's Promise when Hermes has one, with a __DEV__-only rejection tracker, and installs RN's JS Promise otherwise.",
       "globals": ["Promise"],
       "status": "host",
-      "reason": "On Hermes global.Promise is the engine's own, so the module installs nothing outside __DEV__. The host runs real Hermes, the Promise RN uses on iOS and Android, and src/initialize.js refuses to start without HermesInternal. The DEV rejection tracker belongs to GF-29.",
+      "reason": "On Hermes global.Promise is the engine's own, so the module installs nothing outside __DEV__. The host runs real Hermes, the Promise RN uses on iOS and Android, and src/initialize.js refuses to start without HermesInternal. The DEV rejection tracker belongs to GF-29; slice F certifies that a release bundle (__DEV__ false, as the host's is) enables none, so an unhandled rejection is not tracked and reaches nothing, as in RN's release builds.",
       "evidence": [
         { "file": "native/application_runtime.cpp", "symbol": "makeHermesRuntime(config)" },
         { "file": "src/initialize.js", "symbol": "HermesInternal" }
@@ -218,7 +218,7 @@
           "name": "timers",
           "globals": ["setTimeout", "clearTimeout", "setInterval", "clearInterval"],
           "status": "host",
-          "reason": "RN's own C++ TimerManager, compiled unchanged over the Godot deadline registry, attaches them as ReactInstance does on iOS and Android. src/runtime.js wraps setTimeout and setInterval so a stopped runtime schedules nothing.",
+          "reason": "RN's own C++ TimerManager, compiled unchanged over the Godot deadline registry, attaches them as ReactInstance does on iOS and Android. src/runtime.js wraps setTimeout and setInterval so a stopped runtime schedules nothing. A callback's exception is a fatal error for JsErrorHandler (slice F), as the task of RN's RuntimeScheduler that runs it there is.",
           "evidence": [
             { "file": "native/application_runtime.cpp", "symbol": "timer_manager->attachGlobals(*runtime)" },
             { "file": "src/runtime.js", "symbol": "for (const name of [\"setTimeout\"" },
@@ -230,7 +230,7 @@
           "name": "animation-frame",
           "globals": ["requestAnimationFrame", "cancelAnimationFrame"],
           "status": "host",
-          "reason": "The host rebinds both after attachGlobals, so callbacks run on the FrameClock tick with one timestamp per tick instead of TimerManager's zero-delay timer; src/runtime.js wraps requestAnimationFrame like the timers.",
+          "reason": "The host rebinds both after attachGlobals, so callbacks run on the FrameClock tick with one timestamp per tick instead of TimerManager's zero-delay timer; src/runtime.js wraps requestAnimationFrame like the timers. A callback's exception is a fatal error for JsErrorHandler, as the TimerManager timer RN runs it in is (slice F).",
           "evidence": [
             { "file": "native/application_runtime.cpp", "symbol": "bind(\"requestAnimationFrame\"" },
             { "file": "native/application_runtime.cpp", "symbol": "bind(\"cancelAnimationFrame\"" },
@@ -242,7 +242,7 @@
           "name": "queue-microtask",
           "globals": ["queueMicrotask"],
           "status": "runs",
-          "reason": "src/initialize.js imports RN's setUpTimers unchanged, which installs the function of RN's NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, which queues on the runtime's microtask queue) as a lazy getter; the host registers that module in its TurboModule registry, compiled unchanged, as NativeMicrotasksCxx. src/runtime.js puts the host's lifecycle gate over the getter without replacing the function: once stop() has begun nothing is queued, and what was queued before it completes first, in one microtask checkpoint at its head. The gate is a host extension for shutdown (V2-D27) that RN does not have. Whether an exception thrown by a callback surfaces as it does in RN is certified by slice F.",
+          "reason": "src/initialize.js imports RN's setUpTimers unchanged, which installs the function of RN's NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, which queues on the runtime's microtask queue) as a lazy getter; the host registers that module in its TurboModule registry, compiled unchanged, as NativeMicrotasksCxx. src/runtime.js puts the host's lifecycle gate over the getter without replacing the function: once stop() has begun nothing is queued, and what was queued before it completes first, in one microtask checkpoint at its head. The gate is a host extension for shutdown (V2-D27) that RN does not have. An exception thrown by a callback surfaces as it does in RN, a fatal error for JsErrorHandler, and the host drains the queue with RN's own checkpoint loop (certified by slice F, tests/js-exceptions-native.test.mjs).",
           "evidence": [
             { "file": "src/initialize.js", "symbol": "import \"react-native/Libraries/Core/setUpTimers\"" },
             { "file": "src/runtime.js", "symbol": "gate(\"queueMicrotask\"" },
@@ -254,7 +254,7 @@
           "name": "immediate",
           "globals": ["setImmediate", "clearImmediate"],
           "status": "runs",
-          "reason": "setUpTimers installs RN's own immediateShim lazily, and the host adds nothing over it. The shim defers through global.queueMicrotask, which is the gated function of the queue-microtask part, so it inherits that part's semantics; ordering, exceptions and starvation are certified by slice F.",
+          "reason": "setUpTimers installs RN's own immediateShim lazily, and the host adds nothing over it. The shim defers through global.queueMicrotask, which is the gated function of the queue-microtask part, so it inherits that part's semantics; its ordering is certified by slice D1, and its exceptions and starvation by slice F (every immediate is a microtask of its own, so a throwing immediate does not stop the ones behind it).",
           "evidence": [
             { "file": "src/initialize.js", "symbol": "import \"react-native/Libraries/Core/setUpTimers\"" }
           ],
@@ -322,7 +322,7 @@
       "summary": "Installs ExceptionsManager's console.error reporter and registers its handler with ErrorUtils.setGlobalHandler, unless the C++ error path (RN$useAlwaysAvailableJSErrorHandling) is on.",
       "globals": [],
       "status": "runs",
-      "reason": "Imported unchanged by src/initialize.js, in RN's position (after the timers, before setUpXHR). The host defines RN$useAlwaysAvailableJSErrorHandling as the flag's pinned default (false), as ReactInstance does, so RN's JS path runs: ExceptionsManager asks RN$handleException, which the host answers false once the bundle has evaluated, and reports to the host's ExceptionsManager module, where a fatal exception becomes the host's failure and a soft one a log line, as RN's release builds on Android (a thrown exception and an FLog.e) and iOS (RCTFatal and the delegate) end it. Before the bundle has evaluated, or when an exception escapes a JS task, JsErrorHandler's C++ pipeline reports the same way. Exceptions that escape a timer callback keep the host's direct failure record until slice F.",
+      "reason": "Imported unchanged by src/initialize.js, in RN's position (after the timers, before setUpXHR). The host defines RN$useAlwaysAvailableJSErrorHandling as the flag's pinned default (false), as ReactInstance does, so RN's JS path runs: ExceptionsManager asks RN$handleException, which the host answers false once the bundle has evaluated, and reports to the host's ExceptionsManager module, where a fatal exception becomes the host's failure and a soft one a log line, as RN's release builds on Android (a thrown exception and an FLog.e) and iOS (RCTFatal and the delegate) end it. Before the bundle has evaluated, or when an exception escapes a JS task, JsErrorHandler's C++ pipeline reports the same way. An exception that escapes a timer, a frame callback or a microtask is a fatal error through the same JsErrorHandler (slice F, tests/js-exceptions-native.test.mjs).",
       "evidence": [
         { "file": "native/application_runtime.cpp", "symbol": "void report_exception(" },
         { "file": "native/js_error_path.cpp", "symbol": "void JsErrorPath::install(" }

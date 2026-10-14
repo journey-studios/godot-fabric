@@ -22,6 +22,9 @@ constexpr std::size_t retained_reports = 32;
 // RuntimeScheduler_Modern.cpp:402 and 442); that one is made by RN's compiled scheduler, not by the host, and the oracle reads both
 // spellings from the pinned sources and checks this one against ReactInstance.cpp.
 constexpr const char *non_js_exception_prefix = "Non-JS exception: ";
+// The wrap of RuntimeScheduler_Modern::executeTask and performMicrotaskCheckpoint (RuntimeScheduler_Modern.cpp:402 and 442): slice F's catch
+// sites that stand for RN's scheduler tasks and its microtask checkpoint spell it as the scheduler does.
+constexpr const char *task_non_js_exception_prefix = "Non-js exception: ";
 
 // ReactInstance.cpp:423, copied: the truthiness JS gives a value.
 bool is_truthy(jsi::Runtime &runtime, const jsi::Value &value) {
@@ -234,15 +237,22 @@ void JsErrorPath::handle_fatal(jsi::Runtime &runtime, jsi::JSError &error) {
   }
 }
 void JsErrorPath::handle_fatal(jsi::Runtime &runtime, const std::exception &error) {
+  report_fatal(runtime, error, non_js_exception_prefix);
+}
+void JsErrorPath::handle_task_error(jsi::Runtime &runtime, const std::exception &error) {
+  report_fatal(runtime, error, task_non_js_exception_prefix);
+}
+// A Hermes JSError is reported as the JS error it carries; anything else is wrapped as a JS error whose message starts with `prefix`.
+void JsErrorPath::report_fatal(jsi::Runtime &runtime, const std::exception &error, const char *prefix) {
   if (auto *js_error = js_error_of(error)) {
     handle_fatal(runtime, *js_error);
     return;
   }
   try {
-    jsi::JSError wrapped(runtime, std::string(non_js_exception_prefix) + error.what());
+    jsi::JSError wrapped(runtime, std::string(prefix) + error.what());
     handle_fatal(runtime, wrapped);
   } catch (const std::exception &failure) {
-    state_->deliver(State::Origin::Handler, {true, std::string(non_js_exception_prefix) + error.what() + " (" + failure.what() + ")", {}, 0});
+    state_->deliver(State::Origin::Handler, {true, std::string(prefix) + error.what() + " (" + failure.what() + ")", {}, 0});
   }
 }
 

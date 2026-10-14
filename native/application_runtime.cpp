@@ -338,6 +338,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   bool unmounting_roots{false};
   // True while stop() runs the checkpoint of the microtasks pending at the stop.
   bool draining_for_stop{false};
+  // RuntimeScheduler_Modern's performingMicrotaskCheckpoint_: a checkpoint does not start inside another.
+  bool performing_microtask_checkpoint{false};
   bool inactive() const { return stopped || stopping || stop_requested; }
 
   static const rn::ShadowNode *find_family(const rn::ShadowNode &node, rn::Tag tag) {
@@ -1046,8 +1048,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       const auto id = dispatching_timer;
       work.push_back([this, id, callback = std::move(callback)](jsi::Runtime &rt) {
         if (inactive()) return;
+        // RN runs a timer as an Immediate-priority task of its RuntimeScheduler (the TimerManager's runtime executor is ReactInstance's buffered
+        // executor, which schedules work: ReactInstance.cpp:173-177, RCTInstance.mm:334, JReactInstance.cpp:72). TimerManager::callTimer does
+        // not catch (TimerManager.cpp:171-195), so an exception leaves the task and RuntimeScheduler_Modern::executeTask hands it to the task error
+        // handler as a fatal error (RuntimeScheduler_Modern.cpp:399-404, 469-477; ReactInstance.cpp:128-131). Every other timer is a task of its own
+        // and still runs.
         try { callback(rt); }
-        catch (const std::exception &error) { fail(error.what()); }
+        catch (const std::exception &error) { js_errors->handle_fatal(rt, error); }
         // Upstream erases one-shot callbacks after invocation. A throwing
         // callback bypasses that erase; release it through the original API.
         if (!timer_registry->recurring(id)) clear_timer->call(rt, static_cast<double>(id));
@@ -1224,6 +1231,39 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     js_errors->bundle_evaluated();
     return true;
   }
+  // RuntimeScheduler_Modern::performMicrotaskCheckpoint (RuntimeScheduler_Modern.cpp:414-451), the same loop at every point where the host
+  // drains the microtask queue (RN performs it after each task of its scheduler; the timers and frame callbacks that RN runs as scheduler tasks
+  // are not tasks of this host's scheduler, so the host performs it after each of them). It drains until the queue is empty. A job that
+  // throws (queueMicrotask's callback; Promise jobs never throw into the host, jsi.h:408-411) makes drainMicrotasks throw and discards that job
+  // (jsi.h:395-397): the error is handled as a task error, which is a fatal error for JsErrorHandler, and the drain is retried, so the jobs
+  // behind it still run. Hermes ignores the hint and returns true only when the queue is empty, so a retry is always a throw; after
+  // kRetriesBound of them the checkpoint gives up and throws. A job that queues itself without throwing is never counted: nothing bounds it.
+  void perform_microtask_checkpoint() {
+    if (performing_microtask_checkpoint) return;
+    performing_microtask_checkpoint = true;
+    struct Restore {
+      bool &flag;
+      ~Restore() { flag = false; }
+    } restore{performing_microtask_checkpoint};
+    uint8_t retries = 0;
+    // A heuristic number to guard infinite or absurd numbers of retries.
+    const static unsigned int kRetriesBound = 255;
+    while (retries < kRetriesBound) {
+      try {
+        if (runtime->drainMicrotasks()) break;
+      } catch (const std::exception &error) {
+        js_errors->handle_task_error(*runtime, error);
+      }
+      retries++;
+    }
+    if (retries == kRetriesBound) throw std::runtime_error("Hits microtasks retries bound.");
+  }
+  // What follows the checkpoint in RN when it throws (the bound): the exception leaves the task of the runtime executor, which hands it to
+  // JsErrorHandler as a fatal error (ReactInstance.cpp:100-109). The host goes on with what it was doing, as it does after any fatal error.
+  void microtask_checkpoint() {
+    try { perform_microtask_checkpoint(); }
+    catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
+  }
   void pump(bool frame_tick = false) {
     ExecutionScope execution(*this);
     if (stopped || stop_requested) return;
@@ -1266,7 +1306,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       beat->tick();
       // Finish the preceding JS turn's microtasks before due native timers.
       js.open();
-      runtime->drainMicrotasks();
+      microtask_checkpoint();
       js.close();
       // The frame clock decides whether this Godot frame is a tick: the display
       // link RN's frame consumers run on never fires twice within a refresh period.
@@ -1297,13 +1337,20 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         auto callback = frame_callbacks.extract(id);
         if (callback.empty()) continue;
         ++frame_callbacks_run;
+        // RN has no frame loop of ReactInstance's: its requestAnimationFrame is a TimerManager timer (TimerManager.cpp:319-368, the same as
+        // setTimeout(0)), so a throwing callback is a throwing timer task: a fatal error, and the other callbacks are tasks of their own.
         try { callback.mapped().call(*runtime, frame_time); }
-        catch (const std::exception &error) { fail(error.what()); }
-        if (!stop_requested) runtime->drainMicrotasks();
+        catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
+        if (!stop_requested) microtask_checkpoint();
       }
       js.close();
       // One native animation frame per tick, at the frame callbacks' time: RN's
       // backend runs its queued operations, drivers and prop updates.
+      // The two frames below stay a recorded failure with the exception's own text (slice F). They are C++ frames, no JS callback runs inside them (the
+      // JS callbacks of Native Animated and LayoutAnimation go through the runtime executor, which `work` below catches), and RN has no catch around
+      // them either: iOS drives them from a CADisplayLink and a run loop observer (RCTScheduler.mm:129-152) and Android from a Choreographer frame
+      // callback, so a C++ exception that leaves them is not handed to JsErrorHandler, it ends the process. The recorded failure is this host's
+      // continuation of that fatal error (V2-D26).
       if (tick && native_animated && !stopping && !stop_requested) {
         try { native_animated->frame(frame_time); }
         catch (const std::exception &error) { fail(error.what()); }
@@ -1339,9 +1386,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         // is a fatal error for JsErrorHandler.
         try { callback(*runtime); }
         catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
-        if (!stop_requested) runtime->drainMicrotasks();
+        if (!stop_requested) microtask_checkpoint();
       }
-      if (!stop_requested) runtime->drainMicrotasks();
+      if (!stop_requested) microtask_checkpoint();
       js.close();
       // A bounded work drain can leave the induced beat callback in the queue.
       // In that case defer retirement rather than erase a still-queued target.
@@ -1493,14 +1540,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // before any root, service or timer is torn down. That includes the microtask React queues to finish a commit that was in flight when a
     // native signal requested the stop: a job React asks for and does not get leaves it waiting for that job for good (didScheduleMicrotask),
     // and it never unmounts the roots. The gate closes after the checkpoint (stopping); what is queued then is refused.
-    // The bound is the one every pump() has: Hermes drains until the queue is empty (it ignores the hint of drainMicrotasks(int); measured:
+    // The bound is the one every pump() has, RN's: Hermes drains until the queue is empty (it ignores the hint of drainMicrotasks(int); measured:
     // 200000 microtasks that queue the next one all ran in one call), so what the microtasks queue while they run completes in this same
-    // checkpoint, and one that queues itself without end starves stop() as it starves a frame (slice F measures that against RN).
+    // checkpoint, and one that queues itself without end and without throwing starves stop() as it starves a frame, as it starves RN's event loop
+    // (slice F). A job that throws is handled and the rest still completes, up to RN's retry bound.
     draining_for_stop = true;
     {
       ExecutionScope execution(*this);
-      try { runtime->drainMicrotasks(); }
-      catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
+      microtask_checkpoint();
     }
     draining_for_stop = false;
     stopping = true;

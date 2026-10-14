@@ -169,7 +169,9 @@ export function hostFacts(base) {
   const pump = source.slice(source.indexOf("void pump(bool frame_tick = false) {"), source.indexOf("void unmount(int id, bool legacy_hook = false) {"));
   const takeDue = pump.indexOf("timer_registry->take_due(now_ms())");
   const drain = pump.indexOf("for (int limit = 0; !stop_requested && !work.empty() && limit < 256; ++limit) {");
-  const checkpoint = pump.indexOf("if (!stop_requested) runtime->drainMicrotasks();", drain);
+  // Slice F: the host's drains are RN's performMicrotaskCheckpoint (microtask_checkpoint() in the pump, RuntimeScheduler_Modern.cpp:414-451; tests/js-exceptions-oracle.mjs
+  // compares the loop with RN's), so the drain after each item of the queue is a call of it and no longer of drainMicrotasks() itself.
+  const checkpoint = pump.indexOf("if (!stop_requested) microtask_checkpoint();", drain);
   return {timersTakenBeforeTheWorkDrain: takeDue !== -1 && drain !== -1 && takeDue < drain, drainsAfterEachWorkItem: drain !== -1 && checkpoint > drain};
 }
 

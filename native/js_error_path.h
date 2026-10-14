@@ -57,6 +57,10 @@ class JsErrorPath {
   // error for JsErrorHandler. A std::exception that is not a JS error becomes one, as in ReactInstance.
   void handle_fatal(facebook::jsi::Runtime &runtime, facebook::jsi::JSError &error);
   void handle_fatal(facebook::jsi::Runtime &runtime, const std::exception &error);
+  // The same for a catch that mirrors one of the RuntimeScheduler: its executeTask and performMicrotaskCheckpoint spell the wrap of an
+  // exception that is not a JS error "Non-js exception: " (RuntimeScheduler_Modern.cpp:402 and 442) and the runtime executor above spells it
+  // "Non-JS exception: ". The error it reports is the same.
+  void handle_task_error(facebook::jsi::Runtime &runtime, const std::exception &error);
   // ReactInstance::loadScript: the runtime is ready after the bundle evaluated, unless a fatal error was already handled.
   void bundle_evaluated();
   // The ExceptionsManager TurboModule: the native end of RN's JS error path.
@@ -69,6 +73,7 @@ class JsErrorPath {
   struct State;
 
  private:
+  void report_fatal(facebook::jsi::Runtime &runtime, const std::exception &error, const char *prefix);
   std::shared_ptr<State> state_;
 };
 }

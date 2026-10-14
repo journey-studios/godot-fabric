@@ -156,6 +156,10 @@ does not bound an infinite chain of Promise jobs or arbitrary blocking JS.
 > `queueMicrotask`, `setImmediate`, `clearImmediate`, `requestIdleCallback` and `cancelIdleCallback` and sets the flag, so the idle callbacks are no longer open;
 > `src/runtime.js` keeps only the host's lifecycle gate. The encoding globals and the callback exceptions (slice F) stay open.
 >
+> Later note: since the [callback exceptions slice](#callback-exceptions-and-starvation-slice-f-2026-10-14), the exception of a timer, an interval, a frame callback, an immediate, a microtask, an idle callback and an event handler is a fatal error for
+> `JsErrorHandler` as in RN bridgeless, the host drains the microtask queue with RN's own `performMicrotaskCheckpoint` loop (255 retries, then "Hits microtasks retries bound."), and a Promise storm is measured: RN bounds only the failures of a
+> checkpoint, so a chain that does not throw starves the event loop and reports nothing, in RN and in the host alike. The "Remaining GF-05 work" below describes the state before it.
+>
 > Later note: since the [web globals slice](#web-globals-slice-e-2026-10-14), `URL`, `URLSearchParams`, `AbortController` and `AbortSignal` are certified member by member against
 > RN's own files, `fetch` and `XMLHttpRequest` are shown to observe the signal, `TextEncoder`, `atob` and `btoa` are tested against Node with their Hermes deviations documented, and
 > `TextDecoder` is absent with a negative fixture, so the encoding globals are no longer open; the callback exceptions (slice F) are.
@@ -486,8 +490,8 @@ places. Each corresponding site of the host, and what slice C did with it:
 | The `RuntimeScheduler`'s task error handler (`Impl` constructor) | `ReactInstance.cpp:128-131` | `fail(error.what())` | `JsErrorPath::handle_fatal` |
 | The work queue the host's runtime executor feeds, drained in `pump()` | the runtime executor's catch, `ReactInstance.cpp:92-109` | `fail(error.what())` | `JsErrorPath::handle_fatal` |
 | The evaluation of the bundle (`Impl::load_bundle`, `FabricApplication::mount`) | `ReactInstance::loadScript`, then the runtime executor's catch; `setRuntimeReady` after it (`ReactInstance.cpp:287-299`) | `mount`'s catch: `report_error(error.what())`, then stop | `handle_fatal` while the runtime is not ready; ready after a clean evaluation; `mount` stops without reporting twice |
-| `TimerManager`'s runtime executor (timers, immediates) | the runtime executor's catch | `fail(error.what())` | unchanged: slice F |
-| `requestAnimationFrame` callbacks, Native Animated and LayoutAnimation frames | none (`ReactInstance` has no frame loop) | `fail(error.what())` | unchanged |
+| `TimerManager`'s runtime executor (timers, immediates) | the runtime executor's catch | `fail(error.what())` | unchanged: slice F (later: `JsErrorPath::handle_fatal`, [below](#the-hosts-catch-sites-1)) |
+| `requestAnimationFrame` callbacks, Native Animated and LayoutAnimation frames | none (`ReactInstance` has no frame loop) | `fail(error.what())` | unchanged (later, slice F: the frame callbacks are `handle_fatal`; the two native frames keep `fail()`, for RN has no catch there either) |
 | `FabricApplication.evaluate`, the validation seam | none | `fail(error.what())` | unchanged |
 
 **A finding that shapes the first two rows.** `hermesvm.framework` defines and exports its own
@@ -593,7 +597,7 @@ lane recorded of the tree when it ran (the commit and every path that differed f
 **Limits.**
 
 - The catch sites of timers, immediates, microtasks and animation frames still record `error.what()` directly; slice F measures
-  their exceptions against RN and routes them as RN does.
+  their exceptions against RN and routes them as RN does. (Later note: it did, in the [callback exceptions slice](#callback-exceptions-and-starvation-slice-f-2026-10-14).)
 - `RN$hasHandledFatalException` and `RN$notifyOfFatalException` are not installed: excluded by V2-D26, and GF-07's error-cleanup slice owns
   any change. Without them RN's JS reports every fatal exception to the host; a second fatal exception in the C++ pipeline is still
   dropped, because that dedupe is inside `JsErrorHandler`.
@@ -696,7 +700,7 @@ Timers and frame callbacks queued before the stop do not run (the adapter accept
 
 **The bound of the checkpoint.** Hermes ignores the `maxMicrotasksHint` of `drainMicrotasks(int)` (measured: 200,000 microtasks, each queueing the next, all ran in one call, 69 ms), so
 the hint is not used. What the microtasks queue while they run completes in the same checkpoint, and a microtask that queues itself without end starves `stop()` as it starves a frame in
-`pump()`; that starvation, and RN's behaviour under it, is slice F's.
+`pump()`; that starvation, and RN's behaviour under it, is slice F's. (Later note: it measured both in the [callback exceptions slice](#callback-exceptions-and-starvation-slice-f-2026-10-14): RN starves the same way, and the host's drains are now RN's checkpoint loop.)
 
 
 ### The probe
@@ -808,7 +812,7 @@ against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
 - The timer in a case depends on the host taking a timer that a handler registers in a later pump than the RuntimeScheduler's loop of this one (the oracle reads that order from `native/application_runtime.cpp`); RN's own platforms
   deliver a timer when the platform does, so a `setTimeout(0)` and a Normal task queued together are not ordered by RN, and the cases do not ask for more than the host gives.
 - The registry counts the calls that reach RN's module in front of RN's own invoker; the module's C++ is compiled unchanged. The count is the suite's observable of "reaches the C++ module".
-- The gate is the host's extension (V2-D27). Exceptions thrown by a microtask callback, `setImmediate` ordering under load and a Promise storm are slice F's; idle callbacks are slice D2's.
+- The gate is the host's extension (V2-D27). Exceptions thrown by a microtask callback, `setImmediate` ordering under load and a Promise storm are slice F's (certified there); idle callbacks are slice D2's.
 - The headless desktop host only; the mobile exports have not run this bundle.
 
 **For slices D2, F and GF-06.** D2 adds `NativeIdleCallbacks`, imports `setUpTimers` unchanged and deletes from `src/runtime.js` what it then installs (the flag, `queueMicrotask`, `setImmediate`,
@@ -995,7 +999,7 @@ lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin
 - The timer in the `order` case depends on the host taking a timer that a handler registers in a later pump than the RuntimeScheduler's loop of this one (the oracle reads that order from `native/application_runtime.cpp`); RN's own platforms deliver a timer when the platform does.
 - A reading of `timeRemaining()` is bounded by the lane's timestamps, not fixed, and a stall of the process longer than the 50 ms between two statements would make a first reading zero where the bounds allow it (the lower bound is then zero).
 - The registry counts the calls that reach RN's module in front of RN's own invokers; the module's C++ is compiled unchanged.
-- The gate is the host's extension (V2-D27). Exceptions thrown by an idle callback, a microtask or an immediate, `setImmediate` under load and a Promise storm are slice F's.
+- The gate is the host's extension (V2-D27). Exceptions thrown by an idle callback, a microtask or an immediate, `setImmediate` under load and a Promise storm are slice F's (certified there).
 - The headless desktop host only; the mobile exports have not run this bundle.
 
 **For slices E, F and GF-06.** E adds globals after `setUpTimers`' place and before the error path in `src/initialize.js` only through RN's own imports; nothing there may read `queueMicrotask` or the flag before the renderer does, and `tests/react-microtasks-host.js` (which the idle
@@ -1207,3 +1211,146 @@ scan of the nine binaries). It also holds checks for `TextEncoder`, `atob` and `
 throwing timer or microtask callback does not touch them; a listener that throws on `abort` would reach the event dispatch of RN's `EventTarget`, which no case here exercises.
 The sabotage lanes are bundle overrides: a later slice that edits `src/initialize.js` must keep the text the `text-decoder-polyfilled` sabotage anchors on (the anchor test fails
 otherwise). The expectation file is the one thing a change to RN, Node or the Hermes pin must regenerate.
+
+## Callback exceptions and starvation (slice F, 2026-10-14)
+
+Slices C to E left four things for this one: the catch sites of timers, immediates, frame callbacks and microtasks still recorded `error.what()` where they happened to catch it
+(slice C's table); the host drained the microtask queue with a bare `drainMicrotasks()` that RN's own scheduler never uses on its own (D1 and D2 named the throwing callback and
+the storm as F's); and the user decided on 2026-10-13 that starvation is **parity with RN bridgeless**: measure what RN does under a Promise storm, and the host does the same, with
+no guard that RN does not have. Slice F reads RN's behaviour out of the pinned sources, measures it in the real host, changes two catch sites (timers and frame callbacks) and the five microtask drains, and
+certifies the result per kind of callback with the oracle the earlier slices use. `RN$hasHandledFatalException` and `RN$notifyOfFatalException` stay excluded under V2-D26,
+and the D1 stop-path semantics, D2's strict gate and slice C's globals are unchanged.
+
+### How RN 0.87.1 bridgeless does it (step 1)
+
+All paths are inside `node_modules/react-native`; the evidence file ([`js-exceptions.json`](js-exceptions.json), `rnBehaviour`) holds the same rows with each citation found by its text.
+"Fatal" is `JsErrorHandler::handleError(runtime, error, true)`, which reaches `ExceptionsManager` and the host's failure record (slice C); "the task error handler" is the function
+`ReactInstance` hands its `RuntimeScheduler` (`ReactInstance.cpp:128-131` and `:162-165`).
+
+| Callback | Who calls it in RN | Where its exception goes | The rest of the queue |
+| --- | --- | --- | --- |
+| `setTimeout` | `TimerManager::callTimer` (`TimerManager.cpp:171`, the callback at `:185`) on the buffered runtime executor (`ReactInstance.cpp:173-177`, handed to the TimerManager at `RCTInstance.mm:334` and `JReactInstance.cpp:72`), which schedules work: an Immediate task of the RuntimeScheduler (`RuntimeScheduler_Modern.cpp:45-48`) | `callTimer` catches nothing; the exception leaves the task: `executeTask`'s catch (`RuntimeScheduler_Modern.cpp:399-404`), `handleTaskError` (`:469-477`), the task error handler: **fatal** | Yes. Every other timer is a task of its own and the queue is not cleared (`enableRuntimeSchedulerQueueClearingOnError` is `false`, `ReactNativeFeatureFlagsDefaults.h:198`). A one-shot timer keeps its `timers_` entry, because `timers_.erase` (`TimerManager.cpp:191`) is skipped |
+| `setInterval` | the same, with a recurring timer (`TimerManager.cpp:293`) | as `setTimeout`: **fatal** | Yes; the recurring timer is not erased, so the next tick runs |
+| `requestAnimationFrame` | a `TimerManager` timer with a zero delay (`TimerManager.cpp:321-367`); `ReactInstance` has no frame loop | as `setTimeout`: **fatal** | Yes; another callback is another timer |
+| `setImmediate` (`immediateShim`) | `immediateShim.js:45`: one `queueMicrotask` per call (no batch, no loop) | as `queueMicrotask` | Yes; each immediate is a microtask of its own |
+| `queueMicrotask` | `NativeMicrotasks.cpp:28` (`runtime.queueMicrotask`); drained by `performMicrotaskCheckpoint` (`RuntimeScheduler_Modern.cpp:414-451`) after each task (`:332`) | `drainMicrotasks` throws and discards the job (`jsi.h:397`); the checkpoint calls `handleTaskError` (**fatal**) and drains again; after 255 such failures it throws `std::runtime_error("Hits microtasks retries bound.")` (`:429`, `:449`), which leaves `runEventLoopTick` for the runtime executor's catch (`ReactInstance.cpp:103-108`, wrapped `Non-JS exception: `): **fatal** | Yes: the next drain runs the jobs behind the one that threw, up to the bound; what is left runs in the next checkpoint |
+| Promise reaction (`then`, `catch`), unhandled rejection | Hermes' own queue (the one `queueMicrotask` uses) | a reaction that throws rejects the promise it returned; Promise jobs never reach the host (`jsi.h:410`). A rejection nobody handles is **not tracked in a release build**: `polyfillPromise.js:32` enables Hermes' tracker under `__DEV__` only (`:28`), `Libraries/Promise.js:18` likewise, `setUpErrorHandling` enables nothing, and in a development bundle the options would report it as a *soft* error (`promiseRejectionTrackingOptions.js:46`): swallowed | Yes |
+| `requestIdleCallback` | `NativeIdleCallbacks.cpp:118`, inside an Idle-priority task | propagates out of the task: `executeTask` → `handleTaskError` → the task error handler: **fatal** | Yes (the queue is not cleared) |
+| event handler (`dispatchEvent`) | `UIManagerBinding.cpp:158` (`eventHandler_->call`) in the event beat's Immediate task (`EventBeat.cpp:78`); React's `executeDispatch` keeps the first exception, runs every listener and rethrows it (`ReactFabric-prod.js:302`, `:1313`) | neither `UIManagerBinding` nor `EventQueueProcessor` catches, so it leaves the beat's task: **fatal** through the task error handler | Yes for the scheduler's tasks; the events behind it in the same flush are not dispatched (`EventQueueProcessor.cpp:56`, no catch; read, not exercised) |
+
+No callback kind has a *soft* exception in RN. The soft channel is `ErrorUtils.reportError` and `console.error`, which the `soft` case certifies from inside a timer.
+
+**What the host did before.** `pump()` drained the queue with `runtime->drainMicrotasks()` at its head, after each frame callback, after each item of the work queue and at its end,
+none inside a `try`: a throwing `queueMicrotask` callback left the drain, reached `pump()`'s outer catch (`fail(error.what())`), and skipped everything else that pump would have done;
+a throwing timer or frame callback was caught where it ran (`fail(error.what())`, without RN's message and stack format). `stop()` drained once, with a catch.
+
+### Starvation: what RN does, and what the host does (step 1, last item)
+
+- **`performMicrotaskCheckpoint`** (`RuntimeScheduler_Modern.cpp:414-451`) is `uint8_t retries = 0; kRetriesBound = 255; while (retries < kRetriesBound) { try { if (runtime.drainMicrotasks()) break; } catch (...) { handleTaskError(...); } retries++; }`
+  and then `throw std::runtime_error("Hits microtasks retries bound.")` if `retries == kRetriesBound`. It does not nest. **It counts failures only:** `drainMicrotasks()` uses the default hint (unbounded),
+  Hermes ignores a hint anyway (D1 measured 200,000 chained microtasks in one call), and a drain that does not throw returns `true` and ends the loop. So a microtask that queues itself
+  and **throws** every time is cut after 255 failures and reported once as `Non-JS exception: Hits microtasks retries bound.`, and what is left runs in the next checkpoint;
+  a microtask that queues itself **without throwing** has no limit, no counter and no message in RN: its checkpoint never ends.
+- **A Promise storm** is the second case. Timers, frame callbacks and input are tasks of the RuntimeScheduler (or of the platform's loop), and a task starts only when the checkpoint of the one before it returns, so RN's
+  event loop is starved for the length of the chain and **nothing is reported**. A bounded storm ends, and the timer and the frame queued beside it then run. Nothing the sources above read (the checkpoint, the scheduler, `ReactInstance`) puts a time or an iteration limit on a chain that does not throw.
+- **The wedge (a finding).** The bound's exception leaves `performMicrotaskCheckpoint` and then `runEventLoopTick` and `runEventLoop`, and none of them catches (`RuntimeScheduler_Modern.cpp:271-342`). `selectTask` had reset
+  `isEventLoopScheduled_` (`:297`), the task that ran stays in the queue until the next selection pops it, and `scheduleTask` schedules the loop only for an empty queue (`:254`): so the RuntimeScheduler takes
+  no further task. In RN the fatal error that the bound produces ends the process; in a host that keeps running (V2-D26) the application that reaches the bound **from RN's own checkpoint** (a chain started in an event handler, an idle callback or any
+  task of the scheduler) keeps its timers, frames and the host's own drains, and loses its scheduler: events, idle callbacks and React's own tasks stop. The probe certifies it as RN's behaviour, in an application of its own.
+- **The host today.** `perform_microtask_checkpoint()` (`native/application_runtime.cpp`) is that loop, with the same type, bound and message, and `microtask_checkpoint()` reports the throw at the bound as the runtime executor's catch does. Every drain goes through it:
+  the head of the pump, after each frame callback, after each item of the work queue, the end of the pump and the head of `stop()`. The oracle compares the two loops token by token and requires `drainMicrotasks()` to be called once in the whole file.
+  RN performs the checkpoint after each *scheduler task*; the host's timers and frame callbacks are not tasks of its scheduler (D1 and D2 certified their order), so the host performs it after each of them.
+
+### The host's catch sites
+
+| Site | RN's counterpart | Before | Now |
+| --- | --- | --- | --- |
+| `TimerManager`'s runtime executor (timers, intervals, immediates' timer) | a task of the RuntimeScheduler: `executeTask`'s catch, then the task error handler (`RuntimeScheduler_Modern.cpp:399-404`) | `fail(error.what())` | `JsErrorPath::handle_fatal` (fatal). The other timers due in the tick still run (each is a work item with its own catch); the one-shot entry is released through the original `clearTimeout`, which RN leaks (`TimerManager.cpp:191` is skipped) |
+| `requestAnimationFrame` callbacks | `TimerManager`'s timer (`TimerManager.cpp:321-367`) | `fail(error.what())` | `JsErrorPath::handle_fatal`; the other callbacks of the tick still run |
+| The five microtask drains of `pump()` and `stop()` | `performMicrotaskCheckpoint` | a bare `drainMicrotasks()`: uncaught in the pump, once with a catch in `stop()` | `microtask_checkpoint()`: RN's loop; a job's exception is `JsErrorPath::handle_task_error` (fatal, spelled `Non-js exception: ` as the scheduler spells it), the bound's throw is `handle_fatal` (`Non-JS exception: `, the runtime executor's) |
+| `Native Animated` frame, `LayoutAnimation` tick | none that catches: iOS drives them from a `CADisplayLink` and a run loop observer (`RCTScheduler.mm:134`, `:147`), Android through JNI calls from its frame callbacks (`FabricUIManagerBinding.cpp:61`, `:71`), and no C++ on either path catches, so an exception there is not handed to `JsErrorHandler` and is uncaught | `fail(error.what())` | **unchanged**: a recorded failure with the exception's own text, this host's continuation of RN's fatal (V2-D26). No JS runs inside them (the JS callbacks of both go through the runtime executor, `LayoutAnimationKeyFrameManager.cpp:1156`, which the work queue's catch handles), so no case reaches them |
+| The work queue (the runtime executor), the RuntimeScheduler's task error handler | `ReactInstance.cpp:92-109`, `:128-131` | `handle_fatal` (slice C) | unchanged; idle callbacks, event handlers and the microtasks of RN's own checkpoint arrive here |
+| `FabricApplication.evaluate`, the validation seam | none: a host API, not RN | `fail(error.what())` | **unchanged**, on purpose |
+
+### Decisions
+
+- **Mirror, don't guard.** The user's decision rules out a bound that RN does not have, so the storm is not limited, and the only limit is RN's: 255 failures. The cases measure both sides of that sentence.
+- **The host performs RN's checkpoint where RN would.** RN's scheduler does it after every task; the host's microtask-bearing steps are its pump and `stop()`, and each ends in the same function. The reachable difference is the wrap text: a microtask that throws at RN's *own* checkpoint (after a press) is reported as the scheduler's `Non-js exception: <what>`, because RN's compiled `catch (jsi::JSError&)` does not match Hermes' own class in this linkage (slice C's finding), where the same microtask at the host's checkpoint is reported as the JS error it is. Both are fatal and carry the message.
+- **A timer's exception is fatal, not soft.** Nothing in RN reports a callback's exception as soft; the soft channel stays what slice C certified.
+- **The wedge is RN's, and the host does not repair it.** Rescuing the scheduler would be a behaviour RN does not have, and V2-D26's recovery is GF-07's.
+- **The Native Animated and LayoutAnimation frames and the validation seam keep `fail()`**, for the reasons in the table.
+
+### The probe
+
+`npm run test:js-exceptions` runs `tests/js-exceptions-native.test.mjs`: one bundle (`tests/js-exceptions-fixture.jsx`, with `tests/js-exceptions-host.js` injected before everything) in actual Hermes applications of one Godot process, headless. The cases are
+`tests/js-exceptions-cases.mjs`, shared with the oracle: each is entered from `evaluate`, a timer, a frame callback or a Pressable's `onPress` (a Godot mouse event through the host's real event path) and ends with its own last callback, never with a count of frames.
+`tests/js-exceptions-probe.gd` makes **41 checks**:
+
+- *per kind, two checks each*: where the exception is reported (one failure per fatal error, in order, in slice C's format, `message, stack:` and a `method@file:line:column` line per frame, counted as module-route fatal reports and nothing else) and that the rest of the queue still runs (the journal is the model's):
+  `timeout` (a, b, c), `interval` (throws on ticks 1 and 2, clears itself on the third), `raf` (r1 throws, r2 runs, r2 requests r3), `idle` (i1 throws, i2 runs), `event` (a handler that queues a timer and throws, then a press whose handler does not);
+  `soft` (`ErrorUtils.reportError` from a timer: soft, logged, no failure);
+- *the microtask queue at each drain point*, two checks each: `queueMicrotask` that throws, a Promise reaction, `setImmediate` that throws, one that does not, and a callback that queues another, entered from `evaluate` (the head of the pump), a timer, a frame callback and a press (RN's own checkpoint);
+- *Promise reactions*: a `then` that throws, `then().catch()`, a rejection nobody handles and an async function that throws reach no host (no failure, no counter, no console line), the reactions and the catch run in order, and Hermes' tracker, when the probe enables it afterwards, reports the unhandled rejection once and the late handler of it;
+- *starvation*: `retry-bound-evaluate|timer|raf` (a 300-run microtask chain that queues itself and throws every run: 255 failures, the bound's report, the other 45, in that order; a timer and a frame callback queued beside it see 255 or 300 runs, never the inside of a checkpoint) and `storm-evaluate|timer` (a chain of 1,000,000 reactions, alternately Promise jobs and `queueMicrotask`: nothing is reported, logged or recorded, and the timer and the frame callback run after the last link);
+- *stop*: the microtasks pending when the application stops complete in one checkpoint although one throws, and the stop releases the root;
+- *the wedge application*: the same chain started in a press handler is cut by RN's own checkpoint with the same failures (the first 255 in the scheduler's spelling, then the bound, then the rest as the host's), the timers and frames go on and the chain completes, the next press is never delivered, and the application still stops.
+
+The fatal cases make the host record failures on purpose (`FABRIC_ERROR`): the log of a lane must hold, in order, exactly the failures the two applications recorded (1,220: 918 in the main application and 302 in the one that lost its scheduler, whose stop also completes a queued microtask that throws), and one `HERMES: ExceptionsManager soft exception:` line for the soft report.
+
+`tests/js-exceptions-oracle.mjs` is written from RN, not from the probe: it reads the constants and the loop of `performMicrotaskCheckpoint`, the flag default, the wraps of the scheduler and of the runtime executor, TimerManager's missing catch and its executor, `immediateShim`, `NativeMicrotasks`, `NativeIdleCallbacks`, the event path, the renderer's rethrow, the rejection tracker's call sites (a scan of
+`Libraries/` and `src/` finds exactly three files that mention it) and the iOS frame paths out of the pinned files; it requires the host's checkpoint to be RN's loop and every drain to go through it; it runs RN's `setUpErrorHandling` in V8 to learn how `ExceptionsManager` composes a message; it derives the journal and the fatal errors of every case from a model of the host's pump
+over RN's scheduler rules (a queue, a loop scheduled once, a checkpoint after each task) and V8's own microtask queue; and it counts the chains from the bound it read, including the block of exactly 255. The wedge is derived from the scheduler's rules, not observed alone. Every verdict of the probe is derived again from the report's raw observations and must agree.
+
+### Controls
+
+**The previous host** (the tip of `feat/gf-05-web-globals`, `c0b52a54`, kept in `build/gf05-exceptions-previous-host/`; `node tests/js-exceptions-native.test.mjs --allow-original-negative` while it is `addons/fabric_godot.dylib`, then the current host is put back; run it with `node`, not `node --test`, which does not hand the flag to the file) runs the same bundle
+and fails exactly **10 of the 41** checks, the ones that need the new routing: the report of a timer, an interval and a frame callback, of a microtask at the three drain points the host performs, of the chain's bound at those three, and of the rest of the chain after RN's own checkpoint gave up. The other 31 hold on both hosts: the scheduler's own routes (idle, event, a microtask at RN's checkpoint),
+the Promise reactions, the storm, and the order in which the rest of every queue runs. **Five sabotages** (`scripts/js-exceptions-sabotage.mjs`, the table in `tests/js-exceptions-sabotages.mjs`), each a line of `native/application_runtime.cpp` with a rebuilt host, are rejected by the probe and the oracle:
+
+| Sabotage | Breaks | Checks it fails |
+| --- | --- | --- |
+| `timer-site` | a timer's exception is recorded as `error.what()` again | 2 (`timeout`, `interval`: the report) |
+| `no-retry-bound` | the checkpoint loops until the queue is clean, without RN's limit | 3 (the bound's report at the three drain points the host performs) |
+| `soft-as-fatal` | a soft exception is recorded as a failure | 1 (`soft`) |
+| `drop-remaining` | the work queue is dropped after a timer's exception | 1 (`timeout`: the other timers) |
+| `no-resume` | the checkpoint stops at the first exception, as the single drain did | 13 (the bound and the chain beside it at every drain point, the storm cases, which the leftover chain reaches, the failure count and the wedge application's two) |
+
+### Audit
+
+`docs/compatibility/bootstrap-audit-0.87.1.json`: `slices.F` is "(done)", and the reasons this slice made stale are updated (`setUpErrorHandling`, the `timers`, `animation-frame`, `queue-microtask` and `immediate` parts, `polyfillPromise`, the `starvation` decision, which now says what was measured). No status changed (10 `runs`, 4 `replaced`, 4 `host`, 0 `pending`, 12 `not-applicable`) and the gate passes.
+
+**Evidence.** [`js-exceptions.json`](js-exceptions.json) is the committed record: the 41 verdicts, every case's journal and failures, the previous host's 10 failing checks with its SHA-256 and the commit it was built from, each sabotage, the facts read from RN, the step 1 table with its citations, and the catch sites.
+`scripts/js-exceptions-evidence.mjs` writes it from the reports the lanes leave in `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; it requires `--previous-host-commit <sha>` and, with `--commit <sha>`, checks each pin against `git show`. Hosted CI is pending (the suite is in the `native-suites-runtime` job of `contracts.yml`, artifact `native-js-exceptions`).
+
+### Regressions
+
+This changes how the host catches a timer's and a frame callback's exception and how it drains the microtask queue at five points, so the host was rebuilt and these suites ran on it, one at a time:
+`test:js-exceptions` (this slice's own), `test:js-errors`, `test:react-microtasks`, `test:idle-callbacks`, `test:js-globals`, `test:web-globals`, `test:application`, `test:runtime`,
+`test:events:original|ancestry|dispatch|integrated`, `test:pointers:processor|geometry|interest|query-faults|documents|resolver-faults|up|move|documents:up|documents:move|hover|root-path|documents:hover|click|capture`,
+`test:responders:pan|shared-touches`, `test:animated`, `test:layout-animation`, `test:frame-clock`, `test:services`, `test:modules`, `test:app-state`, `test:lists`, `test:modal`, `test:touchables`, `test:scroll-view`,
+`test:switch`, `test:focus:commands`, `test:accessibility`, `test:accessibility-info`, `test:activity-indicator`, `test:appearance`, `test:performance`, `test:networking`, `test:device-services`, `test:os-contracts`,
+`test:world-input`, `test:mobile-density`, `test:scope-0.5`, `test:text-original|layout|style` and `test:examples` (56 suites) all pass, with the stale controls moved aside (`build/stale-controls-gf05-f/`, 34 report files named as they were:
+the previous-host and sabotage reports of earlier slices, produced from other hosts and bundles, which each suite compares its current lane with when they are in `build/`). The consumer adapter runtime check
+(`scripts/adapter-runtime-check.mjs`, over an SDK packed as CI packs it: `sdk:native:pack --build-dir .deps/build`, `sdk:native:verify`, then `test:adapters:native` with 213 checks and `test:adapters:loader` with 89) passes in all 13 modes
+(`headless`, `external-appearance`, `reentrant-stop`, `reentrant-raf`, `reentrant-timer` and the eight `root-*` modes), the reentrant stop included.
+
+Two oracles of earlier slices changed, and only because the behaviour they read is now RN's:
+
+- `tests/react-microtasks-oracle.mjs` (`hostFacts`, which the idle callbacks suite imports) anchored on the text `if (!stop_requested) runtime->drainMicrotasks();` in the pump to check that the host drains after each item of its work queue; the drain is now `microtask_checkpoint();`, RN's `performMicrotaskCheckpoint` (`RuntimeScheduler_Modern.cpp:414-451`). It checks the same fact.
+- `tests/js-errors-oracle.mjs` asserted that `native/js_error_path.cpp` spells the wrap of a non-JS exception once; it now spells each of RN's two wraps once (`Non-js exception: ` as `RuntimeScheduler_Modern.cpp:402` and `:442` spell it, for the checkpoint's catch, and `Non-JS exception: ` as `ReactInstance.cpp:107` spells it) and the oracle reads both from the pinned sources.
+
+No expectation of any suite changed. The gate of the audit (`tests/bootstrap-audit.test.mjs`, 42 tests), the anchors of every retained sabotage (`tests/sabotage-anchors.test.mjs`, 40 tests), `type-check`, `check:static`, the dashboard (`test:dashboard`)
+and the milestone guards (`scripts/milestone-guards.mjs --check` and its 36 tests) pass, and `npm run test:contracts` ran once at the end: parity 82 tests, dashboard 44, the contract list 789 tests with 788 passing and one skipped because `MACOS_EXPORT_TEMPLATE` is unset, and 37 Python tests.
+
+**Limits.**
+
+- The Native Animated and LayoutAnimation frames and the validation seam keep a recorded failure; no case reaches them, and the oracle reads RN's frame paths to show they have no catch there.
+- The application that reaches the bound from RN's own checkpoint loses its RuntimeScheduler (the wedge): events, idle callbacks and React's tasks stop. GF-07's error cleanup owns any change; GF-06 (events and input) should expect it only after 255 consecutive failing microtasks in a checkpoint that follows a scheduler task.
+- A chain that does not throw starves the host's timers, frames and input exactly as it starves RN's: the user's decision. The pump's bounded work drain (256 items) bounds the work queue, not a drain of microtasks.
+- The position of a timer or a frame callback queued beside a chain depends on how many drains the host performs in a pump, so the checks judge the boundaries between checkpoints (255 or 300 runs), not the position.
+- RN's own scheduler wraps what Hermes throws as `Non-js exception: <what>` (two `jsi::JSError` classes), so the idle callbacks, event handlers and microtasks of RN's checkpoint are reported with that text and the timers, frames and the host's checkpoints as the JS error.
+- Hermes' tracker is the `promise` package's: it reports an unhandled rejection after a timer (two seconds for an `Error`), so the positive control waits for the report, an event, with a generous bound in real time.
+- The headless desktop host only; no mobile export has run this bundle.
+
+**For GF-06, GF-07 and GF-29.** GF-06: a handler's exception is a fatal error and the next event is still delivered; only the wedge stops delivery. GF-07's error cleanup (V2-D26) starts from `errors` and the `jsErrors` counters as before, and now also has the wedge to decide about (the host does not clear or restart the scheduler). GF-29's development tools own the DEV rejection tracker: with
+it enabled, an unhandled rejection is a *soft* error, not a fatal one.
