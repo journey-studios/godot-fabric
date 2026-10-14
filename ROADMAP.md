@@ -1355,7 +1355,10 @@ GF-02 remains In progress (comparison cases and applicable targets); see the
 
 **GF-02 checkpoint (2026-10-14):** the `parity` and `targets` lanes passed in the hosted
 Contracts run [38560887388](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388)
-(head `974b46e8`, every job at attempt 1), which is the evidence for both checkpoints. By decision
+(head `974b46e8`, every job at attempt 1). That run and the [targets table](docs/evidence/cold-start.md#targets)
+close the `targets` checkpoint. The run is also the evidence for `parity`, and it is recorded, but
+the `parity` checkpoint stays open: the dashboard admits all checkpoints done only on a complete item,
+which needs its dependency GF-01 complete, so `parity` closes with GF-01. By decision
 of 2026-10-14, parity is native startup cases and the target is macOS arm64 only. `npm run test:cold` now makes at
 least three fresh installs (a new project, an empty resource cache and a fresh `HOME` each),
 launching every step once: a signal, a crash or an error fails the run and a second launch of a
@@ -1373,7 +1376,7 @@ not a control and the boundary lane stays the executable one. In the hosted run,
 `native-cold-start` made 3 fresh installs (12 steps, each `attempts` 1, no signal), the
 boundary control reported `boundary-holds` (5 of 5 and 5 of 5), the failed-start negative passed with
 its causal control, and `parity-comparison` matched the cold-project Godot report with the iOS and
-Android references (13 cases). GF-02 stays In progress while its dependency GF-01 is open. See the
+Android references (13 cases). GF-02 stays In progress: `parity` is open until GF-01 completes. See the
 [evidence record](docs/evidence/cold-start.md#repeated-first-installs) and its
 [targets](docs/evidence/cold-start.md#targets).
 

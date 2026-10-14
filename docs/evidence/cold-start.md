@@ -106,8 +106,11 @@ Run `node --test tests/godot-binary.test.mjs` and
 `python3 -m unittest discover -s tests -p '*_test.py'` for the engine admission
 and recovery regressions. `npm run test:cold` remains the native acceptance
 command. The remaining direct-editor boundary is now an executable control, set
-out in the next section. GF-02 stays **In progress** until its other
-checkpoints (comparison cases and applicable targets) are accepted; the lanes that
+out in the next section. GF-02 stays **In progress**: its `targets` checkpoint is
+closed on hosted run 38560887388 and the [targets table](#targets), and the evidence for
+`parity` (the comparison cases) is recorded from the same run, but that checkpoint stays
+open until GF-01 completes (the dashboard admits all checkpoints done only on a
+complete item, and that needs its dependency GF-01 complete). The lanes that
 provide that evidence are [Repeated first installs](#repeated-first-installs),
 [Failed start with an incompatible minimum](#failed-start-with-an-incompatible-minimum),
 [Parity from a cold project](#parity-from-a-cold-project) and [Targets](#targets).
@@ -227,7 +230,8 @@ rebuilt one. It judges the import-only editor with the Fabric extension alone; i
 does not prove that every editor loading path is safe, and the root cause is the
 upstream explanation above, not a symbolicated trace. The `contract` checkpoint
 of GF-02 closes on this control once a hosted run shows the verdict
-`boundary-holds`; `parity` and `targets` rest on the lanes that follow.
+`boundary-holds`; `targets` closes on the lanes and the table that follow, and the evidence
+for `parity` is recorded there, with its checkpoint open until GF-01 completes.
 
 ## Repeated first installs
 
@@ -467,6 +471,10 @@ artifact `parity-comparison` (id 11893371096, digest `sha256:8967bb3e…6963`) h
 `completeMobileReferences` true, the references `android` and `ios`, 13 cases and the
 `godotColdProject` of the Godot report.
 
+This run is the evidence for the `parity` checkpoint of GF-02. The checkpoint stays open
+until GF-01 completes: the dashboard admits all checkpoints done only on a complete item,
+and that needs its dependency GF-01 complete.
+
 ## Targets
 
 **Decision (2026-10-14).** The target of this evidence is **macOS arm64 only**.
@@ -501,6 +509,8 @@ Godot archive (checksum verified against `dependencies.json`), built the native 
 scratch against the pinned godot-cpp and ran every lane above on `4.7.2.stable.official.ed1daf0bf`
 with `compatibility_minimum = "4.7.2"`. The other four rows are not run anywhere: no lane,
 local or hosted, starts Godot on Linux, Windows, Android or an iOS runtime.
+
+This run and the table above are the evidence on which the `targets` checkpoint of GF-02 is closed.
 
 **What this does not say.** Nothing here qualifies a distribution, an export or a
 device. GF-36 owns native hosted CI for the other ports and GF-37 their
