@@ -329,6 +329,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   bool stopped{false};
   bool stopping{false};
   bool stop_requested{false};
+  // True while stop() unmounts the roots: the JS gate (godotRuntimeActive) stays open for the work React queues to unmount them, which with
+  // RN$enableMicrotasksInReact includes a queueMicrotask of its own. It closes again when the last root is gone.
+  bool unmounting_roots{false};
   bool inactive() const { return stopped || stopping || stop_requested; }
 
   static const rn::ShadowNode *find_family(const rn::ShadowNode &node, rn::Tag tag) {
@@ -664,6 +667,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     native_modules->add_game_services(game_services);
     if (scenario == "refs" || scenario == "modules") native_modules->add_fixture();
     native_modules->add_feature_flags();
+    // RN's NativeMicrotasks, which src/runtime.js installs queueMicrotask from, as setUpTimers does over RN's bridgeless modules. Its
+    // callbacks join the microtask queue that pump() drains after each task, the checkpoint RuntimeScheduler_Modern::runEventLoopTick
+    // performs after each of its own (RuntimeScheduler_Modern.cpp, performMicrotaskCheckpoint).
+    native_modules->add_microtasks();
     if (native_animated) native_modules->add_native_animated();
     native_modules->add_source_code([this] { return bundle_url; });
     native_modules->add_device_info([this] {
@@ -1041,7 +1048,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     timer_manager->attachGlobals(*runtime);
     clear_timer.emplace(runtime->global().getPropertyAsFunction(*runtime, "clearTimeout"));
     bind("godotRuntimeActive", 0, [this](auto &, auto &, const auto *, size_t) {
-      return jsi::Value(!inactive());
+      return jsi::Value(!inactive() || unmounting_roots);
     });
     bind("requestAnimationFrame", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (!count || !args[0].isObject() || !args[0].asObject(rt).isFunction(rt))
@@ -1478,12 +1485,25 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (accessibility_info) accessibility_info->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
+    // The microtasks pending now drain with the JS gate closed, so that what user code queued before this stop does not run (V2-D27).
+    {
+      ExecutionScope execution(*this);
+      try { runtime->drainMicrotasks(); }
+      catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
+    }
     std::vector<int> ids;
     std::vector<std::pair<uint64_t, int>> host_ids;
     for (auto &[id, root] : roots) { ids.push_back(id); host_ids.emplace_back(root->host_id, id); }
-    for (int id : ids) {
-      auto root = roots.find(id);
-      if (root != roots.end()) finalize_unmount(id, root->second->component.empty());
+    {
+      struct GateOpen {
+        bool &flag;
+        explicit GateOpen(bool &flag) : flag(flag) { flag = true; }
+        ~GateOpen() { flag = false; }
+      } unmounting(unmounting_roots);
+      for (int id : ids) {
+        auto root = roots.find(id);
+        if (root != roots.end()) finalize_unmount(id, root->second->component.empty());
+      }
     }
     pending_retirements.clear();
     // Settle service cancellations even when no React root is mounted.

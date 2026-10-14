@@ -8,6 +8,7 @@
 #include <react/bridging/Bridging.h>
 #include <react/bridging/Promise.h>
 #include <react/nativemodule/featureflags/NativeReactNativeFeatureFlags.h>
+#include <react/nativemodule/microtasks/NativeMicrotasks.h>
 #include <react/renderer/animated/AnimatedModule.h>
 #include <react/renderer/runtimescheduler/RuntimeSchedulerCallInvoker.h>
 #include <algorithm>
@@ -269,6 +270,33 @@ double finite_number(jsi::Runtime &runtime, const jsi::Value *args,
   return args[index].asNumber();
 }
 
+struct MicrotasksState {
+  size_t calls{};
+};
+
+// RN's NativeMicrotasks, unchanged (ReactCommon/react/nativemodule/microtasks/NativeMicrotasks.cpp): queueMicrotask is
+// jsi::Runtime::queueMicrotask, so the callback joins the queue Hermes drains after each task, behind the Promise jobs queued before it.
+// The only addition is a count in front of RN's own invoker, so that a suite can tell this module from a Promise shim.
+class CountedMicrotasks final : public rn::NativeMicrotasks {
+ public:
+  CountedMicrotasks(const std::shared_ptr<rn::CallInvoker> &invoker, std::shared_ptr<MicrotasksState> state)
+      : rn::NativeMicrotasks(invoker), state_(std::move(state)) {
+    auto &method = methodMap_.at("queueMicrotask");
+    original_ = method.invoker;
+    method.invoker = &CountedMicrotasks::counted;
+  }
+
+ private:
+  using Invoker = decltype(MethodMetadata::invoker);
+  static jsi::Value counted(jsi::Runtime &runtime, rn::TurboModule &module, const jsi::Value *args, size_t count) {
+    auto &self = static_cast<CountedMicrotasks &>(module);
+    ++self.state_->calls;
+    return self.original_(runtime, module, args, count);
+  }
+  std::shared_ptr<MicrotasksState> state_;
+  Invoker original_{};
+};
+
 struct FixtureState {
   bool active{true};
   uint64_t runtime_id;
@@ -474,6 +502,7 @@ struct TurboModuleRegistry::State {
   std::vector<std::shared_ptr<rn::TurboModule>> retired_modules;
   std::map<std::string, Callable> callables;
   std::shared_ptr<FixtureState> fixture;
+  std::shared_ptr<MicrotasksState> microtasks;
 
   State(uint64_t id, const std::shared_ptr<rn::RuntimeScheduler> &scheduler)
       : runtime_id(id), invoker(std::make_shared<rn::RuntimeSchedulerCallInvoker>(scheduler)) {}
@@ -544,6 +573,14 @@ void TurboModuleRegistry::add_feature_flags() {
       [](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
         return std::make_shared<rn::NativeReactNativeFeatureFlags>(invoker);
       });
+}
+void TurboModuleRegistry::add_microtasks() {
+  auto state = std::make_shared<MicrotasksState>();
+  add(std::string(rn::NativeMicrotasks::kModuleName),
+      [state](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
+        return std::make_shared<CountedMicrotasks>(invoker, state);
+      });
+  state_->microtasks = std::move(state);
 }
 void TurboModuleRegistry::add_native_animated() {
   add(std::string(rn::AnimatedModule::kModuleName),
@@ -653,6 +690,7 @@ folly::dynamic TurboModuleRegistry::snapshot() const {
       ("loaded", loaded)("lookups", state_->lookups)("creations", state_->creations)("disposals", state_->disposals)
       ("retainedUntilVMDestroy", state_->retired_modules.size())
       ("callableModules", state_->callables.size())("callableCalls", state_->callable_calls)("staleCalls", state_->stale_calls);
+  if (state_->microtasks) result["microtasks"] = folly::dynamic::object("calls", state_->microtasks->calls);
   if (state_->fixture) result["fixture"] = folly::dynamic::object("active", state_->fixture->active)
       ("listeners", state_->fixture->legacy_listeners)("disposals", state_->fixture->disposals);
   return result;

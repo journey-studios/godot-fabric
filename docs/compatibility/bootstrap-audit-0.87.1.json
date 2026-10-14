@@ -18,8 +18,8 @@
   "slices": {
     "B": "JS-installed globals (done). src/initialize.js imports RN's own setUpGlobals, setUpDOM, setUpPerformance and setUpNavigator, the build injects RN's console polyfill ahead of every module, and the host no longer defines performance or console, only nativePerformanceNow and nativeLoggingHook (native build; headless probe tests/js-globals-native.test.mjs).",
     "C": "The error path (done). The build injects RN's error-guard polyfill, src/initialize.js imports RN's setUpErrorHandling, and the host answers with RN's JsErrorHandler (ReactCommon/jserrorhandler, compiled unchanged), five of the seven globals ReactInstance installs for the error family over it (RN$handleException, RN$inExceptionHandler, RN$registerExceptionListener, RN$isRuntimeReady and RN$useAlwaysAvailableJSErrorHandling, the flag's pinned value; not RN$hasHandledFatalException and RN$notifyOfFatalException, which V2-D26 excludes because they make RN's JS report only the first fatal exception) and an ExceptionsManager module: a fatal exception is the host's failure, a soft one is a log line (native build; headless probe tests/js-errors-native.test.mjs).",
-    "D1": "RN$enableMicrotasksInReact. React's microtask path switches on as in RN bridgeless; high regression risk, so it runs behind a full suite sweep.",
-    "D2": "Idle callbacks. The NativeIdleCallbacks module backs requestIdleCallback and cancelIdleCallback as in RN bridgeless (cold native build).",
+    "D1": "RN$enableMicrotasksInReact (done). src/runtime.js sets the flag before the renderer evaluates and installs queueMicrotask from RN's NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, compiled unchanged and registered by the host as NativeMicrotasksCxx), behind the host's lifecycle gate; React's sync work commits in a microtask as in RN bridgeless (native build; headless probe tests/react-microtasks-native.test.mjs).",
+    "D2": "Idle callbacks. The NativeIdleCallbacks module backs requestIdleCallback and cancelIdleCallback as in RN bridgeless (cold native build); the slice then imports setUpTimers unchanged and removes from src/runtime.js the duplicates of what it installs (the flag, queueMicrotask, setImmediate and clearImmediate), keeping the host's lifecycle gate.",
     "E": "The web-globals probe. URL, URLSearchParams, AbortController and AbortSignal members, and the encoding globals per the decision: TextEncoder, atob and btoa present and tested, TextDecoder absent with a negative fixture.",
     "F": "Exceptions and starvation parity. Callback exceptions (timers, setImmediate, queueMicrotask) and a Promise storm are measured against RN bridgeless and the host behaves the same."
   },
@@ -242,10 +242,11 @@
           "name": "queue-microtask",
           "globals": ["queueMicrotask"],
           "status": "replaced",
-          "reason": "RN bridgeless queues through the NativeMicrotasks module over Hermes' microtask queue. The host has no such module, so src/runtime.js wraps RN's portable Libraries/Core/Timers/queueMicrotask (a job on a resolved Promise) behind the runtime-active check. Whether an exception thrown by a callback surfaces as it does in RN is certified by slice F.",
+          "reason": "RN bridgeless installs the function of its NativeMicrotasks module (ReactCommon/react/nativemodule/microtasks, which queues on the runtime's microtask queue). src/runtime.js installs that same function from RN's spec module, wrapped in the host's lifecycle gate: a callback does not run once the application is inactive. The gate is a host extension for shutdown (V2-D27) that RN does not have, kept as thin as it was; the host registers RN's module in its TurboModule registry, compiled unchanged, as NativeMicrotasksCxx. Whether an exception thrown by a callback surfaces as it does in RN is certified by slice F.",
           "evidence": [
             { "file": "src/runtime.js", "symbol": "globalThis.queueMicrotask =" },
-            { "file": "src/runtime.js", "symbol": "import queueMicrotask from \"react-native/Libraries/Core/Timers/queueMicrotask\"" }
+            { "file": "src/runtime.js", "symbol": "microtasks/specs/NativeMicrotasks" },
+            { "file": "native/application_runtime.cpp", "symbol": "native_modules->add_microtasks()" }
           ],
           "verifyIn": ["F"]
         },
@@ -263,16 +264,18 @@
         {
           "name": "react-microtasks",
           "globals": ["RN$enableMicrotasksInReact"],
-          "status": "pending",
-          "slice": "D1",
-          "reason": "The host never sets global.RN$enableMicrotasksInReact, so the pinned renderer keeps its microtask path off (Libraries/Renderer/implementations/ReactFabric-prod.js:10422), where RN bridgeless sets it to true. Slice D1 turns it on behind a full suite sweep."
+          "status": "replaced",
+          "reason": "RN bridgeless sets the flag to true in setUpTimers, and the pinned renderer reads it once, when it evaluates (Libraries/Renderer/implementations/ReactFabric-prod.js, supportsMicrotasks), to schedule the work of its sync lanes with queueMicrotask instead of a RuntimeScheduler Immediate task. src/runtime.js sets it to true before the renderer evaluates. setUpTimers itself is not imported yet: its bridgeless branch also installs the idle callbacks from a module the host lacks, and slice D2 adds that module and imports setUpTimers unchanged. Slice D1 certifies the flag and the order it produces (tests/react-microtasks-native.test.mjs).",
+          "evidence": [
+            { "file": "src/runtime.js", "symbol": "globalThis.RN$enableMicrotasksInReact = true" }
+          ]
         },
         {
           "name": "idle-callbacks",
           "globals": ["requestIdleCallback", "cancelIdleCallback"],
           "status": "pending",
           "slice": "D2",
-          "reason": "Neither function exists: RN installs them from the NativeIdleCallbacks module, which the host does not provide (the name is reserved). Slice D2 adds the module.",
+          "reason": "Neither function exists: RN installs them from the NativeIdleCallbacks module, which the host does not provide (the name is reserved). Slice D2 adds the module, then imports setUpTimers unchanged, which installs them along with the flag, queueMicrotask and setImmediate.",
           "evidence": [
             { "file": "native/adapter_loader.cpp", "symbol": "\"NativeIdleCallbacksCxx\"" }
           ]

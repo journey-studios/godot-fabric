@@ -69,6 +69,8 @@ set(MODULES
   react/renderer/telemetry react/renderer/mounting react/renderer/uimanager
   react/nativemodule/core/ReactCommon react/nativemodule/dom
   react/nativemodule/featureflags react/bridging
+  # RN's NativeMicrotasks module (queueMicrotask over the runtime's microtask queue), compiled unchanged.
+  react/nativemodule/microtasks
   react/renderer/uimanager/consistency react/renderer/consistency
   react/renderer/bridging react/renderer/dom react/renderer/leakchecker
   react/renderer/runtimescheduler react/renderer/animationbackend
