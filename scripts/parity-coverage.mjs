@@ -174,8 +174,12 @@ function decidedRows(catalog, inventory, taskIds, add) {
       add("E_SHAPE", `${label}: the id is "decided:<name>"`);
       continue;
     }
-    if (known.has(item.id) || seen.has(item.id)) {
+    if (known.has(item.id)) {
       add("E_SHAPE", `${label}: the id is already a row`);
+      continue;
+    }
+    if (seen.has(item.id)) {
+      add("E_SHAPE", `${label}: the id is used twice`);
       continue;
     }
     seen.add(item.id);

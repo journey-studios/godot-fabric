@@ -361,10 +361,24 @@ test("a requirement or a decided contract that is malformed, unowned or dead fai
   assert.match(messages(decided((item) => { item.id = "value:react-native.View"; }), "E_SHAPE"), /the id is "decided:<name>"/);
   assert.match(messages(decided((item) => { item.requires = ["maybe"]; }), "E_SHAPE"), /requires lists positive and\/or negative/);
   assert.match(messages(decided((item) => { item.why = ""; }), "E_SHAPE"), /why/);
+  // The collision has to reach the guard, so the map must stay valid: the inventory gains a row whose id is shaped like a decided one,
+  // that a rule of the copied map resolves to a later scope (no requirement, no ledger item), and a decided item takes that id.
   const collides = mutated((copy) => {
-    copy.inventory.contracts.push({ id: "decided:TextDecoder", kind: "value", owner: "react-native", name: "TextDecoder", type: "any", source: "x" });
+    copy.inventory.contracts.push({ id: "decided:Collider", kind: "value", owner: "react-native", name: "Collider", type: "any", source: "x" });
+    copy.map.rules.push({
+      id: "test-decided-collider", precedence: 90, match: { id: "decided:Collider" }, owner: "GF-05", scope: "post_1_0",
+      scopeReason: "a row the test adds so that a decided id can collide with it", applicability: "all", why: "test",
+    });
+    copy.catalog.decided.push({ id: "decided:Collider", owner: "GF-05", name: "Collider", requires: ["negative"], why: "x" });
   });
-  assert.ok(codes(collides).includes("E_MAP") || codes(collides).includes("E_SHAPE"));
+  assert.deepEqual(collides.problems, [{ code: "E_SHAPE", message: "decided decided:Collider: the id is already a row" }]);
+  assert.equal(collides.stats.decided, 1, "the colliding item makes no row; the real one stays");
+  // The same id twice among the decided items: the first makes the row, the second is refused.
+  const twice = mutated((copy) => {
+    copy.catalog.decided.push(structuredClone(copy.catalog.decided[0]));
+  });
+  assert.deepEqual(twice.problems, [{ code: "E_SHAPE", message: "decided decided:TextDecoder: the id is used twice" }]);
+  assert.equal(twice.stats.decided, 1);
   const contract = (change) => mutated((copy) => change(copy.catalog.negativeContracts.find((item) => item.id === "headless-tasks-typed-error")));
   assert.match(messages(contract((item) => { item.why = " "; }), "E_SHAPE"), /why is required/);
   assert.match(messages(contract((item) => { item.select = { id: ["api-member:AppRegistry.noLongerThere"] }; }), "E_DEAD_ENTRY"), /no row has id api-member:AppRegistry\.noLongerThere/);
