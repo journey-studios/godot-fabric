@@ -24,5 +24,5 @@ export const SABOTAGES = [
   {name: "request-closes-gate", host: true, hostDirectory: "build/react-microtasks-sabotage-request-closes-gate-host", file: "native/application_runtime.cpp",
     find: "return jsi::Value(!(stopped || stopping) || unmounting_roots);", replace: "return jsi::Value(!inactive() || unmounting_roots);"},
   {name: "checkpoint-gate-closed", host: true, hostDirectory: "build/react-microtasks-sabotage-checkpoint-gate-closed-host", file: "native/application_runtime.cpp",
-    find: "    draining_for_stop = true;\n", replace: "    draining_for_stop = true;\n    stopping = true;\n"},
+    find: "      FlagScope draining(draining_for_stop);\n", replace: "      FlagScope draining(draining_for_stop);\n      stopping = true;\n"},
 ];

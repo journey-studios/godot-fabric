@@ -789,7 +789,7 @@ reason now name `NativeMicrotasks` and the host's registration, and the `D2` ent
 two globals, the module's counter before and after the batch, the order each case came out in with the model's orders for the flag on and off, the previous host's 14 failing checks and its SHA-256,
 each sabotage's failing checks, the orders of its cases and the oracle's verdict, and the RN sources it pinned. `scripts/react-microtasks-evidence.mjs` writes it from the reports the lanes leave in
 `build/`, after re-judging each with the oracle and checking that every lane bundled the files on disk and that the current lane ran on the host in `addons/`; with `--commit <sha>` it also checks each pin
-against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
+against `git show <sha>:<path>` and records the commit. The record is of the local run; hosted CI ran earlier heads of this slice (the last of the limits).
 
 **Limits.**
 
@@ -800,6 +800,8 @@ against `git show <sha>:<path>` and records the commit. Hosted CI is pending.
 - The registry counts the calls that reach RN's module in front of RN's own invoker; the module's C++ is compiled unchanged. The count is the suite's observable of "reaches the C++ module".
 - The gate is the host's extension (V2-D27). Exceptions thrown by a microtask callback, `setImmediate` ordering under load and a Promise storm are slice F's; idle callbacks are slice D2's.
 - The headless desktop host only; the mobile exports have not run this bundle.
+- Hosted CI ran earlier heads of this slice, not this record's tree. D1's own run 38507888050 (head `c726c78`) passed `native-suites-runtime`, the adapter runtime check included, and failed only
+  `native-suites-frontier`, on the `cpu-time-instrument` rule that #162 has since fixed on main; the stacked run 38513518839 (D2 on top of this slice, with #162) passed every job.
 
 **For slices D2, F and GF-06.** D2 adds `NativeIdleCallbacks`, imports `setUpTimers` unchanged and deletes from `src/runtime.js` what it then installs (the flag, `queueMicrotask`, `setImmediate`,
 `clearImmediate`); the gate wrapper around the module's function stays, and so do the host's checkpoint at the head of `stop()` and its unmount window, which the application, app-state, appearance,

@@ -166,7 +166,7 @@ const record = {
     "The gate is the host's extension (V2-D27); callback exceptions and a Promise storm are slice F's. Hermes ignores the hint of drainMicrotasks(int), so the checkpoint at the head of stop() is bounded as every pump is: by the queue.",
     "The registry counts the calls that reach RN's module in front of RN's own invoker; the module's C++ is compiled unchanged.",
     "The headless desktop host only; no mobile export has run this bundle.",
-    "Hosted CI is pending: the record is of the local run."],
+    "The record is of the local run. Hosted CI ran earlier heads of this slice: D1's own run 38507888050 (head c726c78) passed native-suites-runtime, adapter runtime check included, and failed only native-suites-frontier, on the cpu-time-instrument rule that #162 has since fixed on main; the stacked run 38513518839 (D2 on top of this slice, with #162) passed every job."],
 };
 writeFileSync(path.join(root, "docs/evidence/runtime/react-microtasks.json"), JSON.stringify(record, null, 2) + "\n");
 console.log(`REACT_MICROTASKS_EVIDENCE_WRITTEN: ${current.report.checks.length} checks, ${original.report.checks.length - failures(original.report).length} held on the previous host, ${sabotages.length} sabotages`);

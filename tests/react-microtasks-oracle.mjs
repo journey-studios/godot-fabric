@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
 import {createRequire} from "node:module";
 import path from "node:path";
+import {fileURLToPath} from "node:url";
 import {isDeepStrictEqual} from "node:util";
 import vm from "node:vm";
 import {build} from "esbuild";
@@ -23,7 +24,7 @@ import {bulk, cases, priorities, runCase} from "./react-microtasks-cases.mjs";
 // The report's raw observations are judged against that, and every verdict the probe gave is derived again here and must agree.
 
 const same = isDeepStrictEqual;
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+const root = fileURLToPath(new URL("..", import.meta.url));
 const requireSdk = createRequire(path.join(root, "package.json"));
 const sorted = values => [...values].sort();
 const squash = text => text.replace(/\s+/g, " ").replace(/\( /g, "(").replace(/ \)/g, ")").replace(/ \./g, ".").trim();

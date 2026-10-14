@@ -540,6 +540,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       catch (const std::exception &error) { owner.fail(error.what()); }
     }
   };
+  // Holds one of the stop sequence's flags (draining_for_stop, unmounting_roots) for a scope, and releases it however the scope ends: a throw from
+  // the code inside (js_errors->handle_fatal reporting) must not leave the flag set, or every later stop() would return at once.
+  struct FlagScope {
+    bool &flag;
+    explicit FlagScope(bool &flag) : flag(flag) { flag = true; }
+    ~FlagScope() { flag = false; }
+  };
   struct ChildRemovalScope {
     int &depth;
     explicit ChildRemovalScope(int &depth) : depth(depth) { ++depth; }
@@ -1485,13 +1492,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // The bound is the one every pump() has: Hermes drains until the queue is empty (it ignores the hint of drainMicrotasks(int); measured:
     // 200000 microtasks that queue the next one all ran in one call), so what the microtasks queue while they run completes in this same
     // checkpoint, and one that queues itself without end starves stop() as it starves a frame (slice F measures that against RN).
-    draining_for_stop = true;
     {
+      FlagScope draining(draining_for_stop);
       ExecutionScope execution(*this);
       try { runtime->drainMicrotasks(); }
       catch (const std::exception &error) { js_errors->handle_fatal(*runtime, error); }
     }
-    draining_for_stop = false;
     stopping = true;
     pointer_processor().setListenerInterestForGodot({});
     pointer_listener_query.reset();
@@ -1511,11 +1517,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     std::vector<std::pair<uint64_t, int>> host_ids;
     for (auto &[id, root] : roots) { ids.push_back(id); host_ids.emplace_back(root->host_id, id); }
     {
-      struct GateOpen {
-        bool &flag;
-        explicit GateOpen(bool &flag) : flag(flag) { flag = true; }
-        ~GateOpen() { flag = false; }
-      } unmounting(unmounting_roots);
+      FlagScope unmounting(unmounting_roots);
       for (int id : ids) {
         auto root = roots.find(id);
         if (root != roots.end()) finalize_unmount(id, root->second->component.empty());
