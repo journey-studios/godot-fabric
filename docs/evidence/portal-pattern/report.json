@@ -1,0 +1,605 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-portal-pattern",
+  "status": "verified-local-headless-retained-sabotages-and-regressions",
+  "executedAt": "2026-10-14",
+  "executionBaseCommit": "4e16cf03823d4f18e794f96a8744cd58a4c47910",
+  "implementationCommit": "3b0c318b7ef6fc9abba8f7d6985967facc67c59b",
+  "sourceState": "every executed source and screenshot pin below is the SHA-256 of the file in the working tree that ran; verify each against git show <implementationCommit>:<path> once the orchestrator commits and replaces PINXR",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless"
+  },
+  "nativeHostSha256": "0c17cd4f25d58d38b309dee1ecd985a873e6c6d132f06939922961ba8d42e160",
+  "hostSource": "rebuilt in this worktree from the sources of main (4e16cf0) and confirmed by a second cmake --build that built nothing: the slice changes no native code, so its control is the retained sabotages and not a previous host",
+  "commands": [
+    "npm run test:portal-pattern",
+    "node scripts/portal-pattern-sabotage.mjs",
+    "npm run example -- portal-pattern --headless",
+    "npm run example -- portal-pattern --capture",
+    "npm run test:app-registry",
+    "npm run test:application",
+    "npm run test:scroll-view",
+    "npm run test:contracts",
+    "npm run type-check",
+    "npm run check:static",
+    "npm run check:publication",
+    "npm run test:dashboard",
+    "node scripts/milestone-guards.mjs --check --base origin/main"
+  ],
+  "bundle": {
+    "path": "build/portal-pattern-probe.js",
+    "sha256": "4461af8a44f67413ba65167043b89ba21141c8bdcddc79eb652dd135d5df7f01"
+  },
+  "executedSources": {
+    "tests/portal-pattern-fixture.jsx": "c3dab86e73d61df191a9088c5d552e0d61e4a6d74c410a6320369e57273945e0",
+    "tests/portal-pattern-probe.gd": "8f34c77e7b5d16c9243c63978921426de08566e62921c9d708b1889bd5ab2388",
+    "tests/portal-pattern-native.test.mjs": "f4f638fd27e9a536d7491632c8adc08b8e4c9ae9f2bd31a5194e977caa52131f",
+    "tests/portal-pattern-oracle.mjs": "2d049b7a0a2d948ecb02334d1b5159d487a1d6919b87a8781d962ad31e1e08a3",
+    "tests/portal-pattern-sabotages.mjs": "a4188569518c86dd5da3bdcceeca2d3d3d9faba3bdfb53c0855c6b16a67bbbbd",
+    "scripts/portal-pattern-bundle.mjs": "63dbd849fe4573f80f1d297df3bf15c098ed6b86ac1f370f9481aa62b44dbe34",
+    "scripts/portal-pattern-sabotage.mjs": "e7b950536a5c767e685d8abc95347c2f5ad54ec82ded43cc0b6d0586c7c94037",
+    "scripts/native-probe-bundle.mjs": "f1326732fcc4d9c57d8c9905ef124101e2a54126507ad22e36b3aa8e7b086198",
+    "sdk/toolchain/platform-plugin.mjs": "37bb179a2aa2e757979cce8ec6ce3938022b427017f5555f3503d763d3c60a40",
+    "native/application_runtime.cpp": "26f92d8639eced736c73bda596b2632fc0b95f206b271c881e6915512562fab2",
+    "examples/portal-pattern/App.jsx": "f2aeeb6016a1a0b3738967c25ef9d6aa4f3bb5cd8d4accd6f6d34f46f4780c29",
+    "src/app-registry.js": "ccda584965514c4ccdfc3e413927ef514fc227742824f1183a5710c0efb974c8",
+    "src/render-application.jsx": "cc57317644bf2a2254b4e3bbb464dfefe682a0fdd34c5afb104cab8b1490db0e",
+    "src/react-native-platform.jsx": "f371fc9c3d8d8f19325871592d4e9535fb8f775b6b44b7e19b94af0246f77d77",
+    "src/scroll-view.jsx": "63c0483060edfaa84e4bbf35bf07ea3100fc16769d2ab8056b24efb9c9634ca9",
+    "src/components.jsx": "2f8f8404609c9f2fc5f1da40eb81a10ca01190f9c9aeb2316b095d3fd65ae331",
+    "examples/portal-pattern/scene.tscn": "05c62bbc6af8acc940257134ba37defd8aca1fb27b637290113a0ee9f66233f8",
+    "examples/portal-pattern/validation.gd": "344922dd90bfd09b98d82f45dd57b6b86c3edd756920889a1f12cbd0e08ae23c",
+    "examples/entry.jsx": "769015bf0b8a2ee8e695147c18058020e12b241ad75ec86992cb9ef0f6de183b",
+    "examples/catalog.json": "1cb896c8b2148d8125ea9fa11ec64bed4ed68e5785ca60461efc01c31d26024c"
+  },
+  "originalReactNativeSources": {
+    "Libraries/ReactNative/AppRegistryImpl.js": "9f58cfbd0c060422203c10080ed1b520b333a02207125fc5d9b7b315429942a4",
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "Libraries/Components/ScrollView/ScrollView.js": "2255279c0a1055c2b594a381e4817b1b9931fdb069272e63fff11086363e02cc",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "ReactCommon/react/renderer/components/view/ViewShadowNode.cpp": "ff016c3b7f5140f946429dab92bae18afd8f28975e8a5f2bb66db32db31edda3",
+    "ReactCommon/react/renderer/mounting/internal/sliceChildShadowNodeViewPairs.cpp": "46b0df5fcf2365fed23bf3677592dfc4faab5f26927562919bbaa53debfd5c79",
+    "Libraries/ReactNative/AppContainer-prod.js": "903202935c83a515ec3c70de813fbc65ba0891262a532c0faf63e5866a47700e",
+    "Libraries/ReactNative/renderApplication.js": "3d13a9004ebc75032aa3b694fe463d7c69c3a28b6817f1ead68f7e150b810814",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8"
+  },
+  "probe": {
+    "checks": 23,
+    "passed": 23,
+    "failed": 0,
+    "allCurrentAssertionsPassed": true,
+    "checkNames": [
+      "placement/The wrapper provider put one host View in the root, the last child of the root's own View, filling it and not clipping",
+      "placement/The host's Control and the root's ignore the mouse: pointerEvents box-none, so the GUI never stops a press on empty area",
+      "lifecycle/Closed, the host holds no Controls: a Portal draws nothing until it mounts",
+      "placement/The dropdown's Controls are the children of the root's host View, and of nothing in the ScrollView or the card",
+      "placement/The host and the portal's Controls in it come after every other Control of the root in tree order, so Godot draws them last",
+      "placement/The dropdown sits under the trigger with its right edge on the trigger's, the position the trigger measured with measureInWindow",
+      "clipping/The ScrollView's Control clips its contents, the clip the dropdown has to escape",
+      "clipping/The dropdown reaches past the ScrollView's clip rectangle and no ancestor of it clips any part of it",
+      "context/The trigger's Context does not reach the portal's content, which renders under the host's providers; a prop carries the value",
+      "lifecycle/The portal's content updates while it is open: the dropdown shows the row count as the state changes, and stays open",
+      "lifecycle/Choosing an item closes the dropdown: the portal's Controls leave the host and the row shows the choice",
+      "input/A press on a row outside the open dropdown reaches that row, leaves the dropdown open and does not reach the world",
+      "input/With the dropdown open, a press on the surface's empty area passes through the host to the world and reaches no View",
+      "input/A press on the dropdown's header, which has no handler, reaches neither the row beneath it nor the world: the dropdown is opaque",
+      "input/An item press, a real mouse press, reaches the item: it chooses Large and closes, and reaches neither the row below nor the world",
+      "input/Once the dropdown is closed, a press where it was reaches the row under that area",
+      "input/With the dropdown closed, a press on the surface's empty area passes through the box-none host to the world",
+      "roots/A second root has a host of its own, empty and at its own place, though a portal exists in the first",
+      "roots/A portal opened in one root is drawn by that root's host alone: each host holds exactly its own dropdown, which never appears in the other root",
+      "roots/State is per root: choosing in the second root changes its row alone, and the first root's dropdown stays open",
+      "lifecycle/Unmounting a root with an open portal removes its host and the portal's Controls with none left over, and the other root keeps its own",
+      "lifecycle/Stopping the application removes every host and every portal Control, with the Controls created and deleted in balance and no diagnostic",
+      "report/The portal pattern report is saved with any failure visible"
+    ],
+    "reportSha256": "0ad644944916c8846f55f923bb833ae10f01636b7d2c6864c9207fc698e6c229",
+    "logSha256": "16cc80bc8f4e4246a0a08bcf90a71a7fc35ad4ddbba9f9ddd28f1635f0217eea"
+  },
+  "oracle": {
+    "file": "tests/portal-pattern-oracle.mjs",
+    "independentOfProbe": true,
+    "sections": [
+      "report",
+      "layout",
+      "tree",
+      "clip",
+      "input",
+      "lifecycle",
+      "roots",
+      "context"
+    ],
+    "layoutDerivedFrom": "the example's LAYOUT numbers (the sizes it fixed) and Yoga's rules: a column stacks, margin and padding inset, an absolute child is placed from its parent's corner, a ScrollView clips",
+    "stackingContextRuleReadFrom": "node_modules/react-native/ReactCommon/react/renderer/components/view/ViewShadowNode.cpp",
+    "hoistingRuleReadFrom": "node_modules/react-native/ReactCommon/react/renderer/mounting/internal/sliceChildShadowNodeViewPairs.cpp",
+    "routingDerivedFrom": "the host's pointer rules: a View RN's hit test finds is RN's, pointerEvents box-none never finds itself, a View outside an ancestor's clip is not found",
+    "clicksReplayed": 12
+  },
+  "measurements": {
+    "surface": [
+      360,
+      440
+    ],
+    "offsets": {
+      "A": [
+        20,
+        20
+      ],
+      "B": [
+        420,
+        20
+      ]
+    },
+    "scrollViewportA": [
+      48,
+      84,
+      304,
+      180
+    ],
+    "dropdownA": [
+      180,
+      214,
+      160,
+      160
+    ],
+    "dropdownPastScrollBottomPx": 110,
+    "measureInWindowA": {
+      "host": [
+        20,
+        20
+      ],
+      "left": 160,
+      "top": 194,
+      "trigger": [
+        268,
+        178,
+        72,
+        32
+      ]
+    },
+    "clicks": [
+      {
+        "id": "A/pick-open",
+        "root": "A",
+        "intent": "pick",
+        "at": [
+          304,
+          194
+        ],
+        "worldPresses": 0,
+        "rowPresses": [],
+        "choices": [],
+        "open": true
+      },
+      {
+        "id": "A/row-0-while-open",
+        "root": "A",
+        "intent": "row:0",
+        "at": [
+          200,
+          106
+        ],
+        "worldPresses": 0,
+        "rowPresses": [
+          0
+        ],
+        "choices": [],
+        "open": true
+      },
+      {
+        "id": "A/world-while-open",
+        "root": "A",
+        "intent": "world",
+        "at": [
+          200,
+          410
+        ],
+        "worldPresses": 1,
+        "rowPresses": [
+          0
+        ],
+        "choices": [],
+        "open": true
+      },
+      {
+        "id": "A/header",
+        "root": "A",
+        "intent": "dropdown-body",
+        "at": [
+          300,
+          234
+        ],
+        "worldPresses": 1,
+        "rowPresses": [
+          0
+        ],
+        "choices": [],
+        "open": true
+      },
+      {
+        "id": "A/row-3-outside",
+        "root": "A",
+        "intent": "row:3",
+        "at": [
+          100,
+          238
+        ],
+        "worldPresses": 1,
+        "rowPresses": [
+          0,
+          3
+        ],
+        "choices": [],
+        "open": true
+      },
+      {
+        "id": "A/item-large",
+        "root": "A",
+        "intent": "item:Large",
+        "at": [
+          260,
+          354
+        ],
+        "worldPresses": 1,
+        "rowPresses": [
+          0,
+          3
+        ],
+        "choices": [
+          "Large"
+        ],
+        "open": false
+      },
+      {
+        "id": "A/row-3-under-closed",
+        "root": "A",
+        "intent": "row:3",
+        "at": [
+          220,
+          238
+        ],
+        "worldPresses": 1,
+        "rowPresses": [
+          0,
+          3,
+          3
+        ],
+        "choices": [
+          "Large"
+        ],
+        "open": false
+      },
+      {
+        "id": "A/world-closed",
+        "root": "A",
+        "intent": "world",
+        "at": [
+          200,
+          410
+        ],
+        "worldPresses": 2,
+        "rowPresses": [
+          0,
+          3,
+          3
+        ],
+        "choices": [
+          "Large"
+        ],
+        "open": false
+      },
+      {
+        "id": "A/pick-reopen",
+        "root": "A",
+        "intent": "pick",
+        "at": [
+          304,
+          194
+        ],
+        "worldPresses": 2,
+        "rowPresses": [
+          0,
+          3,
+          3
+        ],
+        "choices": [
+          "Large"
+        ],
+        "open": true
+      },
+      {
+        "id": "B/pick-open",
+        "root": "B",
+        "intent": "pick",
+        "at": [
+          704,
+          194
+        ],
+        "worldPresses": 2,
+        "rowPresses": [],
+        "choices": [],
+        "open": true
+      },
+      {
+        "id": "B/item-small",
+        "root": "B",
+        "intent": "item:Small",
+        "at": [
+          660,
+          274
+        ],
+        "worldPresses": 2,
+        "rowPresses": [],
+        "choices": [
+          "Small"
+        ],
+        "open": false
+      },
+      {
+        "id": "B/pick-reopen",
+        "root": "B",
+        "intent": "pick",
+        "at": [
+          704,
+          194
+        ],
+        "worldPresses": 2,
+        "rowPresses": [],
+        "choices": [
+          "Small"
+        ],
+        "open": true
+      }
+    ]
+  },
+  "controls": {
+    "kind": "retained sabotages of the example (no native change in this slice)",
+    "sabotages": {
+      "host-in-scroll": {
+        "file": "examples/portal-pattern/App.jsx",
+        "edits": [
+          {
+            "find": "        <PortalHost />\n",
+            "replace": ""
+          },
+          {
+            "find": "        <ScrollView testID=\"portal-scroll\" style={styles.scroll}>\n",
+            "replace": "        <ScrollView testID=\"portal-scroll\" style={styles.scroll}>\n          <PortalHost />\n"
+          }
+        ],
+        "sourceSha256": "93aa93a1ea0aadbfa8a90aa88ebf6ee81cbe74014658b3f568ef77a2934d5f12",
+        "runStatus": 0,
+        "probeFailures": 13,
+        "failedChecks": [
+          "placement/The host's Control and the root's ignore the mouse: pointerEvents box-none, so the GUI never stops a press on empty area",
+          "placement/The dropdown's Controls are the children of the root's host View, and of nothing in the ScrollView or the card",
+          "placement/The host and the portal's Controls in it come after every other Control of the root in tree order, so Godot draws them last",
+          "clipping/The dropdown reaches past the ScrollView's clip rectangle and no ancestor of it clips any part of it",
+          "context/The trigger's Context does not reach the portal's content, which renders under the host's providers; a prop carries the value",
+          "lifecycle/Choosing an item closes the dropdown: the portal's Controls leave the host and the row shows the choice",
+          "input/An item press, a real mouse press, reaches the item: it chooses Large and closes, and reaches neither the row below nor the world",
+          "input/Once the dropdown is closed, a press where it was reaches the row under that area",
+          "input/With the dropdown closed, a press on the surface's empty area passes through the box-none host to the world",
+          "roots/A second root has a host of its own, empty and at its own place, though a portal exists in the first",
+          "roots/A portal opened in one root is drawn by that root's host alone: each host holds exactly its own dropdown, which never appears in the other root",
+          "roots/State is per root: choosing in the second root changes its row alone, and the first root's dropdown stays open",
+          "lifecycle/Unmounting a root with an open portal removes its host and the portal's Controls with none left over, and the other root keeps its own"
+        ],
+        "oracleRejectedSections": [
+          "layout",
+          "tree",
+          "clip",
+          "input",
+          "lifecycle",
+          "roots",
+          "context"
+        ]
+      },
+      "host-blocks-world": {
+        "file": "examples/portal-pattern/App.jsx",
+        "edits": [
+          {
+            "find": " pointerEvents=\"box-none\" style={styles.host}>",
+            "replace": " style={styles.host}>"
+          }
+        ],
+        "sourceSha256": "995fe77a27cff8bbf45bea5dd170727de48c9c2aa3e92d66ddc780790b980feb",
+        "runStatus": 0,
+        "probeFailures": 17,
+        "failedChecks": [
+          "placement/The host's Control and the root's ignore the mouse: pointerEvents box-none, so the GUI never stops a press on empty area",
+          "placement/The dropdown's Controls are the children of the root's host View, and of nothing in the ScrollView or the card",
+          "placement/The host and the portal's Controls in it come after every other Control of the root in tree order, so Godot draws them last",
+          "placement/The dropdown sits under the trigger with its right edge on the trigger's, the position the trigger measured with measureInWindow",
+          "clipping/The dropdown reaches past the ScrollView's clip rectangle and no ancestor of it clips any part of it",
+          "context/The trigger's Context does not reach the portal's content, which renders under the host's providers; a prop carries the value",
+          "lifecycle/The portal's content updates while it is open: the dropdown shows the row count as the state changes, and stays open",
+          "lifecycle/Choosing an item closes the dropdown: the portal's Controls leave the host and the row shows the choice",
+          "input/A press on a row outside the open dropdown reaches that row, leaves the dropdown open and does not reach the world",
+          "input/With the dropdown open, a press on the surface's empty area passes through the host to the world and reaches no View",
+          "input/A press on the dropdown's header, which has no handler, reaches neither the row beneath it nor the world: the dropdown is opaque",
+          "input/An item press, a real mouse press, reaches the item: it chooses Large and closes, and reaches neither the row below nor the world",
+          "input/Once the dropdown is closed, a press where it was reaches the row under that area",
+          "input/With the dropdown closed, a press on the surface's empty area passes through the box-none host to the world",
+          "roots/A portal opened in one root is drawn by that root's host alone: each host holds exactly its own dropdown, which never appears in the other root",
+          "roots/State is per root: choosing in the second root changes its row alone, and the first root's dropdown stays open",
+          "lifecycle/Unmounting a root with an open portal removes its host and the portal's Controls with none left over, and the other root keeps its own"
+        ],
+        "oracleRejectedSections": [
+          "layout",
+          "tree",
+          "clip",
+          "input",
+          "lifecycle",
+          "roots",
+          "context"
+        ]
+      },
+      "provider-not-installed": {
+        "file": "examples/portal-pattern/App.jsx",
+        "edits": [
+          {
+            "find": "AppRegistry.setWrapperComponentProvider(() => PortalProvider);\n",
+            "replace": "void PortalProvider;\n"
+          }
+        ],
+        "sourceSha256": "b7aa87172533f0939f99a79fc7cdbcd279c0955095a24eb136c42dda78593d8f",
+        "runStatus": 0,
+        "probeFailures": 20,
+        "failedChecks": [
+          "placement/The wrapper provider put one host View in the root, the last child of the root's own View, filling it and not clipping",
+          "placement/The host's Control and the root's ignore the mouse: pointerEvents box-none, so the GUI never stops a press on empty area",
+          "lifecycle/Closed, the host holds no Controls: a Portal draws nothing until it mounts",
+          "placement/The dropdown's Controls are the children of the root's host View, and of nothing in the ScrollView or the card",
+          "placement/The host and the portal's Controls in it come after every other Control of the root in tree order, so Godot draws them last",
+          "placement/The dropdown sits under the trigger with its right edge on the trigger's, the position the trigger measured with measureInWindow",
+          "clipping/The dropdown reaches past the ScrollView's clip rectangle and no ancestor of it clips any part of it",
+          "context/The trigger's Context does not reach the portal's content, which renders under the host's providers; a prop carries the value",
+          "lifecycle/The portal's content updates while it is open: the dropdown shows the row count as the state changes, and stays open",
+          "lifecycle/Choosing an item closes the dropdown: the portal's Controls leave the host and the row shows the choice",
+          "input/A press on a row outside the open dropdown reaches that row, leaves the dropdown open and does not reach the world",
+          "input/With the dropdown open, a press on the surface's empty area passes through the host to the world and reaches no View",
+          "input/A press on the dropdown's header, which has no handler, reaches neither the row beneath it nor the world: the dropdown is opaque",
+          "input/An item press, a real mouse press, reaches the item: it chooses Large and closes, and reaches neither the row below nor the world",
+          "input/Once the dropdown is closed, a press where it was reaches the row under that area",
+          "input/With the dropdown closed, a press on the surface's empty area passes through the box-none host to the world",
+          "roots/A second root has a host of its own, empty and at its own place, though a portal exists in the first",
+          "roots/A portal opened in one root is drawn by that root's host alone: each host holds exactly its own dropdown, which never appears in the other root",
+          "roots/State is per root: choosing in the second root changes its row alone, and the first root's dropdown stays open",
+          "lifecycle/Unmounting a root with an open portal removes its host and the portal's Controls with none left over, and the other root keeps its own"
+        ],
+        "oracleRejectedSections": [
+          "layout",
+          "tree",
+          "clip",
+          "input",
+          "lifecycle",
+          "roots",
+          "context"
+        ]
+      },
+      "portal-leaks": {
+        "file": "examples/portal-pattern/App.jsx",
+        "edits": [
+          {
+            "find": "  useEffect(() => () => api?.remove(key), [api, key]);\n",
+            "replace": "  useEffect(() => undefined, [api, key]);\n"
+          }
+        ],
+        "sourceSha256": "fbeb37fadbc10c47c125c92262cfe49b797512ce08a4b441dfe576cda8363e5b",
+        "runStatus": 0,
+        "probeFailures": 6,
+        "failedChecks": [
+          "lifecycle/Choosing an item closes the dropdown: the portal's Controls leave the host and the row shows the choice",
+          "input/An item press, a real mouse press, reaches the item: it chooses Large and closes, and reaches neither the row below nor the world",
+          "input/Once the dropdown is closed, a press where it was reaches the row under that area",
+          "input/With the dropdown closed, a press on the surface's empty area passes through the box-none host to the world",
+          "roots/A portal opened in one root is drawn by that root's host alone: each host holds exactly its own dropdown, which never appears in the other root",
+          "roots/State is per root: choosing in the second root changes its row alone, and the first root's dropdown stays open"
+        ],
+        "oracleRejectedSections": [
+          "tree",
+          "input",
+          "lifecycle",
+          "roots"
+        ]
+      },
+      "host-flattened": {
+        "file": "examples/portal-pattern/App.jsx",
+        "edits": [
+          {
+            "find": ", zIndex: HOST_Z_INDEX }",
+            "replace": " }"
+          }
+        ],
+        "sourceSha256": "32416b356343b583c8315863d9b54c301c48b9150e0875da7288b9b8c0f4901c",
+        "runStatus": 0,
+        "probeFailures": 4,
+        "failedChecks": [
+          "placement/The dropdown's Controls are the children of the root's host View, and of nothing in the ScrollView or the card",
+          "placement/The host and the portal's Controls in it come after every other Control of the root in tree order, so Godot draws them last",
+          "roots/A portal opened in one root is drawn by that root's host alone: each host holds exactly its own dropdown, which never appears in the other root",
+          "roots/State is per root: choosing in the second root changes its row alone, and the first root's dropdown stays open"
+        ],
+        "oracleRejectedSections": [
+          "tree"
+        ]
+      }
+    },
+    "sourcesRestoredByteForByte": true,
+    "genuineSourceSha256": {
+      "examples/portal-pattern/App.jsx": "f2aeeb6016a1a0b3738967c25ef9d6aa4f3bb5cd8d4accd6f6d34f46f4780c29"
+    },
+    "genuineLaneLast": true,
+    "table": "tests/portal-pattern-sabotages.mjs",
+    "runner": "scripts/portal-pattern-sabotage.mjs"
+  },
+  "screenshots": {
+    "docs/evidence/portal-pattern/portal-pattern-closed.png": {
+      "sha256": "bfaff061cec03b6acaf41767a8151ca2c17de91e3ca64ac5785989dfcb20a5c4",
+      "width": 900,
+      "height": 680,
+      "caption": "The list with the dropdown closed: the ScrollView of rows, and the world behind the surface with no press heard",
+      "capturedBy": "npm run example -- portal-pattern --capture (native renderer, macOS arm64)"
+    },
+    "docs/evidence/portal-pattern/portal-pattern-open.png": {
+      "sha256": "c097255160ede0f7699f4758f1afe52e5c68d45bea470babb2d1dc0f14bd81d6",
+      "width": 900,
+      "height": 680,
+      "caption": "The dropdown open over the ScrollView's edge: drawn by the host above the ScrollView and the card, not clipped by either",
+      "capturedBy": "npm run example -- portal-pattern --capture (native renderer, macOS arm64)"
+    },
+    "docs/evidence/portal-pattern/portal-pattern-chosen.png": {
+      "sha256": "ed851847d454bfd0d3ab69ec488f035d25e20b29cb4aa072ee2f7484aa357839",
+      "width": 900,
+      "height": 680,
+      "caption": "After choosing Large: the dropdown closed, the row updated, and the marker where a press on the empty area went to the world",
+      "capturedBy": "npm run example -- portal-pattern --capture (native renderer, macOS arm64)"
+    }
+  },
+  "example": {
+    "id": "portal-pattern",
+    "headlessChecks": 14,
+    "nativeRendererChecks": 18,
+    "capture": "npm run example -- portal-pattern --capture"
+  },
+  "catalog": "no entry added to docs/compatibility/fixture-catalog-0.87.1.json: the pattern is an example and not an RN API row; the rows the suite touches (AppRegistry.setWrapperComponentProvider, in test:app-registry's checks) are claimed by #168 and are not claimed twice",
+  "regressions": {
+    "npm run test:app-registry": "1/1",
+    "npm run test:application": "4/4",
+    "npm run test:scroll-view": "5/5",
+    "npm run test:contracts": "788 node tests (787 pass, 1 skipped for the unset macOS export template), 99 parity tests, 44 dashboard tests and 37 Python tests, 0 failures; run once before the documentation and the dashboard entry were added, then the tests that read them were rerun: scope-0.5, publication-scan, godot-fabric, examples, sabotage-anchors, milestone-guards and control-contracts 117/117, test:parity 99/99, test:dashboard 44/44",
+    "npm run type-check": "passes",
+    "npm run check:static": "no issues",
+    "npm run check:publication": "passed (2525 files, no failures)",
+    "npm run test:dashboard": "44/44",
+    "node scripts/milestone-guards.mjs --check --base origin/main": "passed (X9 not-applicable, X10 clean)"
+  },
+  "scope": {
+    "publicReactNativeImport": true,
+    "wrapperComponentProvider": true,
+    "actualFabricSurfaces": true,
+    "oneApplication": true,
+    "realMouseEvents": true,
+    "worldBehindSurface": true,
+    "createPortalInSdk": false,
+    "portalLibraryCertified": false,
+    "overlappingSurfaceInputCertified": false,
+    "touchCertified": false,
+    "sdkHelperDecided": false
+  },
+  "limits": [
+    "the pattern is inside one root and one surface: an overlay shared by several surfaces needs a second surface or a host per root, and the host cannot draw outside its surface's rectangle",
+    "the Context around the trigger does not reach the portal's content (certified as the known limit); events bubble through the host's subtree and the suite does not assert bubbling",
+    "no dismissal on an outside press: the host is box-none so the press reaches what is under it",
+    "input between overlapping surfaces (V2-D10) is not certified here: it is the next GF-07 slice",
+    "mouse input only: touch, gamepad and keyboard focus are not exercised",
+    "whether the pattern is also published as an SDK helper was not decided; a portal library belongs to GF-27",
+    "hosted CI has not run: the suite is registered in native-suites-runtime (native-portal-pattern artifact), which runs on workflow_dispatch"
+  ]
+}
