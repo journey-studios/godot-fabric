@@ -113,7 +113,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Import direto com cache vazio ainda reproduz o crash upstream (godotengine/godot#111645, aberta; correção #123658 não mesclada). Por decisão de 2026-10-13, o contrato fecha com uma fronteira executável: o 4.7.2 oficial precisa travar sem a contenção e passar com ela, e o controle falha quando um Godot futuro corrigir o bug. O controle passa local (5 de 5 e 20 de 20) e no run hospedado 38403991586 (boundary-holds, 5 de 5 e 5 de 5), que fecha o checkpoint contract. Parity e targets seguem abertos, e a contenção sozinha não fecha o item.",
+      "note": "Import direto com cache vazio ainda reproduz o crash upstream (godotengine/godot#111645, aberta; correção #123658 não mesclada). Por decisão de 2026-10-13, o contrato fecha com uma fronteira executável: o 4.7.2 oficial precisa travar sem a contenção e passar com ela, e o controle falha quando um Godot futuro corrigir o bug. O controle passa local (5 de 5 e 20 de 20) e no run hospedado 38403991586 (boundary-holds, 5 de 5 e 5 de 5), que fecha o checkpoint contract. Parity e targets seguem abertos, e a contenção sozinha não fecha o item. Em 2026-10-14 as faixas de parity e targets foram preparadas e aguardam o run hospedado, então nenhum checkpoint muda ainda: test:cold com no mínimo três instalações novas (projeto descartável, cache de recursos vazio e HOME novo), cada passo uma vez e sem nova tentativa; test:cold:negative com compatibility_minimum 4.99.0, que exige a recusa nas palavras do próprio Godot, processo sem crash, nenhum resíduo dentro ou fora do fixture em comparação com um controle positivo e o início seguinte limpo; parity:godot a partir de um projeto frio, com o hash do diretório do fixture no relatório que a comparação com as referências RN passa a exigir. O alvo é só macOS arm64, com compatibility_minimum 4.7.2; Linux, Windows, Android e iOS ficam como não qualificados aqui (GF-32 a GF-35).",
       "blocker": "",
       "checkpoints": [
         {
@@ -4930,6 +4930,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-02-startup-parity-66c2714",
+      "at": "2026-10-14T12:00:00.000Z",
+      "taskIds": [
+        "GF-02"
+      ],
+      "message": "GF-02, faixas de parity e targets preparadas, sem execução hospedada ainda (nenhum checkpoint muda): test:cold passa a fazer no mínimo três instalações novas, cada uma num projeto descartável com cache de recursos vazio e HOME novo, e cada passo roda uma vez; o relatório é julgado de novo pelos dados (contagem, plano exato e uma tentativa por passo), uma segunda tentativa de um passo é recusada antes de rodar e a sabotagem que repete uma instalação que falhou é rejeitada pela regra de não repetir. test:cold:negative inicia o Godot 4.7.2 oficial com compatibility_minimum 4.99.0 e exige a recusa nas palavras do próprio motor («GDExtension only compatible with Godot version 4.99.0 or later: res://fabric.gdextension, but your Godot version is 4.7.2»), um processo que termina sem crash, nenhum resíduo dentro ou fora do fixture em comparação com um controle positivo e o início seguinte, com o metadado correto, limpo; com o metadado intacto as mesmas asserções falham. parity:godot roda o fixture compartilhado num projeto frio, e o relatório traz o hash do diretório do fixture ao lado dos hashes de fixture, casos e runtime; a comparação com as referências RN iOS e Android recusa um relatório do Godot que não seja de projeto frio. O alvo é só macOS arm64, com compatibility_minimum 4.7.2; Linux, Windows, Android e iOS ficam como não qualificados aqui (GF-32 a GF-35). Local: 3 instalações limpas (36 checagens React e 55 de tipografia cada), negativo aprovado (3 mensagens de recusa, saída 0, mesmo conjunto de arquivos de um import limpo) e 13 casos de parity a partir de um projeto frio. Achado: no projeto completo o import sem a preparação não travou em 11 de 11 execuções locais, então --without-startup não é controle e a fronteira (test:cold:boundary) segue sendo o controle executável. Parity e targets fecham depois do run hospedado; nenhum peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/66c27148c1e178773efb8b3f0ec8b75d800b14e0/docs/evidence/cold-start.md#repeated-first-installs"
+    },
     {
       "id": "cpu-time-instrument-flake-5f30b4f",
       "at": "2026-10-13T23:30:00.000Z",
