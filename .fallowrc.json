@@ -64,6 +64,8 @@
     "tests/native-animated-fixture.jsx",
     "tests/frame-clock-fixture.jsx",
     "tests/performance-fixture.jsx",
+    "tests/js-globals-fixture.jsx",
+    "tests/js-globals-host.js",
     "tests/frontier-baseline-fixture.jsx",
     "tests/text-layout-fixture.jsx",
     "tests/text-original-fixture.jsx",
@@ -94,6 +96,7 @@
   "includeEntryExports": true,
   "ignoreDependencies": [
     "scheduler",
+    "@react-native/js-polyfills",
     "@godot-fabric/adapter-fixture"
   ],
   "ignoreExports": [

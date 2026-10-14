@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { platformPlugin } from "../sdk/toolchain/platform-plugin.mjs";
+import { metroPolyfills } from "../sdk/toolchain/metro-polyfills.mjs";
 import { createAssetPipeline, publishAssets } from "../sdk/toolchain/asset-plugin.mjs";
 import { godotExtensions } from "./platform-resolution.mjs";
 import {
@@ -25,6 +26,7 @@ const result = await build({
   platform: "neutral",
   format: "iife",
   define: { "process.env.NODE_ENV": '"production"', __DEV__: "false" },
+  inject: metroPolyfills((id) => requireSdk.resolve(id)),
   mainFields: ["main"],
   resolveExtensions: godotExtensions,
   metafile: true,
