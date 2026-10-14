@@ -1380,6 +1380,18 @@ Android references (13 cases). GF-02 stays In progress: `parity` is open until G
 [evidence record](docs/evidence/cold-start.md#repeated-first-installs) and its
 [targets](docs/evidence/cold-start.md#targets).
 
+**Progress.** GF-03, slice A of the `contract` checkpoint (code at `8c083cb`): every name of RN's 1.0 root that the facade exports
+now has a public type, and the independent TSX consumer imports and uses all 60. Of the 84 value names in the 1.0 scope, 57 are
+exported, 3 are placeholders that throw where they render (`KeyboardAvoidingView`, `RefreshControl` and `StatusBar`, typed as
+components with RN's props and no statics) and 24 are missing; the 8 that had no declaration (`TouchableWithoutFeedback`,
+`TouchableHighlight`, `PanResponder`, `PixelRatio`, `I18nManager` and the three placeholders) now have one. A census,
+`tests/root-names.test.mjs` in `test:contracts`, fails on an exported name without a type, on a type for a name the facade does not
+export, on a name the consumer drops, and when the pinned list of the 24 missing names changes; it classifies the facade with the rule
+`parity:status` counts with, now `scripts/parity-facade.mjs`, and that output is byte for byte the same. The
+[evidence](docs/evidence/gf-03-root-names/README.md) has the numbers. The facade, the 24 missing names and the differential
+certification (`parity`) do not change: `contract` stays open for those names and for D20, and no checkpoint, weight or denominator
+moves.
+
 ### Focus command boundary complement (2026-10-04)
 
 The [original-dispatch guard fixture](docs/evidence/focus/commands.json) passes

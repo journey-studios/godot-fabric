@@ -7,6 +7,7 @@ import { Pressable, useWindowDimensions, type PressableProps } from "react-nativ
 import { Dimensions, Platform, StyleSheet, type EmitterSubscription, type ScaledSize } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
+import { I18nManager, KeyboardAvoidingView, PanResponder, PixelRatio, RefreshControl, StatusBar, TouchableHighlight, TouchableWithoutFeedback, codegenNativeCommands, codegenNativeComponent, type HostComponent, type TouchableHighlightProps, type ViewProps } from "react-native";
 import type { AppConfig, ComponentProvider, ComponentProviderInstrumentationHook, Registry, RootTag, RootViewStyleProvider, Runnable, Runnables, TaskProvider, WrapperComponentProvider } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
@@ -578,3 +579,63 @@ const thinLine: number = StyleSheet.hairlineWidth;
 // @ts-expect-error a style outside the Godot subset
 const shadowSheet = StyleSheet.create({ shadow: { shadowColor: "#000000" } });
 void Metrics; void sheetView; void composedStyle; void flatStyle; void thinLine; void shadowSheet;
+
+// The rest of RN's 1.0 root: every name the facade exports has a type here, and tests/root-names.test.mjs keeps it so.
+// TouchableWithoutFeedback is RN's own type; TouchableHighlight takes RN's props with the Godot View subset as its style.
+const bareTouch = <TouchableWithoutFeedback onPress={event => { void event.nativeEvent.pageX; }} onLongPress={() => {}} delayLongPress={300}
+  disabled={false} testID="bare"><View /></TouchableWithoutFeedback>;
+const highlightProps: TouchableHighlightProps = {underlayColor: "#dddddd", activeOpacity: 0.6, onShowUnderlay: () => {}, onHideUnderlay: () => {},
+  onPress: () => {}, onPressIn: () => {}, onPressOut: () => {}, disabled: false, testID: "highlight", style: {width: 100, height: 40, opacity: 0.9}};
+const originalHighlightProps: import("../../node_modules/react-native/types_generated/index").TouchableHighlightProps = highlightProps;
+const highlight = <TouchableHighlight {...highlightProps} ref={instance => { if (instance) instance.measure(() => {}); }}><View /></TouchableHighlight>;
+// @ts-expect-error the style is the Godot View subset
+const highlightShadow = <TouchableHighlight style={{shadowColor: "#000000"}}><View /></TouchableHighlight>;
+// @ts-expect-error the delays are numbers
+const slowTouch = <TouchableWithoutFeedback delayPressIn="100"><View /></TouchableWithoutFeedback>;
+void bareTouch; void originalHighlightProps; void highlight; void highlightShadow; void slowTouch;
+// PanResponder is RN's original: the gesture state arrives with each responder event, and the handlers go on a View.
+const panResponder = PanResponder.create({
+  onStartShouldSetPanResponder: () => true,
+  onMoveShouldSetPanResponder: (_event, gesture) => Math.abs(gesture.dx) > 4,
+  onPanResponderGrant: (event, gesture) => { void event.nativeEvent.pageX; void gesture.x0; },
+  onPanResponderMove: (_event, gesture) => { const dx: number = gesture.dx; const vy: number = gesture.vy; void dx; void vy; },
+  onPanResponderRelease: (_event, gesture) => { const touches: number = gesture.numberActiveTouches; void touches; },
+});
+const panView = <View {...panResponder.panHandlers} testID="pan" />;
+// @ts-expect-error a gesture handler receives the responder event first, not a distance
+PanResponder.create({onPanResponderMove: (dx: number) => { void dx; }});
+void panView;
+// PixelRatio is RN's original; I18nManager declares isRTL only, which is false on this host.
+const pixelRatio: number = PixelRatio.get();
+const pixelFontScale: number = PixelRatio.getFontScale();
+const layoutPixels: number = PixelRatio.getPixelSizeForLayoutSize(24);
+const crispSize: number = PixelRatio.roundToNearestPixel(8.4);
+// @ts-expect-error a layout size is a number
+PixelRatio.roundToNearestPixel("8");
+const rightToLeft: boolean = I18nManager.isRTL;
+const upstreamDirection: Pick<typeof import("../../node_modules/react-native/types_generated/index").I18nManager, "isRTL"> = I18nManager;
+// @ts-expect-error forceRTL is not implemented: the text of this host runs left to right
+I18nManager.forceRTL(true);
+void pixelRatio; void pixelFontScale; void layoutPixels; void crispSize; void rightToLeft; void upstreamDirection;
+// KeyboardAvoidingView, RefreshControl and StatusBar are placeholders with RN's types: code written for RN compiles, and the element
+// throws where it renders, which nothing here does.
+const avoidingKeyboard = <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={8}><View /></KeyboardAvoidingView>;
+const refreshControl = <RefreshControl refreshing={false} onRefresh={() => {}} tintColor="#ffffff" />;
+const statusBar = <StatusBar barStyle="dark-content" hidden={false} animated />;
+// @ts-expect-error RN's RefreshControl requires refreshing
+const incompleteRefresh = <RefreshControl onRefresh={() => {}} />;
+// @ts-expect-error RN's barStyle is default, auto, light-content or dark-content
+const wrongBarStyle = <StatusBar barStyle="dark" />;
+// RN's StatusBar statics do not exist on the placeholder, so they are not declared: a call fails here, not with a TypeError at run time.
+// RN declares no statics on KeyboardAvoidingView or RefreshControl, so there is none to refuse for them.
+// @ts-expect-error StatusBar.setBarStyle is not declared until the owner implements StatusBar
+StatusBar.setBarStyle("light-content");
+void avoidingKeyboard; void refreshControl; void statusBar; void incompleteRefresh; void wrongBarStyle;
+// The codegen helpers are RN's own: a native component from its props type, and its commands from the names it supports.
+interface BadgeProps extends ViewProps { label?: string }
+interface BadgeCommands { focus(viewRef: ViewInstance): void }
+const BadgeComponent: HostComponent<BadgeProps> = codegenNativeComponent<BadgeProps>("CodegenBadge");
+const badgeCommands: BadgeCommands = codegenNativeCommands<BadgeCommands>({supportedCommands: ["focus"]});
+// @ts-expect-error a command the spec does not declare cannot be listed
+codegenNativeCommands<BadgeCommands>({supportedCommands: ["blur"]});
+void BadgeComponent; void badgeCommands;

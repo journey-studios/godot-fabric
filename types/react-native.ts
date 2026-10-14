@@ -347,6 +347,29 @@ export type TouchableNativeFeedbackProps = Pick<RN.TouchableNativeFeedbackProps,
   "pressRetentionOffset" | "testID" | "nativeID" | "onLayout" | "children">;
 export declare const TouchableNativeFeedback: React.ComponentType<TouchableNativeFeedbackProps> &
   Pick<typeof RN.TouchableNativeFeedback, "SelectableBackground" | "SelectableBackgroundBorderless" | "Ripple" | "canUseNativeForeground">;
+/** RN's original TouchableWithoutFeedback.js: Pressability's press props around the single child RN clones. The facade passes
+ * RN's props through unchanged, so the type is RN's own. */
+export declare const TouchableWithoutFeedback: typeof RN.TouchableWithoutFeedback;
+/** RN's original TouchableHighlight.js: Pressability's press props, and the underlay and the child's opacity RN draws while it is
+ * pressed. The style is the Godot View subset (a style the host cannot paint fails where the TouchableHighlight renders); the
+ * other props are RN's own. */
+export type TouchableHighlightProps = Omit<RN.TouchableHighlightProps, "style"> & { style?: StyleProp<ViewStyle> };
+export declare const TouchableHighlight: React.ComponentType<TouchableHighlightProps & React.RefAttributes<NativeInstance>>;
+/** RN's original PanResponder: the gesture state from the original responder events and their touch history, multi-touch
+ * centroids included. */
+export declare const PanResponder: typeof RN.PanResponder;
+/** A placeholder, owned by GF-12 (TextInput and keyboard): a component with RN's props, so that code written for RN compiles, and it
+ * throws `Godot platform does not implement KeyboardAvoidingView` where it renders, until GF-12 implements it. RN declares no
+ * statics on it. */
+export declare const KeyboardAvoidingView: React.ComponentType<RN.KeyboardAvoidingViewProps>;
+/** A placeholder, owned by GF-14 (Scroll and refresh): a component with RN's props, so that code written for RN compiles, and it
+ * throws `Godot platform does not implement RefreshControl` where it renders, until GF-14 implements it. RN declares no statics
+ * on it. */
+export declare const RefreshControl: React.ComponentType<RN.RefreshControlProps>;
+/** A placeholder, owned by GF-24 (OS-specific public contracts): a component with RN's props, so that code written for RN compiles,
+ * and it throws `Godot platform does not implement StatusBar` where it renders, until GF-24 implements it. RN's statics
+ * (StatusBar.setBarStyle, setHidden, currentHeight and the stack entries) are not declared until GF-24 implements them. */
+export declare const StatusBar: React.ComponentType<RN.StatusBarProps>;
 /** RN's original Pressable.js over the Godot View: Pressability's press props, and a style that may be a function of
  * `pressed`. It takes the props of the Godot View, with its own press props; the hover handlers, the Android ripple and
  * sound, `testOnly_pressed`, `focusable` and `tabIndex` are not declared (the hover handlers and `testOnly_pressed` fail
@@ -369,6 +392,11 @@ export declare const Dimensions: {
 };
 /** React hook over the window's metrics: width, height, scale and fontScale (always 1). */
 export declare function useWindowDimensions(): ScaledSize;
+/** RN's original PixelRatio over the scale and the font scale that Dimensions reports (the font scale is always 1). */
+export declare const PixelRatio: typeof RN.PixelRatio;
+/** The text of this host runs left to right: `isRTL` is false. getConstants, allowRTL, forceRTL, swapLeftAndRightInRTL and
+ * doLeftAndRightSwapInRTL are not implemented and not declared. */
+export declare const I18nManager: Pick<typeof RN.I18nManager, "isRTL">;
 /** The platform object: `OS` is "godot", which is neither "ios" nor "android", so `select` picks the `godot` key, then
  * `native`, then `default`; the `ios` and `android` keys are never selected. `constants` has the RN version only: Version,
  * isTV and the rest of RN's Platform are absent. */
