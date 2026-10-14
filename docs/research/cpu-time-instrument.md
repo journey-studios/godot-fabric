@@ -101,8 +101,13 @@ window, one canvas item that costs the renderer something. The schedule is a lis
   within 1%.
 - **CPU time and not the interval.** The idle total is a small part of the idle interval: its median is at most 25% and its 95th percentile at most 50% of the idle interval reference, the median of the
   half-sums of consecutive pairs of the first 600 idle intervals (the baseline's `idleReference`, imported from `tests/frontier-baseline-oracle.mjs`). With the vsync on at 120 Hz that reference is
-  near 8.3 ms and the idle CPU time is a hundredth of it. And in each load block the process term takes at least 8 values and repeats at most 10 frames in a row, which a clock does and a monitor
-  refreshed once a second does not.
+  near 8.3 ms and the idle CPU time is a hundredth of it.
+- **Inclusion (the process term of a load frame contains its load).** In every frame of a load block, the settle frames included, the process term is at least as long as the busy loop that frame ran, as
+  `Time.get_ticks_usec` measured it: `round(process_ms * 1000) >= burnUsec`. The loop runs between the stamp that opens the process step and the one that closes it, so a clock reading of the step contains it, to the
+  microsecond, on any runner and at any pace. A monitor the engine refreshes once a second does not: every block starts with the value of the second before, taken before the load began. This replaced, on
+  2026-10-13, a rule that counted values (at least 8, at most 10 equal in a row): the loop is exactly T microseconds in about 99% of the frames and the rest of the step is a few microseconds on a clock that ticks in
+  microseconds, so on a quiet runner most of a block is one value (a hosted run had 118 of 200 frames at 10.001 ms, 12 in a row) and a count of values depends on the runner's noise. How much the term repeats is still
+  recorded (`processTermVariation`) and no longer judged; the hosted runs that decided it are in [the evidence](../evidence/cpu-time-instrument/README.md#a-regra-do-termo-de-processo-corrigida-2026-10-13).
 - **The arithmetic.** The terms of every frame are recomputed from the raw stamps and readings, and the oracle refuses a term that is not what the stamps give (the instrument reads its clock at the
   hooks and adds as above); a scheduled frame without a sample is refused.
 - **The engine's own number (headless).** `TIME_PROCESS` counts from before the process step to after the draw, so between two of its changes it is never under the instrument's largest process term of
@@ -160,8 +165,8 @@ file counts as not rejected. Do not run another suite in the worktree meanwhile.
 | Variant | What it breaks | Probe | Oracle's first reason |
 | --- | --- | --- | --- |
 | `reads-interval` | the process term is the interval between frames | the four accuracy rules and the CPU rule | the idle total is a small part of the idle interval: the instrument reads CPU time and not the interval |
-| `load-outside-frame` | the busy loop runs from a `process_frame` handler connected before the instrument's, so it ends before the clock starts | the four accuracy rules and the rule that the term changes from frame to frame | the median total minus the idle median is within 10% of the 2 ms load: it read about zero |
-| `reads-monitor` | the process term is `Performance.TIME_PROCESS` | the four accuracy rules, the CPU rule and the rule that the term changes from frame to frame | the idle total is a small part of the idle interval (a second's largest idle frame) |
+| `load-outside-frame` | the busy loop runs from a `process_frame` handler connected before the instrument's, so it ends before the clock starts | the four accuracy rules and the inclusion rule | the median total minus the idle median is within 10% of the 2 ms load: it read about zero |
+| `reads-monitor` | the process term is `Performance.TIME_PROCESS` | the four accuracy rules, the CPU rule and the inclusion rule | the idle total is a small part of the idle interval (a second's largest idle frame) |
 
 The oracle also names, for each variant, every rule that it breaks (the load outside the frame is also the engine's, and not the instrument's: the cross-check puts the engine's number about 10 ms over it). The slice has no previous-host control because it changes no C++ and its subject, the instrument, runs without the host.
 

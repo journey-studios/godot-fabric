@@ -13,8 +13,10 @@ merging, and reads three more kinds of contract from RN's JavaScript with the sa
 TypeScript parser. The [generated inventory](contracts-0.87.1.json) (format 2)
 contains stable IDs, signatures, owning types, a `derivation` block that records
 how the JavaScript-derived rows were found and what they leave out, and hashes of
-every RN source file it read (the declarations and the 636 JavaScript files under
-`Libraries/` and `src/`).
+every RN source file it read: the declarations of `react-native` (paths inside the package) and of the
+`@react-native/*` packages it uses (package-qualified, such as
+`@react-native/virtualized-lists/types_generated/index.d.ts`, 11 files), and the 636 JavaScript files under
+`Libraries/` and `src/`.
 `npm run parity:inventory -- --check` rejects drift without rewriting that file,
 and a test regenerates it twice and compares the bytes with the checked-in file.
 This check runs in the normal contract gate.
@@ -26,14 +28,31 @@ This check runs in the normal contract gate.
 | Props | 1,934 |
 | Events | 1,165 |
 | Styles | 405 |
-| Public instance/ref members | 1,027 |
-| API members | 342 |
-| Other type members | 2,556 |
+| Public instance/ref members | 793 |
+| API members | 309 |
+| Other type members | 1,016 |
 | Explicit RN global values / types / members | 32 / 54 / 265 |
 | Runtime globals RN's `InitializeCore` chain installs | 72 |
 | Host globals RN's JS reads and the host must provide | 42 |
 | Native commands (`codegenNativeCommands`) | 27 |
-| Total | 8,254 |
+| Total | 6,447 |
+
+A member is a row only when RN's own sources declare it: the `react-native` package and the
+`@react-native/*` packages it splits off (the virtualized lists, whose declarations leave `source`
+empty). The checker also reaches the apparent members of a string-literal union (the 52 of
+`String.prototype` for each of 29 types), what a class instance inherits from `Object.prototype` and
+`React.Component`, and the statics of React's classes. None is an RN contract, so the generator does not
+emit them (the first inventory carried 1,807 such rows: 1,540 type members, 234 instance members and
+33 API members). Four of the API members were never marked `out` by the contract map: `Consumer` and
+`Provider` of `RootTagContext` (`api-member:RootTagContext.Consumer`, `api-member:RootTagContext.Provider`,
+GF-07, `1_0`) and of `unstable_TextAncestorContext` (`api-member:unstable_TextAncestorContext.Consumer`,
+`api-member:unstable_TextAncestorContext.Provider`, GF-40, `post_1_0`). They are React's own context API
+(`@types/react`), not RN's contract; the context value itself stays as its own `value` row. A member RN
+declares stays even when it overrides a base one: `VirtualizedList` re-declares `render`, `state` and the
+lifecycle methods of `React.Component`. A member keyed by a well-known symbol is named by its source
+spelling, `[Symbol.iterator]`, not by the checker's internal `__@iterator@<n>`, so an id does not move with
+the checker's work. `tests/parity-inventory.test.mjs` asks the checker again for every owner and requires the
+rows and the members RN declares to be the same set.
 
 The last three kinds are not in the generated declarations:
 
@@ -73,12 +92,12 @@ Public values and their API members also carry a **mechanical platform marker**,
 `platformImplementation` (`["ios"]`, `["android"]` or `["android","ios"]`) with
 `platformEvidence`: the value's module has a `<module>.ios.js` or `<module>.android.js`
 next to it, or the value's name ends in `IOS` or `Android`. A member inherits its
-value's marker, and is also marked when its own name ends in `IOS` or `Android`. 13 values and 61 API members are marked. The marker is evidence,
+value's marker, and is also marked when its own name ends in `IOS` or `Android`. 13 values and 59 API members are marked. The marker is evidence,
 not an applicability decision: `TouchableNativeFeedback` and `InputAccessoryView` have
 no such file and are not marked.
 
 Rows count declarations in their owning contexts. An inherited property can
-occur in several components; these are not 8,254 independent behaviors.
+occur in several components; these are not 6,447 independent behaviors.
 Signatures retain nested types and overloads, but member expansion is immediate,
 not recursive. Private deep imports, every possible value/combination and RN's
 entire transitive dependency API are outside this inventory, and so are the

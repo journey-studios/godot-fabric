@@ -589,61 +589,32 @@
       "why": "GF-08 owns the HostInstance/DOM node API (measure*, focus/blur, nodes) that every instance type inherits from ReadOnlyNode/Element"
     },
     {
-      "id": "out-ecmascript-members",
-      "precedence": 50,
-      "match": {
-        "kind": "type-member",
-        "source": {"absent": true},
-        "name": [
-          "__@iterator@1079", "anchor", "at", "big", "blink", "bold", "charAt", "charCodeAt", "codePointAt", "concat",
-          "endsWith", "fixed", "fontcolor", "fontsize", "includes", "indexOf", "isWellFormed", "italics", "lastIndexOf",
-          "length", "link", "localeCompare", "match", "matchAll", "normalize", "padEnd", "padStart", "repeat",
-          "replace", "replaceAll", "search", "slice", "small", "split", "startsWith", "strike", "sub", "substr",
-          "substring", "sup", "toLocaleLowerCase", "toLocaleUpperCase", "toLowerCase", "toString", "toUpperCase",
-          "toWellFormed", "trim", "trimEnd", "trimLeft", "trimRight", "trimStart", "valueOf", "toExponential",
-          "toFixed", "toLocaleString", "toPrecision", "__@toPrimitive@379", "__@toStringTag@381", "description"
-        ]
-      },
-      "scope": "out",
-      "applicability": "not-a-contract",
-      "scopeReason": "ECMAScript String/Number/Symbol members that the inventory read through a string-literal, numeric or symbol type; the contract is the type's values, not the engine's built-ins",
-      "why": "Source-less type members with a built-in name: 29 string-literal union types list the 52 String.prototype members (1,508 rows at 0.87.1), and numeric and symbol types a few more"
-    },
-    {
       "id": "out-class-instance-members",
       "precedence": 50,
       "match": {
         "kind": "ref-member",
+        "subject": "VirtualizedListInstance",
         "source": {"absent": true},
-        "name": [
-          "constructor", "hasOwnProperty", "isPrototypeOf", "propertyIsEnumerable", "toLocaleString", "toString",
-          "valueOf", "__@toPrimitive@379", "__@toStringTag@381", "description", "UNSAFE_componentWillMount",
-          "UNSAFE_componentWillReceiveProps", "UNSAFE_componentWillUpdate", "componentDidCatch", "componentDidMount",
-          "componentDidUpdate", "componentWillMount", "componentWillReceiveProps", "componentWillUnmount",
-          "componentWillUpdate", "context", "forceUpdate", "getSnapshotBeforeUpdate", "props", "refs", "render",
-          "setState", "shouldComponentUpdate", "state"
-        ]
+        "name": ["componentDidMount", "componentDidUpdate", "componentWillUnmount", "render", "setState", "state"]
       },
       "scope": "out",
       "applicability": "not-a-contract",
-      "scopeReason": "Object.prototype and React.Component members that an instance type inherits; the engine and React own those contracts, not React Native",
-      "why": "Source-less instance members: Object.prototype, Symbol and React.Component class members"
+      "scopeReason": "React.Component lifecycle and state members that VirtualizedList and its StateSafePureComponent base re-declare in @react-native/virtualized-lists; React calls them, an app does not, and the list behavior they carry is GF-15's through the list props and the scroll methods",
+      "why": "The inventory keeps a member RN declares even when it overrides a React.Component one: these six are all that remain of the instance members the old rule swept (Object.prototype and React.Component, no longer rows)"
     },
     {
       "id": "out-react-class-statics",
       "precedence": 50,
       "match": {
         "kind": "api-member",
+        "subject": "VirtualizedList",
         "source": {"absent": true},
-        "name": [
-          "propTypes", "contextType", "displayName", "$$typeof", "getDerivedStateFromProps", "toExponential", "toFixed",
-          "toLocaleString", "toPrecision", "toString", "valueOf"
-        ]
+        "name": ["contextType", "getDerivedStateFromProps"]
       },
       "scope": "out",
       "applicability": "not-a-contract",
-      "scopeReason": "React class statics (propTypes, contextType, displayName, getDerivedStateFromProps), element internals ($$typeof) and Number built-ins; React and the engine own them",
-      "why": "Source-less API members that are React statics or Number built-ins"
+      "scopeReason": "React class statics that VirtualizedList declares in @react-native/virtualized-lists; React reads them when it renders the class, and the list behavior they carry is GF-15's through the list props",
+      "why": "The inventory keeps a static RN declares even when it overrides a React.Component one: these two are all that remain of the statics the old rule swept (React's classes and Number, no longer rows)"
     },
     {
       "id": "os-ios-only-components",

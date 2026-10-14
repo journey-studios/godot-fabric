@@ -76,6 +76,13 @@ const mutations = {
   "load-outside-frame": {rule: /within 10% of the 2 ms load/, change: copy => {
     copy.frames.lastProcessUsec = copy.frames.lastProcessUsec.map((last, index) => Math.max(copy.frames.startUsec[index], last - copy.frames.burnUsec[index]));
   }},
+  // The first frame of each load block reads the second before it, as a monitor refreshed once a second does, and every other frame is the clock's: only the
+  // inclusion rule sees it (the medians, the idle total and the 10% rule do not).
+  "stale-first-frame-of-a-load-block": {rule: /process term of every frame of the 2 ms block contains the load that frame ran/, change: copy => {
+    for (const block of copy.config.blocks.filter(each => each.kind === "load")) {
+      copy.frames.lastProcessUsec[block.first] = copy.frames.startUsec[block.first];
+    }
+  }},
   // A frame of the schedule has no sample.
   "missing-sample": {rule: /one entry for each of the \d+ scheduled frames/, change: copy => {
     for (const column of Object.values(copy.frames)) {

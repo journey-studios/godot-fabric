@@ -16,11 +16,13 @@ import {guardSources} from "./sabotage-sources.mjs";
 //                      rule (the idle total against the idle interval) accuses it first, and the 10% rule accuses the loads it cannot see, since the
 //                      loop's own sleep hides a 2 or 5 ms load in an interval of 6.9 ms.
 //  load-outside-frame  the busy loop runs from a process_frame handler connected before the instrument's, so it ends before the instrument's clock starts: the
-//                      load is outside the measured frame, the engine's clock says it ran, and the 10% rule says the instrument does not see it.
+//                      load is outside the measured frame, the engine's clock says it ran, the 10% rule says the instrument does not see it, and the
+//                      inclusion rule says the process term of every load frame is shorter than that frame's own busy loop.
 //  reads-monitor       the instrument takes Performance.TIME_PROCESS for the frame's process time. The engine refreshes that monitor once a second with the
-//                      largest process time of the second, so the term repeats for a hundred frames: the rule that the process term changes from frame to
-//                      frame accuses it, and the idle total, which would be the second's largest idle frame, and the loads that begin inside a second do not
-//                      read right.
+//                      largest process time of the second, so every load block starts with the value of the second before, taken before the load began:
+//                      the inclusion rule (the process term of a load frame is at least that frame's own busy loop, which a clock reading contains)
+//                      accuses it, and so do the idle total, which would be the second's largest idle frame, and the loads that begin inside a second,
+//                      which do not read right. The rule it replaced counted repeats of the term, which a quiet runner's genuine clock also fails.
 //
 // A variant counts as rejected only if its verdict exists: the file of the result is deleted before the variant runs, and a missing file (a run that died
 // before judging) is a variant that was not rejected. A last run of the genuine source writes build/cpu-time-instrument-comparison.json with the verdicts

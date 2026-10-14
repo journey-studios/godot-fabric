@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-13T18:00:00.000Z",
+  "updatedAt": "2026-10-13T20:00:00.000Z",
   "source": {
     "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
@@ -4922,6 +4922,15 @@
   ],
   "activity": [
     {
+      "id": "cpu-time-instrument-flake-5f30b4f",
+      "at": "2026-10-13T23:30:00.000Z",
+      "taskIds": [
+        "GF-30"
+      ],
+      "message": "0.5, instrumento de tempo de CPU: o check «o termo de processo muda de quadro a quadro» reprovava de forma intermitente em runner hospedado quieto (run 38473856206 e, antes, 38403991586, tentativa 1 de cada; a nova tentativa passou com o mesmo código). Nos artefatos, o termo de um bloco de carga é o laço (T µs) mais um resto de poucos µs em passos de 1 µs, e 118 dos 200 quadros do bloco de 10 ms valem 10,001 ms, 12 seguidos: contar valores e repetições mede o ruído do runner, não o relógio. A regra passa a ser a de inclusão: o termo de cada quadro de carga é no mínimo o laço que o próprio quadro rodou, o que um relógio cumpre sempre e um monitor atualizado uma vez por segundo não cumpre. Os 20 relatórios hospedados que o GitHub ainda serve passam; a leitura do monitor refeita sobre cada um é recusada; as três sabotagens retidas seguem rejeitadas. O instrumento não muda. Nenhum checkpoint, peso ou denominador se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/5f30b4f4593c2da1cce38940acc3a0480b204151/docs/evidence/cpu-time-instrument/README.md#a-regra-do-termo-de-processo-corrigida-2026-10-13"
+    },
+    {
       "id": "gf-05-idle-callbacks-slice-d2-b691623",
       "at": "2026-10-13T23:30:00.000Z",
       "taskIds": [
@@ -4940,13 +4949,22 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/0e78cc26efefe10ebc5c5e93e8edeac6d35d0d91/docs/evidence/runtime/README.md#react-microtask-path-slice-d1-2026-10-13"
     },
     {
-      "id": "gf-05-error-path-slice-c-2362089",
+      "id": "gf-05-error-path-slice-c-39af0e6",
       "at": "2026-10-13T20:30:00.000Z",
       "taskIds": [
         "GF-05"
       ],
       "message": "GF-05, fatia C: o caminho de erros do RN roda no host. O host só registrava uma falha onde por acaso a capturava (fail(), com a linha FABRIC_ERROR) e não havia ErrorUtils, nem relator de console.error, nem módulo ExceptionsManager, nem RN$handleException. Agora o build injeta o polyfill error-guard do RN depois do console (sdk/toolchain/metro-polyfills.mjs, na ordem do RN; o plugin de plataforma passa o polyfill, que é código Flow, pelo mesmo Babel que o Metro usa), o src/initialize.js importa o setUpErrorHandling na posição do RN e o host responde com o JsErrorHandler do RN (ReactCommon/jserrorhandler, compilado sem mudança), com cinco dos sete globais da família de erros que o ReactInstance instala sobre ele (RN$handleException, RN$inExceptionHandler, RN$registerExceptionListener, RN$isRuntimeReady e RN$useAlwaysAvailableJSErrorHandling, com a semântica do RN e o valor padrão da flag) e com um módulo ExceptionsManager (native/js_error_path.cpp). Ficam de fora RN$hasHandledFatalException e RN$notifyOfFatalException, excluídos pela V2-D26: com eles o JS do RN reporta só a primeira exceção fatal, e o runtime continua rodando depois de um erro não capturado; a mudança é da fatia de limpeza de erros do GF-07. Como nas builds de release do RN, uma exceção fatal vira falha do host (a linha FABRIC_ERROR, com a mensagem e a pilha analisada) e uma exceção leve (console.error, ErrorUtils.reportError) vira uma linha de log, nunca falha. Os pontos de captura do host que o ReactInstance também encaminha ao JsErrorHandler (o tratador de erros do RuntimeScheduler, a fila de trabalho e a avaliação do bundle, depois da qual o runtime fica pronto) passam por ele; os de timers, immediates e microtasks ficam como estavam até a fatia F. Achado: o Hermes e a fábrica do host definem cada um seu jsi::JSError, com type_info diferente, então um catch (jsi::JSError&) do código compilado do RN nunca casa com o que o Hermes lança; o host reconhece o erro do Hermes pelo nome do tipo. A sonda executa 23 verificações em três aplicações Hermes reais (pronta, erro durante a avaliação do bundle, erro que escapa dela) e o oráculo independente roda o JavaScript do próprio RN no V8 e compara com o Hermes; o host anterior falha exatamente as 14 verificações que dependem do host novo e sete sabotagens retidas (duas no bundle, cinco no host) são rejeitadas pela sonda e pelo oráculo. A auditoria de bootstrap marca setUpErrorHandling e o polyfill error-guard como runs, sem pendências de fatia C. Nenhum checkpoint, peso ou denominador muda; a CI hospedada está pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/2362089ab433777841778a09b7b8c20fd866aeda/docs/evidence/runtime/README.md#error-path-slice-c-2026-10-13"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/39af0e68a10f05c7228a700e49be2cb3e8242167/docs/evidence/runtime/README.md#error-path-slice-c-2026-10-13"
+    },
+    {
+      "id": "gf-01-inventory-noise-ac77791",
+      "at": "2026-10-13T20:00:00.000Z",
+      "taskIds": [
+        "GF-01"
+      ],
+      "message": "GF-01, limpeza do inventário de contratos (só Node e dados, sem execução nativa): o gerador deixa de emitir os membros que o RN não declara. O checker da TypeScript lista, para um tipo de literais de string, os 52 membros de String.prototype (29 tipos), para uma instância de classe os de Object.prototype e de React.Component e, para uma classe do React, as estáticas; nada disso é contrato do RN. Saíram 1.807 das 8.254 linhas (1.540 type-member, 234 ref-member e 33 api-member, 4 deles o Provider e o Consumer de contextos do React), restando 6.447. Toda outra linha ficou idêntica, conferido por um script que compara por id; as únicas diferenças são os ids de Headers e URLSearchParams, que deixam de levar o contador interno do checker (__@iterator@1079) e passam a usar a grafia do código, [Symbol.iterator], sem número. O gerador falha se dois ids coincidirem. Ficam os membros que o RN declara, em react-native ou em @react-native/*, mesmo quando sobrescrevem um de React.Component (VirtualizedList e seu StateSafePureComponent). No mapa de contratos, a regra out-ecmascript-members saiu (casava só o ruído) e as outras duas regras out, estreitadas, casam agora só as 8 linhas de VirtualizedList, com motivo reescrito; restam 132 regras e o escopo out cai de 1.815 para 12 (1_0: 6.314 para 6.312 e post_1_0: 125 para 123, por 4 membros da API de contexto do React, que o mapa tratava como contrato e que não são do RN: api-member:RootTagContext.Consumer e api-member:RootTagContext.Provider, do GF-07 (1_0), e api-member:unstable_TextAncestorContext.Consumer e api-member:unstable_TextAncestorContext.Provider, do GF-40 (post_1_0); o valor do contexto segue como linha própria). O teste do inventário refaz a pergunta com o checker para cada dono e exige que as linhas e os membros declarados pelo RN sejam o mesmo conjunto, com mutações que injetam membros de String, Object.prototype e React e removem uma declaração do RN. O checkpoint contract do GF-01 segue aberto até o catálogo de polaridade das fixtures (S3). Nenhum checkpoint, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ac7779178c8dac63b8851d82073813703d981975/docs/compatibility/README.md"
     },
     {
       "id": "gf-05-js-globals-slice-b-bae7aac",
