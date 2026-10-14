@@ -1,13 +1,16 @@
 import test from "node:test";
+import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import ts from "typescript";
 
 const inventory = JSON.parse(readFileSync(new URL("../docs/compatibility/contracts-0.87.1.json", import.meta.url)));
 const row = (id) => inventory.contracts.find((contract) => contract.id === id);
+const nodeModules = fileURLToPath(new URL("../node_modules/", import.meta.url));
 const upstream = fileURLToPath(new URL("../node_modules/react-native/", import.meta.url));
 const upstreamText = (file) => readFileSync(path.join(upstream, file), "utf8");
 const rowsOf = (kind) => inventory.contracts.filter((contract) => contract.kind === kind);
@@ -69,6 +72,181 @@ test("the format is versioned, ordered and keeps the old row shape except for th
       assert.ok(["platformImplementation", "platformEvidence"].includes(key) && ["value", "api-member"].includes(contract.kind), `${contract.id} has ${key}`);
     }
   }
+});
+
+// An oracle for the member rows that does not share the generator's code: the checker is asked again, with the generator's
+// compiler options, which members each export has, and a member counts only when one of its declarations sits in RN's own
+// packages (react-native and the @react-native/* packages it splits off). The owners come from the exports, not from the rows,
+// so an export whose members were all dropped is noticed; rows and checker members must be the same set.
+const memberOracle = (() => {
+  let cached;
+  return () => {
+    if (cached) {
+      return cached;
+    }
+    const entry = path.join(upstream, "types_generated/index.d.ts");
+    const program = ts.createProgram([entry], {
+      strict: true, skipLibCheck: true, noEmit: true, target: ts.ScriptTarget.ESNext, lib: ["lib.esnext.d.ts"], types: ["react"],
+      module: ts.ModuleKind.NodeNext, moduleResolution: ts.ModuleResolutionKind.NodeNext,
+    });
+    const checker = program.getTypeChecker();
+    const exported = new Map(checker.getExportsOfModule(checker.getSymbolAtLocation(program.getSourceFile(entry))).map((symbol) => [symbol.name, symbol]));
+    const siblings = `${nodeModules}@react-native/`;
+    const owned = [upstream, siblings];
+    const declarationFiles = (symbol) => (symbol.declarations ?? []).map((declaration) => declaration.getSourceFile().fileName).filter((file) => owned.some((directory) => file.startsWith(directory)));
+    const resolved = (owner) => {
+      const symbol = exported.get(owner);
+      return symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol;
+    };
+    // An export is an API value (its members are api-member rows) unless it is exported as a type only; every other export is a type.
+    const familyOf = (owner) => {
+      const typeOnly = (exported.get(owner).declarations ?? []).every((node) => ts.isExportSpecifier(node) && (node.isTypeOnly || node.parent.parent.isTypeOnly));
+      return !typeOnly && resolved(owner).flags & ts.SymbolFlags.Value ? "value" : "type";
+    };
+    const members = new Map();
+    // The members RN declares for one owner, each with the files that declare it: of the type behind the export, or of the value for the API members.
+    const declared = (owner, family) => {
+      const key = `${family}:${owner}`;
+      if (!members.has(key)) {
+        const symbol = resolved(owner);
+        const type = family === "value" ? checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration || symbol.declarations[0]) : checker.getDeclaredTypeOfSymbol(symbol);
+        members.set(key, new Map(checker.getPropertiesOfType(type).filter((member) => declarationFiles(member).length > 0).map((member) => [member.name, declarationFiles(member)])));
+      }
+      return members.get(key);
+    };
+    const pairs = [...exported.keys()].map((owner) => ({ owner, family: familyOf(owner) })).filter(({ owner, family }) => declared(owner, family).size > 0);
+    // The declaration files of the sibling packages that rows are declared in: the exports and the members of every owner.
+    const siblingFiles = [...new Set([
+      ...[...exported.keys()].flatMap((owner) => declarationFiles(resolved(owner))),
+      ...pairs.flatMap(({ owner, family }) => [...declared(owner, family).values()].flat()),
+    ].filter((file) => file.startsWith(siblings)))].sort();
+    cached = { exported, declared, pairs, siblingFiles };
+    return cached;
+  };
+})();
+
+// What the rows list and the checker does not (extra) or the checker lists and the rows do not (missing), per owner.
+function memberDiscrepancies(contracts) {
+  const { exported, declared, pairs } = memberOracle();
+  const listed = new Map();
+  for (const contract of contracts) {
+    const family = contract.kind === "api-member" ? "value" : ["prop", "event", "style", "ref-member", "type-member"].includes(contract.kind) ? "type" : undefined;
+    if (family) {
+      const key = `${family}:${contract.owner}`;
+      listed.set(key, { family, owner: contract.owner, names: [...(listed.get(key)?.names ?? []), contract.name] });
+    }
+  }
+  // Every owner the checker expects members for is visited, also when no row names it.
+  for (const { owner, family } of pairs) {
+    const key = `${family}:${owner}`;
+    if (!listed.has(key)) {
+      listed.set(key, { family, owner, names: [] });
+    }
+  }
+  const extra = [];
+  const missing = [];
+  for (const { family, owner, names } of listed.values()) {
+    if (!exported.has(owner)) {
+      extra.push(...names.map((name) => `${family}:${owner}.${name}`));
+      continue;
+    }
+    const expected = declared(owner, family);
+    extra.push(...names.filter((name) => !expected.has(name)).map((name) => `${owner}.${name}`));
+    missing.push(...[...expected.keys()].filter((name) => !names.includes(name)).map((name) => `${owner}.${name}`));
+  }
+  return { extra: extra.sort(), missing: missing.sort() };
+}
+
+test("a member is a row only when RN declares it: nothing from String, Number, Symbol, Object.prototype or React's classes", () => {
+  assert.deepEqual(memberDiscrepancies(inventory.contracts), { extra: [], missing: [] });
+  // The examples the oracle generalizes: a string-literal union lists nothing, an instance inherits nothing and a class has no React statics.
+  assert.equal(inventory.contracts.filter((contract) => contract.owner === "AccessibilityRole").length, 0);
+  assert.equal(row("type-member:AccessibilityRole.charAt"), undefined);
+  assert.equal(rowsOf("type-member").filter((contract) => contract.name === "charAt").length, 0);
+  assert.equal(row("ref-member:ViewInstance.hasOwnProperty"), undefined, "Object.prototype is not an instance member of RN");
+  assert.equal(row("ref-member:ViewInstance.forceUpdate"), undefined, "React.Component is not an instance member of RN");
+  assert.equal(row("api-member:FlatList.propTypes"), undefined, "React's class statics are not API members of RN");
+  // A member RN declares stays even when it overrides a React.Component one, and so does everything the sibling packages declare.
+  for (const id of ["ref-member:VirtualizedListInstance.render", "ref-member:VirtualizedListInstance.setState", "api-member:VirtualizedList.contextType", "api-member:VirtualizedList.getDerivedStateFromProps", "ref-member:VirtualizedListInstance.scrollToIndex", "prop:FlatListProps.CellRendererComponent"]) {
+    assert.ok(row(id), id);
+    assert.equal(row(id).source, undefined, `${id} is declared in @react-native/virtualized-lists, which the source field leaves out`);
+  }
+  // The member rows without a source are exactly the ones declared in @react-native/virtualized-lists, which FlatList and SectionList build on.
+  const sourceless = inventory.contracts.filter((contract) => ["prop", "event", "style", "ref-member", "type-member", "api-member"].includes(contract.kind) && contract.source === undefined);
+  assert.deepEqual([...new Set(sourceless.map((contract) => contract.owner))].sort(), [
+    "FlatListProps", "ListRenderItemInfo", "ListViewToken", "ScrollToLocationParamsType", "SectionBase", "SectionListProps", "SectionListRenderItemInfo",
+    "Separators", "VirtualizedList", "VirtualizedListInstance", "VirtualizedListProps", "VirtualizedSectionListInstance", "VirtualizedSectionListProps",
+  ]);
+});
+
+test("the member check bites: built-in members and a dropped RN declaration are both reported", () => {
+  const noise = [
+    // A string-literal union read through String.prototype, an instance read through Object.prototype and React.Component, and a React class static.
+    { id: "type-member:AccessibilityRole.charAt", kind: "type-member", owner: "AccessibilityRole", name: "charAt", type: "(pos: number) => string" },
+    { id: "ref-member:ViewInstance.hasOwnProperty", kind: "ref-member", owner: "ViewInstance", name: "hasOwnProperty", type: "(v: PropertyKey) => boolean" },
+    { id: "ref-member:ViewInstance.forceUpdate", kind: "ref-member", owner: "ViewInstance", name: "forceUpdate", type: "(callback?: () => void) => void" },
+    { id: "api-member:FlatList.propTypes", kind: "api-member", owner: "FlatList", name: "propTypes", type: "any" },
+  ];
+  const withNoise = memberDiscrepancies([...inventory.contracts, ...noise]);
+  assert.deepEqual(withNoise.extra, ["AccessibilityRole.charAt", "FlatList.propTypes", "ViewInstance.forceUpdate", "ViewInstance.hasOwnProperty"]);
+  assert.deepEqual(withNoise.missing, []);
+  // A real member of RN, an override of a React.Component one, missing from the rows.
+  const dropped = memberDiscrepancies(inventory.contracts.filter((contract) => contract.id !== "ref-member:VirtualizedListInstance.render"));
+  assert.deepEqual(dropped, { extra: [], missing: ["VirtualizedListInstance.render"] });
+  // Every member of one exported owner missing: the owners come from the exports, so the oracle still visits it and reports each member.
+  const instanceRows = rowsOf("ref-member").filter((contract) => contract.owner === "VirtualizedListInstance");
+  assert.ok(instanceRows.length > 20);
+  const ownerDropped = memberDiscrepancies(inventory.contracts.filter((contract) => contract.owner !== "VirtualizedListInstance"));
+  assert.deepEqual(ownerDropped, { extra: [], missing: instanceRows.map((contract) => `VirtualizedListInstance.${contract.name}`).sort() });
+});
+
+test("the hashes pin the declarations of the @react-native/* packages that rows come from, so a change to one is drift", () => {
+  const { siblingFiles } = memberOracle();
+  const wanted = siblingFiles.map((file) => path.relative(nodeModules, file));
+  // The files the oracle finds rows declared in (the lists package's types) are all there, qualified with their package.
+  assert.ok(wanted.length >= 5 && wanted.every((file) => file.startsWith("@react-native/virtualized-lists/types_generated/")), wanted.join(", "));
+  const pinned = new Map(inventory.upstreamFiles.filter((entry) => entry.file.startsWith("@react-native/")).map((entry) => [entry.file, entry.sha256]));
+  const unpinned = (pins) => wanted.filter((file) => !pins.has(file));
+  const stale = (pins) => [...pins].filter(([file, sha256]) => createHash("sha256").update(readFileSync(path.join(nodeModules, file))).digest("hex") !== sha256).map(([file]) => file);
+  assert.deepEqual(unpinned(pinned), []);
+  assert.deepEqual(stale(pinned), []);
+  // The entries of react-native itself keep their path inside the package.
+  assert.ok(inventory.upstreamFiles.some((entry) => entry.file === "types_generated/index.d.ts"));
+  assert.ok(inventory.upstreamFiles.every((entry) => entry.file.startsWith("@react-native/") || !entry.file.includes("node_modules")));
+  // The check bites: a sibling declaration that is not hashed, or hashed with another content, is reported.
+  const [first] = wanted;
+  assert.deepEqual(unpinned(new Map([...pinned].filter(([file]) => file !== first))), [first]);
+  assert.deepEqual(stale(new Map([...pinned].map(([file, sha256]) => [file, file === first ? sha256.replace(/^./, sha256[0] === "0" ? "1" : "0") : sha256]))), [first]);
+  // And so does the generator's own check: the checked-in text passes, and the same text with one sibling hash altered is drift.
+  const directory = mkdtempSync(path.join(tmpdir(), "fabric-inventory-"));
+  try {
+    const checkedIn = readFileSync(new URL("../docs/compatibility/contracts-0.87.1.json", import.meta.url), "utf8");
+    const check = (text) => {
+      const file = path.join(directory, "inventory.json");
+      writeFileSync(file, text);
+      return spawnSync(process.execPath, ["scripts/parity-inventory.mjs", "--check", "--output", file], { encoding: "utf8", timeout: 30000 });
+    };
+    const control = check(checkedIn);
+    assert.equal(control.status, 0, control.stdout + control.stderr);
+    const sha256 = pinned.get(first);
+    assert.equal(checkedIn.split(sha256).length, 2, "the hash occurs once");
+    const drifted = check(checkedIn.replace(sha256, sha256.replace(/^./, sha256[0] === "0" ? "1" : "0")));
+    assert.equal(drifted.status, 1, drifted.stdout + drifted.stderr);
+    assert.match(drifted.stderr, /Parity inventory drift/);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test("ids are the source spelling: no checker-internal symbol counter reaches an id or a name", () => {
+  const withCounter = (contracts) => contracts.filter((contract) => /__@\w+@\d+/.test(contract.id) || /__@\w+@\d+/.test(contract.name)).map((contract) => contract.id);
+  assert.deepEqual(withCounter(inventory.contracts), []);
+  assert.equal(row("global-member:Headers.[Symbol.iterator]").name, "[Symbol.iterator]");
+  assert.equal(row("global-member:URLSearchParams.[Symbol.iterator]").name, "[Symbol.iterator]");
+  // The check bites: the spelling the checker uses for the same members is reported.
+  const checkerSpelling = inventory.contracts.map((contract) => contract.name === "[Symbol.iterator]"
+    ? { ...contract, id: contract.id.replace("[Symbol.iterator]", "__@iterator@1079"), name: "__@iterator@1079" } : contract);
+  assert.deepEqual(withCounter(checkerSpelling), ["global-member:Headers.__@iterator@1079", "global-member:URLSearchParams.__@iterator@1079"]);
 });
 
 test("runtime globals are what the setUp chain installs, under the conditions RN writes", () => {

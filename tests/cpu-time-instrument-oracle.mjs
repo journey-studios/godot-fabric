@@ -29,8 +29,12 @@ import {idleReference} from "./frontier-baseline-oracle.mjs";
 //   truth      the busy loop of a load block took its target, as the engine's clock measured it (the median to within 1%)
 //   accuracy   for each target T: |median(total in the load-T frames) - base - T| <= 10% of T, with base the median of the total over the measured
 //              frames of every idle block (the median of an even count is the mean of the two middle values)
-//   variation  in each load block the process term takes at least DISTINCT_MINIMUM values and does not repeat more than RUN_MAXIMUM frames in a row,
-//              which a clock does and a monitor that the engine refreshes once a second does not
+//   inclusion  in every frame of a load block (the settle frames too: the loop runs in them as well) the process term is at least as long as the busy loop
+//              that frame ran, as the engine's clock measured it. The loop runs between the stamp that opens the process step and the stamp that closes
+//              it, so a reading of that step contains it to the microsecond, on any runner and at any pace; a monitor that the engine refreshes once a
+//              second does not: it starts every block with the value of the second before, taken before the load began. How much the term repeats from
+//              frame to frame is recorded and not judged: the loop is the same length in every frame and the clock ticks in microseconds, so on a quiet
+//              runner most of a block's terms are one value, and how many depends on the runner's pace and noise (docs/evidence/cpu-time-instrument/README.md)
 //   render     (a window) the render pulse lands RENDER_READING_LAG_DRAWS draws after the draw that caused it and nowhere else
 //   engine     (headless) the engine's own TIME_PROCESS monitor, which is the largest process time of the last second and covers more than the
 //              instrument's process step, is never under the largest process term of the second before it was set, and not far over it
@@ -53,8 +57,6 @@ const DRAIN_FRAMES = 12;
 const IDLE_SHARE = 0.25;
 const IDLE_P95_SHARE = 0.5;
 const BURN_TOLERANCE = 0.01;
-const DISTINCT_MINIMUM = 8;
-const RUN_MAXIMUM = 10;
 const ENGINE_MEDIAN_MARGIN_MS = 0.5;
 const ENGINE_HIDDEN_UPDATE_USEC = 1500000;
 const EPSILON = 1e-9;
@@ -124,6 +126,18 @@ export function deriveTerms(frames, readings) {
 const measuredOf = (blocks, kind, targetMs = null) => blocks.filter(block => block.kind === kind && (targetMs === null || block.targetMs === targetMs))
   .flatMap(block => Array.from({length: block.measured}, (_, offset) => block.first + block.settle + offset));
 const at = (column, positions) => positions.map(position => column[position]);
+// The positions of every frame of the load blocks of a target, the settle frames included.
+const loadFramesOf = (blocks, targetMs) => blocks.filter(block => block.kind === "load" && block.targetMs === targetMs)
+  .flatMap(block => Array.from({length: block.end - block.first}, (_, offset) => block.first + offset));
+
+// How much longer the process term of each frame of a load block is than the busy loop that frame ran, in microseconds (the stamps are whole
+// microseconds, so the reported milliseconds are rounded back to them): the shortest margin of the target's frames and how many are negative.
+export function loadInclusion(frames, blocks) {
+  return Object.fromEntries(TARGETS_MS.map(target => {
+    const margins = loadFramesOf(blocks, target).map(position => Math.round(frames.processMs[position] * 1000) - frames.burnUsec[position]);
+    return [target, {frames: margins.length, shortestMarginUs: Math.min(...margins), shorterThanTheLoad: margins.filter(margin => margin < 0).length}];
+  }));
+}
 
 // How much more the reading is at the draws of the pulse frames, plus a lag, than at the draws of the others, for each lag in draws.
 function pulseGains(frames, readings, blocks) {
@@ -299,6 +313,14 @@ export function judgeCpuTimeInstrumentReport(report) {
       violations.push(`The median total minus the idle median is within 10% of the ${target} ms load: it read ${round(readMs, 4)} ms (${round(100 * (readMs - target) / target, 2)}%)`);
     }
   }
+  stats.inclusion = loadInclusion(frames, blocks);
+  for (const target of TARGETS_MS) {
+    const {frames: count, shortestMarginUs, shorterThanTheLoad} = stats.inclusion[target];
+    if (shorterThanTheLoad > 0) {
+      violations.push(`The process term of every frame of the ${target} ms block contains the load that frame ran, as a clock does (${shorterThanTheLoad} of ${count} frames are shorter than their load, by up to ${-shortestMarginUs} us), and not as a monitor refreshed once a second`);
+    }
+  }
+  // What the term repeats is recorded for the reader, not judged (see the inclusion rule above).
   for (const target of TARGETS_MS) {
     const terms = at(frames.processMs, measuredOf(blocks, "load", target));
     let run = 0;
@@ -307,11 +329,7 @@ export function judgeCpuTimeInstrumentReport(report) {
       run = index > 0 && term === terms[index - 1] ? run + 1 : 1;
       longest = Math.max(longest, run);
     });
-    const distinct = new Set(terms).size;
-    stats.variation[target] = {distinct, longestRun: longest};
-    if (!(distinct >= DISTINCT_MINIMUM && longest <= RUN_MAXIMUM)) {
-      violations.push(`The process term of the ${target} ms block changes from frame to frame as a clock does (${distinct} values, at most ${longest} frames the same), and not as a monitor refreshed once a second`);
-    }
+    stats.variation[target] = {distinct: new Set(terms).size, longestRun: longest};
   }
   if (windowed) {
     const {pulses, gains} = pulseGains(frames, readings, blocks);

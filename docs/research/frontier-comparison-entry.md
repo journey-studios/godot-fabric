@@ -345,7 +345,8 @@ registered the manifests' hashes and the sizes of the trial; its raw reports cou
 - **A parse error is how a set is wrong.** Without `hud_*.gd` A's measurement app fails at `frontier-comparison-hud.gd` and the entry class does not compile: the process ends with exit 2 and no report. A set that lacks a file the arm uses by path fails; one that lacks a file only a different arm uses does not, which is why the sets are proven arm by arm.
 - **A missing asset does not fail the process.** C without the fonts ran to its end, exit 0, and the log was full of `FABRIC_ERROR` lines. The proof counts the errors of the log (`processOf`) for that reason, as the rehearsal does.
 - **The self-check through a Release probe passes, and is sensitive to the load.** Of four runs of it by hand, at a load of 5 to 6, one failed its check that the process term changes from frame to frame (18 values, a run of 12 equal frames, where the oracle accepts at most 10); the other three, and the ones inside the lane and the rehearsal, passed. That is the gate
-  working on a busy machine, as for the Debug one; the campaign's machine has to be quiet.
+  working on a busy machine, as for the Debug one; the campaign's machine has to be quiet. *(Correction, 2026-10-13: that check counted values and repeats of the process term, which depends on how quiet the runner is, and failed
+  genuine hosted runs; it was replaced by a check that each load frame's term contains its own load, see `docs/evidence/cpu-time-instrument/README.md`.)*
 - **The export requires the texture formats of the desktop in `project.godot`**, even for a project with no texture (the probe), and the hash of the probe's `project.godot` in its manifest is the exported file's.
 
 ### What is not shown
