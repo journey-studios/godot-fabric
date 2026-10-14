@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "0.5 macOS: coletor validado; comparativo aguardando Mac com carga estável. Nova coorte retomável, zero execuções aceitas; orçamento e relatório final abertos."
   },
-  "updatedAt": "2026-10-14T13:20:00.000Z",
+  "updatedAt": "2026-10-14T13:30:00.000Z",
   "source": {
     "commit": "e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e92c0043d637ef9db022b4a71ea563aab5f6cf6b",
@@ -4930,6 +4930,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf-07-overlays-design-50ac2ae",
+      "at": "2026-10-14T13:30:00.000Z",
+      "taskIds": [
+        "GF-07"
+      ],
+      "message": "GF-07, fatia 5 (nota de projeto, só Node e documentação, sem execução nativa): overlays e portals contra o contrato público do RN 0.87.1. A nota docs/research/overlays-portals.md mede o que o RN oferece para conteúdo que desenha acima de outro conteúdo: o Modal, que renderiza os filhos num host view da mesma árvore React e o apresenta fora do app (Context e estado ficam no ponto de chamada); o zIndex, que ordena só irmãos posicionados dentro de um contexto de empilhamento (o fixture da View do host já mostra o filho com zIndex 100 preso sob um irmão com zIndex 2); e o createPortal, que só os três builds do renderer Fabric exportam e que nem o react-native, nem o ReactFabricType, nem os tipos, nem o código do próprio RN mencionam (o pacote só o alcança por import profundo, sem tipos, e o facade do SDK não o expõe). No Fabric o portal entrega os filhos como a lista inteira de filhos da surface de destino (completeRoot substitui a lista) e a raiz da própria surface a sobrescreve na mesma transação; isso foi executado com um UIManager de teste, não contra o nativo. Do lado do Godot, a nota resume as várias FabricSurface como raízes React independentes (o Context não as atravessa), o z-order entre elas como do Godot (o zIndex do RN para na surface, e a surface que recebe o ponteiro é escolhida pela ordem da árvore), o Modal como Window exclusiva e o input de surfaces sobrepostas como não certificado (V2-D10). A tabela das sete necessidades (tooltip, menu de contexto, dropdown, toast, diálogo, preview de arrasto e HUD sobre o mundo) traz o mecanismo público do RN, o mapeamento no Godot (mesma raiz, Modal do GF-18, segunda surface ou portal) e o GF dono de cada lacuna. As três opções (a, só paridade com o RN, sem createPortal no facade; b, expor o createPortal do renderer como extensão do SDK; c, padrão documentado de Context mais um host view dentro da raiz) ficam com prós e contras, e a escolha é do usuário. Dez testes em tests/overlays-portals-facts.test.mjs (no test:contracts) fixam os fatos, entre eles as props declaradas do Modal e a execução do renderer, e uma troca de versão do RN que os mude os reprova. Nenhum checkpoint, GF, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/50ac2aea412ce0f2dc2b012286ccae3d23dbcc26/docs/research/overlays-portals.md"
+    },
     {
       "id": "gf-01-catalog-merged-suites-d199274",
       "at": "2026-10-14T13:20:00.000Z",
