@@ -62,8 +62,10 @@ nunca se repetem na mesma aplicação (`next_surface_id += 10`).
 
 ## A sonda nativa
 
-`tests/app-registry-fixture.jsx` roda, ao carregar o bundle, um roteiro de 40 chamadas ao registro (linhas de dados, não
-código: o oráculo repete as mesmas linhas) e registra o resultado de cada uma; `tests/app-registry-probe.gd` monta seis
+`tests/app-registry-fixture.jsx` roda, ao carregar o bundle, um roteiro de 39 operações (28 chamadas que registram,
+recusam ou falham, entre elas os 7 registros, as 6 recusas de chave repetida, as 4 de chave reservada, as 7 entradas
+inválidas e os 4 membros headless, e 11 leituras do registro; são linhas de dados, não código, e o oráculo repete as
+mesmas linhas) e registra o resultado de cada uma; `tests/app-registry-probe.gd` monta seis
 `FabricSurface` reais de uma `FabricApplication` e exercita os membros de superfície pelo JS e pelo Godot.
 `tests/app-registry-native.test.mjs` (`npm run test:app-registry`) empacota o fixture (o bundle roda
 `AppRegistryImpl.js`, `RootTag.js`, `DisplayMode.js`, o stub do logger e o `ReactFabric-prod.js` originais), roda o Godot
