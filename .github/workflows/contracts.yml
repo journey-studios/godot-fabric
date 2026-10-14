@@ -56,7 +56,8 @@ jobs:
   # A pull request or a push of main skips the four native jobs and parity-comparison, which needs one of them.
   #
   # native-cold-start builds the native host from scratch and uploads the built workspace as `native-host`;
-  # test:cold and parity:godot then run on that cold build. When it ends, the three native-suites-* jobs
+  # test:cold (three fresh installs), the failed-start negative and parity:godot (the shared fixture from a cold
+  # project) then run on that cold build. When it ends, the three native-suites-* jobs
   # restore `native-host` on a checkout of the same commit, check the host against its build receipt and split
   # the suites between them, each keeping their original order, artifacts and if-no-files-found policies.
   # A suite still runs alone on its runner, so no oracle depends on the split. The single job this replaces
@@ -115,6 +116,9 @@ jobs:
           compression-level: 0
           retention-days: 1
           if-no-files-found: error
+      # Three fresh installs of GF-02 (docs/evidence/cold-start.md): a new project, an empty resource cache and a fresh
+      # HOME each, a real import, the React and typography scenarios and a warm import, one attempt per step. A signal,
+      # a crash or an error fails the run; nothing is retried.
       - run: npm run test:cold
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -136,6 +140,20 @@ jobs:
             build/cold-start-boundary.json
             build/cold-start-boundary-*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      # The failed start of GF-02 (docs/evidence/cold-start.md): a fixture whose compatibility_minimum is above the engine
+      # must be refused in Godot's own words, end without a crash and leave no residue, and the next start of the same
+      # fixture with the correct metadata must be clean. A positive control with the unmodified metadata runs the same way.
+      - run: npm run test:cold:negative
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-cold-start-negative
+          path: |
+            build/cold-start-negative.json
+            build/cold-start-negative-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      # The shared parity fixture from a cold project: the report names the project it ran in, and parity-comparison
+      # refuses a Godot report that was not made this way.
       - run: npm run parity:godot
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

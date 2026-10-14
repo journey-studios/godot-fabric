@@ -33,8 +33,9 @@ dispatched run adds six jobs:
 - `native-cold-start` builds the native host from scratch with `npm run setup`,
   packs the native SDK and uploads the built workspace (`.deps`, `addons`,
   `.godot`, `node_modules` and `build`) as the `native-host` artifact, kept one
-  day. It then runs `test:cold`, the engine-boundary control `test:cold:boundary` (GF-02) and
-  `parity:godot` on that cold build.
+  day. It then runs, on that cold build, `test:cold` (three fresh installs, GF-02), the engine-boundary
+  control `test:cold:boundary` (GF-02), the failed-start negative `test:cold:negative` (GF-02) and
+  `parity:godot` (the shared fixture from a cold project).
 - Three suite jobs start when it ends. Each one checks out the same commit and
   restores `native-host`. A configured CMake tree cannot move, so it first
   checks that `.deps/build` was configured at this job's workspace path (GitHub's

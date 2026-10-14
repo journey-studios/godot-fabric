@@ -1353,6 +1353,33 @@ executable), and the `contract` checkpoint is closed on it.
 GF-02 remains In progress (comparison cases and applicable targets); see the
 [evidence record](docs/evidence/cold-start.md#executable-engine-boundary).
 
+**GF-02 checkpoint (2026-10-14):** the `parity` and `targets` lanes passed in the hosted
+Contracts run [38560887388](https://github.com/journey-studios/godot-fabric/actions/runs/38560887388)
+(head `974b46e8`, every job at attempt 1). That run and the [targets table](docs/evidence/cold-start.md#targets)
+close the `targets` checkpoint. The run is also the evidence for `parity`, and it is recorded, but
+the `parity` checkpoint stays open: the dashboard admits all checkpoints done only on a complete item,
+which needs its dependency GF-01 complete, so `parity` closes with GF-01. By decision
+of 2026-10-14, parity is native startup cases and the target is macOS arm64 only. `npm run test:cold` now makes at
+least three fresh installs (a new project, an empty resource cache and a fresh `HOME` each),
+launching every step once: a signal, a crash or an error fails the run and a second launch of a
+step is refused. `npm run test:cold:negative` starts a fixture whose `compatibility_minimum` is
+`4.99.0` on the real engine and requires Godot's own refusal (`GDExtension only compatible with
+Godot version 4.99.0 or later`), a process that ends without a crash, no residue inside or
+outside the fixture compared with a positive control, and a clean next start with the correct
+metadata; with the metadata unchanged the same assertions must fail. `npm run parity:godot` runs
+the shared parity fixture from a cold project and its report, which the comparison with the RN
+iOS and Android references now requires, carries the hash of the fixture directory beside the
+fixture, case and runtime hashes. `compatibility_minimum` stays `4.7.2`; Linux, Windows, Android
+and iOS are recorded as not qualified here (GF-32 to GF-35). One finding is recorded: on the full
+project the unprepared import did not crash in 11 of 11 local runs, so `--without-startup` is
+not a control and the boundary lane stays the executable one. In the hosted run,
+`native-cold-start` made 3 fresh installs (12 steps, each `attempts` 1, no signal), the
+boundary control reported `boundary-holds` (5 of 5 and 5 of 5), the failed-start negative passed with
+its causal control, and `parity-comparison` matched the cold-project Godot report with the iOS and
+Android references (13 cases). GF-02 stays In progress: `parity` is open until GF-01 completes. See the
+[evidence record](docs/evidence/cold-start.md#repeated-first-installs) and its
+[targets](docs/evidence/cold-start.md#targets).
+
 **Progress.** GF-03, slice A of the `contract` checkpoint (code at `8c083cb`): every name of RN's 1.0 root that the facade exports
 now has a public type, and the independent TSX consumer imports and uses all 60. Of the 84 value names in the 1.0 scope, 57 are
 exported, 3 are placeholders that throw where they render (`KeyboardAvoidingView`, `RefreshControl` and `StatusBar`, typed as
