@@ -50,14 +50,50 @@ function record(kind, owner, name, type, declaration) {
     ...(file?.startsWith(upstream + path.sep) ? { source: path.relative(upstream, file) } : {}),
   });
 }
+// What RN declares lives in the react-native package and in the packages it splits off under @react-native/ (the
+// virtualized lists FlatList and SectionList build on). Everything else the checker reaches is a language or React
+// declaration that RN does not own.
+const nodeModules = path.join(root, "node_modules");
+const ownedDirectories = [upstream, path.join(nodeModules, "@react-native")].map((directory) => directory + path.sep);
+const declaredByRN = (declaration) => ownedDirectories.some((directory) => declaration.getSourceFile().fileName.startsWith(directory));
+const PRIMITIVE_FLAGS = ts.TypeFlags.StringLike | ts.TypeFlags.NumberLike | ts.TypeFlags.BigIntLike | ts.TypeFlags.BooleanLike |
+  ts.TypeFlags.ESSymbolLike | ts.TypeFlags.Null | ts.TypeFlags.Undefined | ts.TypeFlags.Void;
+// A primitive, a literal or a union of them has no members of its own: the checker answers with the apparent members of
+// String, Number or Symbol, which every string-literal union (29 types times 52 members) would repeat as RN contracts.
+function isPrimitiveLike(type) {
+  return type.isUnion() ? type.types.every(isPrimitiveLike) : (type.flags & PRIMITIVE_FLAGS) !== 0;
+}
+// The checker spells a well-known-symbol member `__@iterator@1079`: the number is its internal symbol counter, which moves with
+// the work done before the name is first built. A row uses the source spelling, `[Symbol.iterator]`, so ids do not depend on it.
+const SYMBOL_KEY = /^__@(\w+)@\d+$/;
+const renderedSymbols = new Map();
+function memberName(owner, member) {
+  const match = SYMBOL_KEY.exec(member.name);
+  if (!match) {
+    return member.name;
+  }
+  const name = `[Symbol.${match[1]}]`;
+  const previous = renderedSymbols.get(`${owner}.${name}`);
+  if (previous !== undefined && previous !== member.name) {
+    throw new Error(`Two symbol-keyed members of ${owner} render as ${name}: ${previous} and ${member.name}`);
+  }
+  renderedSymbols.set(`${owner}.${name}`, member.name);
+  return name;
+}
+// A member is a contract when RN declares it, also when the declaration overrides a base member (VirtualizedList's render).
+// What a class instance inherits from Object.prototype and React.Component, and the statics of React's classes, are not.
 function members(type, owner, kind) {
+  if (isPrimitiveLike(type)) {
+    return;
+  }
   for (const member of checker.getPropertiesOfType(type)) {
     const declaration = member.valueDeclaration || member.declarations?.[0];
-    if (!declaration) continue;
-    if (kind === "global-member" && !declaration.getSourceFile().fileName.startsWith(upstream + path.sep)) continue;
+    if (!declaration || !member.declarations.some(declaredByRN)) {
+      continue;
+    }
     const fieldType = checker.getTypeOfSymbolAtLocation(member, declaration);
     const category = kind === "prop" && /^on[A-Z]/.test(member.name) ? "event" : kind;
-    record(category, owner, member.name, fieldType, declaration);
+    record(category, owner, memberName(owner, member), fieldType, declaration);
   }
 }
 for (const exported of exports) {
@@ -118,16 +154,25 @@ for (const row of records) {
   }
 }
 records.sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0);
+// Ids are what the map and the fixture catalog key on, so two rows must never share one.
+const duplicates = records.filter((row, index) => index > 0 && records[index - 1].id === row.id).map((row) => row.id);
+if (duplicates.length) {
+  throw new Error(`Duplicate contract ids: ${duplicates.join(", ")}`);
+}
+// The compiler files of react-native keep their path inside the package; those of the packages it splits off are qualified
+// with the package (`@react-native/virtualized-lists/...`), so a change to a sibling declaration shows up as drift too.
 const sourceFiles = [...new Map([
   ...program.getSourceFiles().filter((file) => file.fileName.startsWith(upstream + path.sep))
     .map((file) => [path.relative(upstream, file.fileName), hash(file.text)]),
+  ...program.getSourceFiles().filter((file) => file.fileName.startsWith(ownedDirectories[1]))
+    .map((file) => [path.relative(nodeModules, file.fileName), hash(file.text)]),
   ...scan.files.map(({ file, sha256 }) => [file, sha256]),
 ]).entries()].map(([file, sha256]) => ({ file, sha256 })).sort((left, right) => left.file < right.file ? -1 : left.file > right.file ? 1 : 0);
 const counts = {};
 for (const row of records) counts[row.kind] = (counts[row.kind] || 0) + 1;
 const inventory = {
   schemaVersion: 2, reactNative: version, typescript: ts.version,
-  scope: "Root public generated declarations, their immediate members, and explicitly declared RN globals, plus three kinds read from RN's JavaScript: the globals InitializeCore's chain installs (runtime-global), the globals RN's JS reads that the host must provide (host-global) and the commands codegenNativeCommands registers (native-command). Public values and their members carry a mechanical platformImplementation marker. Signatures retain nested types and overloads; private deep imports are outside this inventory. Rows define contracts, not behavior coverage.",
+  scope: "Root public generated declarations, their immediate members that RN's own sources declare (what the checker only reaches through String, Number, Symbol, Object.prototype or React's classes is not a contract), and explicitly declared RN globals, plus three kinds read from RN's JavaScript: the globals InitializeCore's chain installs (runtime-global), the globals RN's JS reads that the host must provide (host-global) and the commands codegenNativeCommands registers (native-command). Public values and their members carry a mechanical platformImplementation marker. Signatures retain nested types and overloads; private deep imports are outside this inventory. Rows define contracts, not behavior coverage.",
   counts,
   derivation: {
     ...scan.derivation,

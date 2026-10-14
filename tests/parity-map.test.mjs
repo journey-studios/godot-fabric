@@ -291,7 +291,7 @@ test("the map agrees with the 0.5 prop classification the repository already exe
 
 test("the platform marker of the inventory is evidence that the map answers, row by row", () => {
   const marked = inventory.contracts.filter((row) => row.platformImplementation);
-  assert.equal(marked.length, 74);
+  assert.equal(marked.length, 72);
   for (const row of marked) {
     const { applicability } = rowOf(row.id);
     assert.ok(["applies", "not-applicable", "host-provides"].includes(applicability.godot.status), row.id);
@@ -465,18 +465,23 @@ test("each native command file is linked to its public component, and its owner 
   assert.equal(godot("native-command:AndroidDrawerLayoutNativeComponent.openDrawer"), "not-applicable");
 });
 
-test("the rows the inventory read through built-in types are out of the target, with their reason", () => {
+test("the inventory holds no built-in member, and the few out rows it still has are RN declarations with their reason", () => {
   const outRows = [...outcome.resolved.values()].filter((row) => row.scope === "out");
   const byRule = {};
   for (const row of outRows) {
     byRule[row.via.scope] = (byRule[row.via.scope] ?? 0) + 1;
     assert.ok(row.scopeReason, row.id);
   }
-  assert.deepEqual(Object.keys(byRule).sort(), ["host-legacy-bridge", "out-class-instance-members", "out-ecmascript-members", "out-react-class-statics"]);
-  // 29 string-literal union types list the 52 String.prototype members each.
-  const stringMembers = inventory.contracts.filter((row) => row.kind === "type-member" && row.name === "charAt");
-  assert.equal(stringMembers.length, 29);
-  assert.ok(stringMembers.every((row) => rowOf(row.id).scope === "out"));
+  // The rules that swept String.prototype, Object.prototype and React.Component are gone with the rows they matched.
+  assert.deepEqual(byRule, { "host-legacy-bridge": 4, "out-class-instance-members": 6, "out-react-class-statics": 2 });
+  assert.equal(inventory.contracts.filter((row) => row.kind === "type-member" && row.name === "charAt").length, 0);
+  // What stays out of the target of the generated members is what VirtualizedList and StateSafePureComponent re-declare from React.Component.
+  assert.deepEqual(outRows.filter((row) => /^out-/.test(row.via.scope)).map((row) => row.id).sort(), [
+    "api-member:VirtualizedList.contextType", "api-member:VirtualizedList.getDerivedStateFromProps",
+    "ref-member:VirtualizedListInstance.componentDidMount", "ref-member:VirtualizedListInstance.componentDidUpdate",
+    "ref-member:VirtualizedListInstance.componentWillUnmount", "ref-member:VirtualizedListInstance.render",
+    "ref-member:VirtualizedListInstance.setState", "ref-member:VirtualizedListInstance.state",
+  ]);
   // A real member that happens to share a name with a built-in keeps its place: those rows have a declaring source.
   for (const row of inventory.contracts.filter((candidate) => ["type-member", "ref-member", "api-member"].includes(candidate.kind) && candidate.source)) {
     assert.ok(!/^out-/.test(rowOf(row.id).via.scope), `${row.id} has a source and is a contract`);
