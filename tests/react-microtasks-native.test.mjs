@@ -42,11 +42,24 @@ async function optionalJson(file) {
 function gitState() {
   const run = (...args) => spawnSync("git", args, {cwd: root, encoding: "utf8"});
   const head = run("rev-parse", "HEAD");
-  const status = run("status", "--porcelain", "--untracked-files=all", "--", ".", ":(exclude)docs/evidence/runtime/react-microtasks.json");
+  const status = run("status", "--porcelain=v1", "-z", "--untracked-files=all", "--", ".", ":(exclude)docs/evidence/runtime/react-microtasks.json");
   if (head.status !== 0 || status.status !== 0) {
     return null;
   }
-  return {head: head.stdout.trim(), dirtyPaths: status.stdout.split("\n").filter(line => line !== "").map(line => line.slice(3)).sort()};
+  // NUL-delimited records keep paths unquoted. A rename or copy record names the new path and is followed by one more record, the old path.
+  const records = status.stdout.split("\0");
+  const dirtyPaths = [];
+  for (let index = 0; index < records.length; index++) {
+    const record = records[index];
+    if (record === "") {
+      continue;
+    }
+    dirtyPaths.push(record.slice(3));
+    if (record[0] === "R" || record[0] === "C") {
+      index++;
+    }
+  }
+  return {head: head.stdout.trim(), dirtyPaths: dirtyPaths.sort()};
 }
 
 async function hashes() {
