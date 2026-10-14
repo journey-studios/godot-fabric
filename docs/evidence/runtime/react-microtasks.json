@@ -2,11 +2,16 @@
   "schemaVersion": 1,
   "scenario": "react-microtasks",
   "status": "verified-local-headless-previous-host-control-seven-sabotages",
-  "at": "2026-10-14T12:48:55.493Z",
-  "executionBaseCommit": "83c94f202ebf2de70d42e610b4af9eee420bf744",
-  "sourceDirtyDuringExecution": false,
-  "implementationCommit": "83c94f202ebf2de70d42e610b4af9eee420bf744",
-  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>.",
+  "at": "2026-10-14T16:01:26.574Z",
+  "executionBaseCommit": "f60c415aaa83d630e6c2aa3484ed17bb12e308c8",
+  "sourceDirtyDuringExecution": true,
+  "dirtyPathsDuringExecution": [
+    "docs/evidence/runtime/README.md",
+    "scripts/react-microtasks-evidence.mjs",
+    "tests/react-microtasks-native.test.mjs"
+  ],
+  "implementationCommit": "83e962a9c8084c780e116292092b606e2c36a8c8",
+  "pinning": "Every sourcePins entry equals git show <implementationCommit>:<path>. The lanes ran on top of executionBaseCommit with the uncommitted paths of dirtyPathsDuringExecution, so the pins, not the commit the lanes ran on, tie what they executed to the implementation commit.",
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -15,13 +20,25 @@
     "displayServer": "headless",
     "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
     "previousHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-    "previousHost": "built from executionBaseCommit (the tip of feat/gf-05-error-path), which registers no NativeMicrotasksCxx module; kept in build/gf05-microtasks-previous-host/ (local, not in Git)"
+    "previousHost": {
+      "sourceCommit": "26a3a9087dbb8dc7b0cab3570c09a43e8d1aea2f",
+      "sourceCommitSubject": "docs(dashboard): Register GF-05's error path slice",
+      "nativeTreeAtSourceCommit": "cecdc1771bd37200cadcc6a636427d106b53840c",
+      "sha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
+      "copy": "build/gf05-microtasks-previous-host/fabric_godot.dylib (local, not in Git)",
+      "attribution": {
+        "hasJsErrorPath": true,
+        "registersMicrotasksModule": false,
+        "checkedBy": "git cat-file -e <sourceCommit>:native/js_error_path.cpp, and git grep -e add_microtasks -e nativemodule/microtasks <sourceCommit> -- native (no match)"
+      },
+      "provenance": "The commit is given by whoever ran the slice (--previous-host-commit); no build receipt was recorded for the copy. The host was copied from addons/ when the slice's branch was created, from slice C's tip, and equals slice C's host; the native/ tree of that commit is nativeTreeAtSourceCommit. The script checks that the commit has native/js_error_path.cpp and registers no microtasks module (attribution), which is what a host without NativeMicrotasksCxx and with RN's error path means; it cannot check the bytes against a build of that commit."
+    }
   },
   "commands": [
     "npm run test:react-microtasks",
     "node tests/react-microtasks-native.test.mjs --allow-original-negative (previous host in addons/)",
     "node scripts/react-microtasks-sabotage.mjs",
-    "node scripts/react-microtasks-evidence.mjs"
+    "node scripts/react-microtasks-evidence.mjs --previous-host-commit <sha> [--commit <sha>]"
   ],
   "currentLane": {
     "checks": 19,
@@ -29,7 +46,7 @@
     "oracleVerdict": null,
     "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
     "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
-    "logSha256": "eeb88201beb0e930ea2e75e329df40d43d34a0f88a49bcdaa3630dbef5a8d5f5",
+    "logSha256": "4e3d0a812441d59896c152ff18716b5b614e8a35a17be6daa13f5ad7d82ce168",
     "result": "REACT_MICROTASKS_PASSED: 19",
     "checkVerdicts": [
       {
@@ -436,7 +453,7 @@
     "oracleVerdict": "The oracle fails 14 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
     "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
     "nativeHostSha256": "a9f4e054b3e6ec0386876f6f32894b778352155f9379b76cf8a8085b61a9099d",
-    "logSha256": "1c94d651104e454c94dc216b0cb17ba5c0095b3d9e0c826db437e736aa92da36",
+    "logSha256": "8b6234ee6f69b06c175c74cbe99d04afd62574384c187c8159769ac0d2df84c4",
     "sameBundleAsCurrent": true,
     "result": "REACT_MICROTASKS_ORIGINAL_NEGATIVE: 14",
     "expectedOriginalFailures": [
@@ -456,7 +473,7 @@
       "reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it"
     ],
     "nativeModuleLoaded": false,
-    "note": "The same bundle runs on the host that registers no NativeMicrotasksCxx: queueMicrotask has nothing to reach, so React's first update throws and the root does not mount. It fails exactly the checks that need the new module, and holds the three that need only the JS the bundle runs (the flag, and the global installed before the renderer reads it) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from executionBaseCommit."
+    "note": "The same bundle runs on the host that registers no NativeMicrotasksCxx: queueMicrotask has nothing to reach, so React's first update throws and the root does not mount. It fails exactly the checks that need the new module, and holds the three that need only the JS the bundle runs (the flag, and the global installed before the renderer reads it) and the lifecycle and report checks. Its native producers are pinned for the tree; the old binary was built from environment.previousHost.sourceCommit, not from executionBaseCommit."
   },
   "retainedSabotage": {
     "script": "scripts/react-microtasks-sabotage.mjs",
@@ -479,7 +496,7 @@
         "oracleVerdict": "The oracle fails 4 check(s), the first of them flag/RN$enableMicrotasksInReact is written true by the host runtime before the renderer reads it, and the renderer reads true",
         "bundleSha256": "8dd09b5d99a58ebafb9f7c3687bc6bf822bb584cc18a159336db9300b1406920",
         "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
-        "logSha256": "ebeeda016df2738b3ee57d91fb14cf941fb659868a266459c03e62a225db396e",
+        "logSha256": "3b9cec58d47a99e9318e664651f4fa885c1adfb0e1b2238adbdf06515da0479f",
         "orders": {
           "fifo": [
             "handler-end",
@@ -536,7 +553,7 @@
         "oracleVerdict": "The oracle fails 2 check(s), the first of them module/Each queueMicrotask call through the global reaches the C++ module once",
         "bundleSha256": "32d844d18ab77f3e41d266bce60b7d38a94ea9268d016e441f62a34e70378e65",
         "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
-        "logSha256": "2abfd9dbe13273e1440b07a042722a01f4fbd205147bb470ad7a8677dc548a8e",
+        "logSha256": "a2bb0e8c1b6d38944757c1a044cc913a2cea04d26f9f2254c133da8273682561",
         "orders": {
           "fifo": [
             "handler-end",
@@ -592,7 +609,7 @@
         "oracleVerdict": "The oracle fails 1 check(s), the first of them gate/Once the application has stopped, queueMicrotask schedules nothing, does not reach the module, and nothing queued then runs",
         "bundleSha256": "b997388aa5fbf8767ec774ef9de8f94f62b0dc27a70b313e55a1b11e6a971fc3",
         "nativeHostSha256": "f385e218e002f9904e090b065d08a3f0c5c03893761a545a757649facef56baa",
-        "logSha256": "dc95b483f1e0306e4fba5662c6c54f9ba4ac75bd0fb32abfa9133e34e97ebceb",
+        "logSha256": "e89ce23e4fab7308fb0b054a847e58432c7f822408158d4bb5fb700bf586a36e",
         "orders": {
           "fifo": [
             "handler-end",
@@ -661,7 +678,7 @@
         "oracleVerdict": "The oracle fails 14 check(s), the first of them mount/The root mounts through the original AppRegistry without a diagnostic",
         "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
         "nativeHostSha256": "298aaeca88854bfa97d329c3bad4df5f3bfcaa28613186972a3e8a525b4ed13b",
-        "logSha256": "d0bdb78b048f530c7134fa594d7597a9da77a7b8c637ad34767abd70fcdc170b",
+        "logSha256": "5e56d95441011a1b1f06a759391909f495fe0aed0d5ea8b859aae7db095c72c3",
         "orders": {
           "fifo": [],
           "react-microtask": [],
@@ -682,7 +699,7 @@
         "oracleVerdict": "The oracle fails 1 check(s), the first of them reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it",
         "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
         "nativeHostSha256": "fdb6e2a79864807b8238a57a52edce78a25c7638dc647934bd951644c231f629",
-        "logSha256": "096eed480d8e70f7475a503897214ae77c76d061a054040c36f1543ae5e935b1",
+        "logSha256": "011e6946b755456b13460ee795f689e6b81c1ba83b6d07b901c2b4e73564d2a7",
         "orders": {
           "fifo": [
             "handler-end",
@@ -738,7 +755,7 @@
         "oracleVerdict": "The oracle fails 1 check(s), the first of them reentrant/A stop requested by a native signal in the middle of a commit still unmounts the root: React queues its next job after the request, and the gate does not refuse it",
         "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
         "nativeHostSha256": "f0c8d28b9754416d5b4d446146a0180c938498da8b791e8715a698ff0ec96ae3",
-        "logSha256": "e8392fcf8d2d83d4a85a6f516568ed01be82197d13aa6393157932842c46388b",
+        "logSha256": "95c8a6f1886353998d3c7e723454d9c0cbc0aadbd46018bb696a7e566832cbf1",
         "orders": {
           "fifo": [
             "handler-end",
@@ -795,7 +812,7 @@
         "oracleVerdict": "The oracle fails 2 check(s), the first of them gate/A microtask, an immediate and a Promise reaction queued before the application stops complete first, while it is still alive",
         "bundleSha256": "6e94d756b4906bb5c78be504af3973044e75330a6696fdea4ebc8042ea7fa2dc",
         "nativeHostSha256": "6d9feb0716b0c0cad2d92860585ce4c4a98cbec36dd34cfef5b0140b995efcd1",
-        "logSha256": "c933d30340a77f70e6d7d8012f22e8fc43bfaf49c60007e69d7d1f65bb718986",
+        "logSha256": "2383fbe65f1f8788b161c3c06e9d1dcad96eb297997e5d746c450b18b3442778",
         "orders": {
           "fifo": [
             "handler-end",
@@ -906,7 +923,7 @@
     "tests/react-microtasks-host.js": "e78f4c12cfc815a8c5eb653bf6b8a2cdd7f498c95592cb1e1c3fa8b5b26519aa",
     "tests/react-microtasks-cases.mjs": "39193c3c778fc14cabad89c2ef1d25d004e9cf00d82debd12044c5677133c08c",
     "tests/react-microtasks-probe.gd": "28c9e1073651c161318ea17b5fd462b20e4e0c7ba874a80b06286a69c8b3b860",
-    "tests/react-microtasks-native.test.mjs": "e6215d5d9e3c58cbad85136f1184f1db591374f23c32b2ea7a9b5ee19a3332ab",
+    "tests/react-microtasks-native.test.mjs": "77f5a4653ecb7f48de4c6d38ce1f74700369456202aa0700dc46b71b72ae693b",
     "tests/react-microtasks-oracle.mjs": "4b24bbbd99533f2009ea5e8ef07929af2c128fc604c5b6bcfd27d4d61b5fae21",
     "tests/react-microtasks-sabotages.mjs": "a8835a881e62d5cd54ea2fa8fc3232148588f9dc92081c26f84142199aa89136",
     "scripts/react-microtasks-bundle.mjs": "af302b5911281c6bb81fecbb5fe6493da128050c8056d6021910af5e0af234fb",
