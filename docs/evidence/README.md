@@ -1251,6 +1251,14 @@ a census (`tests/root-names.test.mjs`) fails on an exported name without a type,
 name the consumer drops and a change in the pinned list of the 24 missing names. The facade, the 24 missing names and the
 differential certification are unchanged, and the `contract` checkpoint of GF-03 stays open.
 
+The [GF-03 D20 record](d20-jsx-subpaths/README.md) proves that `react/jsx-runtime` is one module, the SDK's, for the app and for a
+precompiled installed library beside a nested fake, and refuses React's development JSX runtime, which the production-only build
+accepted in silence and which threw `jsxDEV is not a function` at render, with `E_PROJECT_JSX_DEV_RUNTIME`. Against the real Metro
+0.87.1 it also pins `exports` subpaths and patterns and a package's competing `.godot`/`.native` files outside `exports`, with four
+new named differences (an `exports` array, the order of TypeScript and JavaScript files inside `node_modules` (Metro tries
+TypeScript first, the SDK JavaScript), platform-suffixed JSON and a missing `main`, beside the two already known) and no change to production. The host's condition names, which side wins in each
+difference, workspaces and peers stay open: the `contract` checkpoint of GF-03 stays open and V2-D20 stays pending.
+
 These images are Godot renderer readbacks of generic fixtures, not desktop
 screenshots. They contain no other applications or game content.
 

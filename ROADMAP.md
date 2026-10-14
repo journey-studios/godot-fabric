@@ -1365,6 +1365,18 @@ export, on a name the consumer drops, and when the pinned list of the 24 missing
 certification (`parity`) do not change: `contract` stays open for those names and for D20, and no checkpoint, weight or denominator
 moves.
 
+**Progress.** GF-03, slice B of the `contract` checkpoint, V2-D20 (code at `1cb99ba`): `react/jsx-runtime` is one module, the SDK's, for
+the app and for a precompiled installed library even beside a nested fake, and React's development JSX runtime is no longer accepted
+in silence. The build is production-only, where `react/jsx-dev-runtime` leaves `jsxDEV` undefined, so `jsx: "react-jsxdev"` or a
+library compiled in development mode built and then threw `jsxDEV is not a function` at render; they now fail the build with
+`E_PROJECT_JSX_DEV_RUNTIME`, from one rule in the project resolution plugin. Against the real Metro 0.87.1, `exports` subpaths and
+`./features/*` patterns (normal, reversed and nested conditions, `import` and `require`) and a package's competing
+`.godot`/`.native` files outside `exports` agree, and four differences are pinned by name without changing production: an `exports`
+array, the order of TypeScript and JavaScript files inside `node_modules` (Metro tries TypeScript first, the SDK JavaScript),
+platform-suffixed JSON (a probable SDK gap) and a `main` that names a missing file. The [evidence](docs/evidence/d20-jsx-subpaths/README.md) has the cases. The host's condition names, resolution
+beyond `exports`, which side wins in each difference, workspaces (D19) and peers stay open decisions: D20 is not closed, `contract`
+stays open, and no checkpoint, weight or denominator moves.
+
 ### Focus command boundary complement (2026-10-04)
 
 The [original-dispatch guard fixture](docs/evidence/focus/commands.json) passes

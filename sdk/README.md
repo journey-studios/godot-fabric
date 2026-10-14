@@ -113,9 +113,9 @@ Metro 0.87.1 is bounded: the key order of `exports`/`imports` conditions,
 competing `.godot`/`.native` files of a package without `exports`, in installed
 packages and in the project's own sources. Six differences from Metro are fixed
 by test and name instead of hidden: a missing exact `exports` target, an
-external `#imports` target, an `exports` array, the JavaScript-before-TypeScript
-order inside `node_modules`, platform-suffixed JSON and a `main` that names a
-missing file. Which side is right in each, and the host's condition names, stay
+external `#imports` target, an `exports` array, the order of TypeScript and
+JavaScript files inside `node_modules` (Metro tries TypeScript first, the SDK
+JavaScript), platform-suffixed JSON and a `main` that names a missing file. Which side is right in each, and the host's condition names, stay
 open decisions ([D20 slice B](../docs/evidence/d20-jsx-subpaths/README.md)).
 
 Local `compilerOptions.paths` aliases work through the effective project
