@@ -9,6 +9,7 @@ import test from "node:test";
 import {transformAsync} from "@babel/core";
 import {build} from "esbuild";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
+import {metroPolyfills} from "../sdk/toolchain/metro-polyfills.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
 import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 
@@ -83,7 +84,7 @@ async function bundle(lane, entry, platformRoot, plugins = []) {
   const outfile = path.join(root, `build/touchables-${lane}.js`);
   const result = await build({absWorkingDir: root, entryPoints: [entry], outfile, bundle: true, platform: "neutral", format: "iife",
     metafile: true, logLevel: "silent", define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"},
-    mainFields: ["main"], resolveExtensions: godotExtensions,
+    inject: metroPolyfills(id => requireSdk.resolve(id)), mainFields: ["main"], resolveExtensions: godotExtensions,
     plugins: [...plugins, platformPlugin(platformRoot, id => requireSdk.resolve(id))]});
   // Hermes needs the RN syntax transforms on bundler helpers too.
   const code = (await transformAsync(await readFile(outfile, "utf8"), {filename: outfile, configFile: false, babelrc: false,
