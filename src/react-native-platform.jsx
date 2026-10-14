@@ -32,6 +32,8 @@ import processColor from "react-native/Libraries/StyleSheet/processColor";
 import OriginalStyleSheet from "react-native/Libraries/StyleSheet/StyleSheet";
 export { default as NativeModules } from "./native-modules";
 export { default as NativeEventEmitter } from "react-native/Libraries/EventEmitter/NativeEventEmitter";
+// RN's original ReactNativeVersion, the one source of the version: Platform.constants (src/platform.js) reads it too.
+export { default as ReactNativeVersion } from "react-native/Libraries/Core/ReactNativeVersion";
 // RN's original Animated over RN's C++ NativeAnimatedModule (useNativeDriver)
 // or requestAnimationFrame (JS driver), and its original Easing and hooks.
 export { default as Animated } from "react-native/Libraries/Animated/Animated";

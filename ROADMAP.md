@@ -1353,6 +1353,30 @@ executable), and the `contract` checkpoint is closed on it.
 GF-02 remains In progress (comparison cases and applicable targets); see the
 [evidence record](docs/evidence/cold-start.md#executable-engine-boundary).
 
+**Progress.** GF-03, slice A of the `contract` checkpoint (code at `8c083cb`): every name of RN's 1.0 root that the facade exports
+now has a public type, and the independent TSX consumer imports and uses all 60. Of the 84 value names in the 1.0 scope, 57 are
+exported, 3 are placeholders that throw where they render (`KeyboardAvoidingView`, `RefreshControl` and `StatusBar`, typed as
+components with RN's props and no statics) and 24 are missing; the 8 that had no declaration (`TouchableWithoutFeedback`,
+`TouchableHighlight`, `PanResponder`, `PixelRatio`, `I18nManager` and the three placeholders) now have one. A census,
+`tests/root-names.test.mjs` in `test:contracts`, fails on an exported name without a type, on a type for a name the facade does not
+export, on a name the consumer drops, and when the pinned list of the 24 missing names changes; it classifies the facade with the rule
+`parity:status` counts with, now `scripts/parity-facade.mjs`, and that output is byte for byte the same. The
+[evidence](docs/evidence/gf-03-root-names/README.md) has the numbers. The facade, the 24 missing names and the differential
+certification (`parity`) do not change: `contract` stays open for those names and for D20, and no checkpoint, weight or denominator
+moves.
+
+**Progress.** GF-03, slice C of the `contract` checkpoint (code at `6022226`): `ReactNativeVersion`, the only one of the 24 missing
+names that the contract map assigns to GF-03, is now exported by the facade as RN's original class, with RN's type, and used by the
+TSX consumer (61 names). `Platform.constants.reactNativeVersion` no longer copies `0, 87, 1` by hand: it reads `major`, `minor` and
+`patch` from the same class, so the version has one source, and its shape (no `prerelease`), the 0.5 manifest and
+`tests/scope-0.5.test.mjs` are unchanged. `tests/react-native-version.test.mjs`, in `test:contracts`, bundles the facade's exports of
+the two names with the SDK's platform plugin and runs them in a `vm`: the export is RN's own object, `getVersionString()` is the
+installed `react-native` version, `Platform.constants` agrees, and a stand-in class changes both together. The whole facade only starts
+on the native host, which this slice does not run. `parity:status` goes from 57 exported, 3 placeholders and 37 missing to 58, 3 and
+36; the census pins 23 missing names, all of other GFs. The
+[evidence](docs/evidence/gf-03-react-native-version/README.md) has the numbers. `contract` stays open for D20 and for those 23
+names, and no checkpoint, weight or denominator moves.
+
 ### Focus command boundary complement (2026-10-04)
 
 The [original-dispatch guard fixture](docs/evidence/focus/commands.json) passes

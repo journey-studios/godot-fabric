@@ -207,6 +207,7 @@
         "AccessibilityInfo",
         "PixelRatio",
         "I18nManager",
+        "ReactNativeVersion",
         "Pressable",
         "Image",
         "Switch",
@@ -381,7 +382,16 @@
             "PressableProps",
             "useWindowDimensions",
             "Dimensions",
-            "Platform"
+            "Platform",
+            "TouchableWithoutFeedback",
+            "TouchableHighlight",
+            "PanResponder",
+            "PixelRatio",
+            "I18nManager",
+            "ReactNativeVersion",
+            "KeyboardAvoidingView",
+            "RefreshControl",
+            "StatusBar"
           ]
         },
         {
